@@ -57,7 +57,7 @@ export default function Hero() {
 
           <div className="flex items-center gap-8 pt-4">
             
-            {/* THE NEW TRANSPARENT SHAPE-BLUR BUTTON */}
+            {/* THE TRANSPARENT SHAPE-BLUR BUTTON */}
             <GetStartedButton />
 
             <motion.div 
@@ -90,7 +90,8 @@ export default function Hero() {
         </motion.div>
 
         {/* LOCKED ABSOLUTE ELEMENTS */}
-        <div className="absolute -bottom-20 left-0 hidden md:flex items-center gap-4 opacity-10">
+        {/* FIX: Changed -bottom-20 to -bottom-32 to push the text significantly lower */}
+        <div className="absolute -bottom-32 left-0 hidden md:flex items-center gap-4 opacity-10">
            <div className="w-16 h-[1px] bg-white" />
            <span className="text-[10px] uppercase tracking-[1em] text-white">Agency 2026</span>
         </div>
@@ -131,7 +132,7 @@ function GetStartedButton() {
       href="/contact" 
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="group relative inline-flex items-center justify-center"
+      className="group relative inline-flex items-center justify-center pointer-events-auto"
     >
       {/* 1. The Shape Blur Outer Glow */}
       <motion.div
@@ -162,7 +163,7 @@ function GetStartedButton() {
         }}
       />
 
-      {/* 3. The Button Body (Transparent by default, fades to solid on hover to mask the inner glow) */}
+      {/* 3. The Button Body */}
       <div className="relative z-10 px-14 py-6 bg-transparent group-hover:bg-[#050505] border border-white/10 group-hover:border-transparent rounded-full font-black uppercase tracking-[0.4em] text-[10px] md:text-[11px] overflow-hidden transition-colors duration-500">
         <span className="relative z-20 text-white">Get Started</span>
       </div>
