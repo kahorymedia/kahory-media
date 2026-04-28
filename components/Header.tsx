@@ -20,16 +20,16 @@ function GooeyButton({ text, href, isScroll = false, onClick }: { text: string; 
 
   const buttonContent = (
     <>
+      {/* The invisible-to-neon border */}
       <div className="absolute inset-0 rounded-full border border-[#E61919] opacity-0 group-hover:opacity-100 group-hover:shadow-[0_0_15px_rgba(230,25,25,0.6)] transition-all duration-300" />
       <span className="relative z-30">{text}</span>
     </>
   );
 
-  // FIX: Added pointer-events-auto here so only the button triggers cursor changes
-  const buttonClasses = "pointer-events-auto relative flex items-center justify-center px-8 py-3.5 rounded-full bg-[#050505] text-xs md:text-sm uppercase tracking-[0.2em] font-bold text-white z-20 cursor-pointer";
+  // FIX: Smaller padding (px-6 py-2.5), transparent background, smaller text (10px/xs), and muted white text (white/60) that brightens on hover
+  const buttonClasses = "pointer-events-auto relative flex items-center justify-center px-6 py-2.5 rounded-full bg-transparent text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold text-white/60 hover:text-white transition-colors duration-300 z-20 cursor-pointer";
 
   return (
-    // FIX: pointer-events-none on the wrapper prevents early cursor expansion
     <div className="relative group pointer-events-none">
       {isScroll ? (
         <a href={`#${href}`} onClick={handleClick} className={buttonClasses}>{buttonContent}</a>
@@ -44,7 +44,7 @@ function GooeyButton({ text, href, isScroll = false, onClick }: { text: string; 
   );
 }
 
-// --- THE NEW MAGNETIC CTA BUTTON (Top Right) ---
+// --- THE MAGNETIC CTA BUTTON (Top Right) ---
 function MagneticCTAButton({ text, href }: { text: string; href: string; }) {
   const ref = useRef<HTMLDivElement>(null);
   const [particles, setParticles] = useState<any[]>([]);
@@ -85,14 +85,12 @@ function MagneticCTAButton({ text, href }: { text: string; href: string; }) {
       onMouseMove={handleMouse}
       onMouseLeave={reset}
       style={{ x: springX, y: springY }}
-      // FIX: Added pointer-events-auto so the magnetic field tracks mouse, but it is NOT an <a> tag
       className="relative flex items-center justify-center pointer-events-auto p-8 -m-8"
     >
       <div className="relative group pointer-events-none">
         <Link 
           href={href} 
           onClick={handleClick} 
-          // FIX: Added pointer-events-auto ONLY to the actual visible button
           className="pointer-events-auto relative flex items-center justify-center px-8 py-3.5 rounded-full bg-transparent text-xs md:text-sm uppercase tracking-[0.2em] font-bold text-white z-20 transition-all duration-300"
         >
           <div className="absolute inset-0 rounded-full border border-[#E61919] opacity-0 group-hover:opacity-100 group-hover:shadow-[0_0_15px_rgba(230,25,25,0.6)] transition-all duration-300" />
