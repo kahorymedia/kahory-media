@@ -6,13 +6,13 @@ const founders = [
   {
     name: "Aabhas Gupta",
     role: "Founder & Creative Head",
-    image: "/founder1.jpg", // Updated to your local image
+    image: "/founder1.jpg", 
     linkedin: "https://www.linkedin.com/in/aabhas911",
   },
   {
     name: "Tanish Sharma",
     role: "Founder & Media Management Head",
-    image: "/founder2.jpg", // Updated to your local image
+    image: "/founder2.jpg", 
     linkedin: "https://www.linkedin.com/in/tanishsharma1007",
   }
 ];
@@ -30,7 +30,7 @@ export default function Founders() {
         ))}
       </div>
     </section>
-  );git add <div className=""></div>
+  );
 }
 
 function FounderCard({ founder }: { founder: any }) {
