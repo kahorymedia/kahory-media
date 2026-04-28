@@ -3,12 +3,17 @@ import { siteData } from "@/data/content";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import DotField from "./DotField"; // IMPORT THE NEW COMPONENT
 
 export default function Hero() {
   const [mounted, setMounted] = useState(false);
   const { scrollY } = useScroll();
 
+  // Parallax for the 3D Icon
   const yParallax = useTransform(scrollY, [0, 1000], [0, -300]);
+  
+  // SCROLL FADE OUT: The dots will fade from 100% opacity at the top to 0% opacity after 500px of scrolling
+  const dotOpacity = useTransform(scrollY, [0, 500], [1, 0]);
 
   useEffect(() => setMounted(true), []);
   if (!mounted) return <div className="min-h-screen bg-black" />;
@@ -16,22 +21,23 @@ export default function Hero() {
   return (
     <section className="relative min-h-[110vh] w-full flex justify-center items-center overflow-hidden bg-black px-6 md:px-12 py-20">
       
-      <div className="absolute inset-0 z-0">
-        <div className="hero-glow-mask absolute inset-0 w-full h-full opacity-60" />
-        <div className="absolute bottom-0 left-0 w-full h-96 bg-gradient-to-t from-black via-black/80 to-transparent z-[1]" />
-      </div>
+      {/* 1. THE INTERACTIVE DOT FIELD BACKGROUND */}
+      <motion.div style={{ opacity: dotOpacity }} className="absolute inset-0 z-0">
+        <DotField />
+        {/* A subtle gradient overlay at the bottom to blend the dots into the next section */}
+        <div className="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-t from-black to-transparent pointer-events-none" />
+      </motion.div>
 
-      {/* THE INNER WRAPPER: Locks max width and keeps absolute items contained */}
-      <div className="relative flex flex-col md:flex-row items-center justify-between w-full max-w-[1200px] z-10 gap-10">
+      {/* THE INNER WRAPPER: Locks max width */}
+      <div className="relative flex flex-col md:flex-row items-center justify-between w-full max-w-[1200px] z-10 gap-10 pointer-events-none">
         
-        <div className="flex-1 space-y-10">
+        <div className="flex-1 space-y-10 pointer-events-auto">
           <div className="flex flex-col">
             <motion.h1 
               initial={{ x: -50, opacity: 0 }}
               whileInView={{ x: 0, opacity: 1 }}
               viewport={{ once: false }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              // FLUID TYPOGRAPHY: Uses clamp() to scale perfectly
               className="text-[clamp(2.5rem,8vw,6rem)] font-bold tracking-tighter leading-[0.85] uppercase text-white"
             >
               Stop<br />
@@ -93,7 +99,7 @@ export default function Hero() {
           />
         </motion.div>
 
-        {/* LOCKED ABSOLUTE ELEMENTS: Now attached to the 1200px box, not the screen edge */}
+        {/* LOCKED ABSOLUTE ELEMENTS */}
         <div className="absolute -bottom-20 left-0 hidden md:flex items-center gap-4 opacity-10">
            <div className="w-16 h-[1px] bg-white" />
            <span className="text-[10px] uppercase tracking-[1em] text-white">Agency 2026</span>
