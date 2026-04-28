@@ -1,0 +1,55 @@
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #080808;
+  --foreground: #ffffff;
+  --maroon: #2D0A12;
+  --gold: #E5D3B3;
+}
+
+html, body {
+  overflow-x: hidden;
+  height: auto !important; /* Forces the page to allow scrolling */
+  background: #000000;
+}
+
+/* Smooth radial mask for the Hero background */
+.hero-glow-mask {
+  background: radial-gradient(
+    circle at center,
+    rgba(45, 10, 18, 0.8) 0%,
+    rgba(26, 5, 10, 0.4) 40%,
+    rgba(0, 0, 0, 0) 70%
+  );
+  /* This creates the smooth blend on left/right edges */
+  mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+}
+
+/* Expand containers for that wide, premium feel */
+section {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 8rem 2rem;
+}
+
+/* Custom smooth selection color */
+::selection {
+  background: var(--gold);
+  color: #000000;
+}
+
+/* Hide default cursor only on devices that have a real mouse (desktops) */
+@media (pointer: fine) {
+  body {
+    cursor: none;
+  }
+  
+  /* Force links and buttons to hide their default pointer hands too */
+  a, button, input, textarea, select {
+    cursor: none !important;
+  }
+}
