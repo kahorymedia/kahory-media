@@ -78,42 +78,43 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* Aesthetic Bottom Info */}
+      {/* Aesthetic Bottom Info - PROPERLY CLOSED NOW */}
       <div className="absolute bottom-10 left-12 hidden md:flex items-center gap-4 opacity-10">
          <div className="w-16 h-[1px] bg-white" />
          <span className="text-[10px] uppercase tracking-[1em] text-white">Agency 2026</span>
-      {/* ELEMENT 1: Blinking "REC" Indicator (Top Right) */}
-        <div className="absolute top-32 right-6 md:right-12 flex items-center gap-3 opacity-60">
-          <motion.div 
-            animate={{ opacity: [1, 0, 1] }}
-            transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-            className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)]"
-          />
-          <span className="text-[10px] md:text-xs font-mono uppercase tracking-[0.3em] text-white">
-            REC • 00:00:00
-          </span>
-        </div>
-
-        {/* ELEMENT 2: Rotating Agency Stamp (Top Left) */}
-        <div className="absolute top-32 left-6 md:left-12 z-20">
-          <motion.div 
-            animate={{ rotate: 360 }}
-            transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-            // Shrunk slightly to w-20 to look elegant in the top corner
-            className="w-20 h-20 relative flex items-center justify-center opacity-90"
-          >
-            <svg viewBox="0 0 100 100" className="w-full h-full text-[#E5D3B3] fill-current">
-              <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="transparent" />
-              <text fontSize="11" fontWeight="bold" letterSpacing="4">
-                <textPath href="#circlePath">
-                  KAHORY MEDIA • EST 2026 • 
-                </textPath>
-              </text>
-            </svg>
-            <div className="absolute w-1.5 h-1.5 bg-white rounded-full" />
-          </motion.div>
-        </div>
       </div>
+
+      {/* ELEMENT 1: Blinking "REC" Indicator (Top Right) */}
+      <div className="absolute top-32 right-6 md:right-12 flex items-center gap-3 opacity-60 z-20">
+        <motion.div 
+          animate={{ opacity: [1, 0, 1] }}
+          transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+          className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)]"
+        />
+        <span className="text-[10px] md:text-xs font-mono uppercase tracking-[0.3em] text-white">
+          REC • 00:00:00
+        </span>
+      </div>
+
+      {/* ELEMENT 2: Rotating Agency Stamp (Top Left) */}
+      <div className="absolute top-32 left-6 md:left-12 z-20">
+        <motion.div 
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+          className="w-20 h-20 relative flex items-center justify-center opacity-90"
+        >
+          <svg viewBox="0 0 100 100" className="w-full h-full text-[#E5D3B3] fill-current">
+            <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="transparent" />
+            <text fontSize="11" fontWeight="bold" letterSpacing="4">
+              <textPath href="#circlePath">
+                KAHORY MEDIA • EST 2026 • 
+              </textPath>
+            </text>
+          </svg>
+          <div className="absolute w-1.5 h-1.5 bg-white rounded-full" />
+        </motion.div>
+      </div>
+      
     </section>
   );
 }

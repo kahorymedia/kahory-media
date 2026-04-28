@@ -13,10 +13,8 @@ export default function Header() {
     e.preventDefault();
     const element = document.getElementById(id);
     if (element) {
-      // This tells the browser to scroll smoothly to the section
       element.scrollIntoView({ behavior: "smooth" });
     } else {
-      // If we're on the contact page, go home first
       window.location.href = `/#${id}`;
     }
   };
@@ -25,13 +23,12 @@ export default function Header() {
     <motion.header 
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      // 1. Removed standard backgrounds, added pointer-events-none so the invisible part doesn't block clicks
-      className="fixed top-0 left-0 w-full z-[100] px-6 py-8 md:py-10 flex justify-center pointer-events-none"
+      // Increased the vertical padding (py-10 md:py-12) to give the content more breathing room
+      className="fixed top-0 left-0 w-full z-[100] px-6 py-10 md:py-12 flex justify-center pointer-events-none"
     >
-      {/* THE TALLER, SMOOTHER FADE LAYER */}
-      <div className="absolute top-0 left-0 w-full h-32 md:h-48 bg-black/60 backdrop-blur-xl [mask-image:linear-gradient(to_bottom,black_20%,transparent_100%)] -z-10 pointer-events-none" />
+      {/* TALLER HEIGHT, SHARPER FADE: h-40/56, black stays solid for 60% before fading */}
+      <div className="absolute top-0 left-0 w-full h-40 md:h-56 bg-black/70 backdrop-blur-md [mask-image:linear-gradient(to_bottom,black_60%,transparent_100%)] -z-10 pointer-events-none" />
       
-      {/* 3. Added pointer-events-auto here so the links and buttons are actually clickable */}
       <div className="w-full max-w-[1200px] flex justify-between items-center relative pointer-events-auto">
         <Link href="/" className="block z-20">
           <img src="/kahory-full-logo.png" alt="Logo" className="h-16 md:h-24 w-auto object-contain" />
