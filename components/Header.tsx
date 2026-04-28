@@ -25,9 +25,14 @@ export default function Header() {
     <motion.header 
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className="fixed top-0 w-full z-[100] px-6 py-8 md:py-10 flex justify-center bg-gradient-to-b from-black via-black/80 to-transparent backdrop-blur-sm"
+      // 1. Removed standard backgrounds, added pointer-events-none so the invisible part doesn't block clicks
+      className="fixed top-0 left-0 w-full z-[100] px-6 py-8 md:py-10 flex justify-center pointer-events-none"
     >
-      <div className="w-full max-w-[1200px] flex justify-between items-center relative">
+      {/* 2. THE SEAMLESS FADE LAYER: Absolute positioned behind the header content */}
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-md [mask-image:linear-gradient(to_bottom,black_60%,transparent_100%)] -z-10" />
+
+      {/* 3. Added pointer-events-auto here so the links and buttons are actually clickable */}
+      <div className="w-full max-w-[1200px] flex justify-between items-center relative pointer-events-auto">
         <Link href="/" className="block z-20">
           <img src="/kahory-full-logo.png" alt="Logo" className="h-16 md:h-24 w-auto object-contain" />
         </Link>

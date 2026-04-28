@@ -82,6 +82,37 @@ export default function Hero() {
       <div className="absolute bottom-10 left-12 hidden md:flex items-center gap-4 opacity-10">
          <div className="w-16 h-[1px] bg-white" />
          <span className="text-[10px] uppercase tracking-[1em] text-white">Agency 2026</span>
+      {/* ELEMENT 1: Blinking "REC" Indicator (Top Right) */}
+        <div className="absolute top-32 right-6 md:right-12 flex items-center gap-3 opacity-60">
+          <motion.div 
+            animate={{ opacity: [1, 0, 1] }}
+            transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+            className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)]"
+          />
+          <span className="text-[10px] md:text-xs font-mono uppercase tracking-[0.3em] text-white">
+            REC • 00:00:00
+          </span>
+        </div>
+
+        {/* ELEMENT 2: Rotating Agency Stamp (Bottom Left) */}
+        <div className="absolute bottom-12 left-6 md:left-12 opacity-30 hidden md:block">
+          <motion.div 
+            animate={{ rotate: 360 }}
+            transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+            className="w-32 h-32 relative flex items-center justify-center"
+          >
+            {/* SVG Circle text */}
+            <svg viewBox="0 0 100 100" className="w-full h-full animate-spin-slow text-white fill-current">
+              <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="transparent" />
+              <text fontSize="10.5" fontWeight="bold" letterSpacing="3.5">
+                <textPath href="#circlePath">
+                  KAHORY MEDIA • EST 2024 • 
+                </textPath>
+              </text>
+            </svg>
+            <div className="absolute w-2 h-2 bg-[#E5D3B3] rounded-full" />
+          </motion.div>
+        </div>
       </div>
     </section>
   );

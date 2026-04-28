@@ -44,8 +44,8 @@ function RollingNumber({ value }: { value: string }) {
 
 export default function Stats() {
   return (
-    // ADDED id="results" HERE so the header link can target it
-    <section id="results" className="w-full py-40 px-6 md:px-16 bg-black border-t border-white/5">
+    // Updated padding here: changed py-40 to pt-32 pb-16
+    <section id="results" className="w-full pt-32 pb-16 px-6 md:px-16 bg-black border-t border-white/5">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-20">
         {siteData.stats.map((stat, i) => (
           <div key={i} className="flex flex-col gap-8">

@@ -13,7 +13,7 @@ export default function About() {
   });
 
   return (
-    <section id="about" ref={container} className="w-full py-40 md:py-64 px-6 md:px-12 bg-black flex items-center justify-center min-h-[80vh]">
+    <section id="about" ref={container} className="w-full pt-32 pb-16 md:py-64 px-6 md:px-12 bg-black flex items-center justify-center min-h-[80vh]">
       <div className="max-w-[1000px] w-full">
         
         <span className="text-[10px] uppercase tracking-[0.5em] text-[#E5D3B3] font-bold block mb-12">
