@@ -6,6 +6,7 @@ import Services from "@/components/Services";
 import ClientMarquee from "@/components/ClientMarquee";
 import Work from "@/components/Work";
 import CtaContact from "@/components/CtaContact";
+import Founders from "@/components/Founders";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -18,6 +19,7 @@ export default function Home() {
       <Services />
       <ClientMarquee />
       <Work />
+      <Founders />
       <CtaContact />
       <Footer />
     </main>
