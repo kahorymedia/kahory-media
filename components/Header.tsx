@@ -20,13 +20,11 @@ function GooeyButton({ text, href, isScroll = false, onClick }: { text: string; 
 
   const buttonContent = (
     <>
-      {/* The invisible-to-neon border */}
       <div className="absolute inset-0 rounded-full border border-[#E61919] opacity-0 group-hover:opacity-100 group-hover:shadow-[0_0_15px_rgba(230,25,25,0.6)] transition-all duration-300" />
       <span className="relative z-30">{text}</span>
     </>
   );
 
-  // FIX: Smaller padding (px-6 py-2.5), transparent background, smaller text (10px/xs), and muted white text (white/60) that brightens on hover
   const buttonClasses = "pointer-events-auto relative flex items-center justify-center px-6 py-2.5 rounded-full bg-transparent text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold text-white/60 hover:text-white transition-colors duration-300 z-20 cursor-pointer";
 
   return (
@@ -113,11 +111,23 @@ export default function Header() {
     { name: "Watch", href: "work" }
   ];
 
+  // --- NEW PRECISION SCROLL LOGIC ---
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
     const element = document.getElementById(id);
+    
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      // Offset defines how many pixels ABOVE the element we should stop scrolling.
+      // 120px perfectly accounts for your fixed header height.
+      const headerOffset = 120; 
+      
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
     } else {
       window.location.href = `/#${id}`;
     }

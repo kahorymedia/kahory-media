@@ -36,7 +36,7 @@ function RollingNumber({ value }: { value: string }) {
 
 export default function Stats() {
   return (
-    <section id="results" className="w-full pt-32 pb-16 px-6 md:px-12 bg-black border-t border-white/5 flex justify-center">
+    <section id="stats" className="w-full pt-32 pb-16 px-6 md:px-12 bg-black border-t border-white/5 flex justify-center">
       {/* INNER WRAPPER */}
       <div className="w-full max-w-[1200px]">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-20">
