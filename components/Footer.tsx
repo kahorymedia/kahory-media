@@ -10,7 +10,7 @@ export default function Footer() {
           <span>© 2026 Kahory Media</span>
           <div className="flex gap-4">
             <a 
-              href="https://www.linkedin.com/in/YOUR_PROFILE" 
+              href="https://www.linkedin.com/in/aabhas911" 
               target="_blank" 
               className="hover:text-[#E5D3B3] transition-colors border-b border-transparent hover:border-[#E5D3B3]"
             >
@@ -18,7 +18,7 @@ export default function Footer() {
             </a>
             <span className="text-white/20">•</span>
             <a 
-              href="https://www.linkedin.com/in/YOUR_PROFILE" 
+              href="https://www.linkedin.com/in/tanishsharma1007" 
               target="_blank" 
               className="hover:text-[#E5D3B3] transition-colors border-b border-transparent hover:border-[#E5D3B3]"
             >
