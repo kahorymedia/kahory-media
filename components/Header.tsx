@@ -25,10 +25,12 @@ function GooeyButton({ text, href, isScroll = false, onClick }: { text: string; 
     </>
   );
 
-  const buttonClasses = "relative flex items-center justify-center px-8 py-3.5 rounded-full bg-[#050505] text-xs md:text-sm uppercase tracking-[0.2em] font-bold text-white z-20 cursor-pointer";
+  // FIX: Added pointer-events-auto here so only the button triggers cursor changes
+  const buttonClasses = "pointer-events-auto relative flex items-center justify-center px-8 py-3.5 rounded-full bg-[#050505] text-xs md:text-sm uppercase tracking-[0.2em] font-bold text-white z-20 cursor-pointer";
 
   return (
-    <div className="relative group">
+    // FIX: pointer-events-none on the wrapper prevents early cursor expansion
+    <div className="relative group pointer-events-none">
       {isScroll ? (
         <a href={`#${href}`} onClick={handleClick} className={buttonClasses}>{buttonContent}</a>
       ) : (
@@ -47,11 +49,8 @@ function MagneticCTAButton({ text, href }: { text: string; href: string; }) {
   const ref = useRef<HTMLDivElement>(null);
   const [particles, setParticles] = useState<any[]>([]);
 
-  // Framer Motion native values (bypasses React state for 60fps performance)
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  
-  // Spring physics for the magnetic "snap"
   const springX = useSpring(x, { stiffness: 150, damping: 15, mass: 0.1 });
   const springY = useSpring(y, { stiffness: 150, damping: 15, mass: 0.1 });
 
@@ -61,8 +60,6 @@ function MagneticCTAButton({ text, href }: { text: string; href: string; }) {
     const { height, width, left, top } = ref.current.getBoundingClientRect();
     const middleX = clientX - (left + width / 2);
     const middleY = clientY - (top + height / 2);
-    
-    // The multiplier controls magnet strength (0.3 = 30% pull towards cursor)
     x.set(middleX * 0.3); 
     y.set(middleY * 0.3);
   };
@@ -83,24 +80,25 @@ function MagneticCTAButton({ text, href }: { text: string; href: string; }) {
   };
 
   return (
-    // The p-8 creates an invisible "magnetic field" around the button
     <motion.div
       ref={ref}
       onMouseMove={handleMouse}
       onMouseLeave={reset}
       style={{ x: springX, y: springY }}
-      className="relative flex items-center justify-center cursor-pointer p-8 -m-8"
+      // FIX: Added pointer-events-auto so the magnetic field tracks mouse, but it is NOT an <a> tag
+      className="relative flex items-center justify-center pointer-events-auto p-8 -m-8"
     >
-      <div className="relative group">
-        <Link href={href} onClick={handleClick} className="relative flex items-center justify-center px-8 py-3.5 rounded-full bg-transparent text-xs md:text-sm uppercase tracking-[0.2em] font-bold text-white z-20 transition-all duration-300">
-          
-          {/* HOVER BORDER: Flashes Neon Red on hover */}
+      <div className="relative group pointer-events-none">
+        <Link 
+          href={href} 
+          onClick={handleClick} 
+          // FIX: Added pointer-events-auto ONLY to the actual visible button
+          className="pointer-events-auto relative flex items-center justify-center px-8 py-3.5 rounded-full bg-transparent text-xs md:text-sm uppercase tracking-[0.2em] font-bold text-white z-20 transition-all duration-300"
+        >
           <div className="absolute inset-0 rounded-full border border-[#E61919] opacity-0 group-hover:opacity-100 group-hover:shadow-[0_0_15px_rgba(230,25,25,0.6)] transition-all duration-300" />
-          
           <span className="relative z-30">{text}</span>
         </Link>
 
-        {/* GOOEY EXPLOSION LAYER */}
         <div className="absolute inset-0 z-10 pointer-events-none" style={{ filter: 'url(#gooey-nav)' }}>
           {particles.length > 0 && <motion.div initial={{ opacity: 1, scale: 0.8 }} animate={{ opacity: 0, scale: 1.2 }} transition={{ duration: 0.5 }} className="absolute inset-0 bg-[#E61919] rounded-full" />}
           {particles.map((p) => <motion.div key={p.id} initial={{ x: "-50%", y: "-50%", scale: 1, opacity: 1 }} animate={{ x: `calc(-50% + ${p.x}px)`, y: `calc(-50% + ${p.y}px)`, scale: 0, opacity: 0 }} transition={{ duration: p.duration, ease: "easeOut" }} className="absolute top-1/2 left-1/2 bg-[#E61919] rounded-full" style={{ width: p.size, height: p.size }} />)}
@@ -146,13 +144,13 @@ export default function Header() {
       >
         <div className="absolute top-0 left-0 w-full h-56 md:h-72 bg-black/70 backdrop-blur-md [mask-image:linear-gradient(to_bottom,black_60%,transparent_100%)] -z-10 pointer-events-none" />
         
-        <div className="w-full max-w-[1200px] flex justify-between items-center relative pointer-events-auto h-16 md:h-24">
+        <div className="w-full max-w-[1200px] flex justify-between items-center relative pointer-events-none h-16 md:h-24">
           
-          <Link href="/" className="block z-[150] flex items-center h-full">
+          <Link href="/" className="block z-[150] flex items-center h-full pointer-events-auto">
             <img src="/kahory-full-logo.png" alt="Logo" className="h-full w-auto object-contain" />
           </Link>
 
-          <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-6 z-[150]">
+          <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-6 z-[150] pointer-events-none">
             {navLinks.map((item) => (
               <GooeyButton 
                 key={item.name} 
@@ -164,7 +162,7 @@ export default function Header() {
             ))}
           </nav>
 
-          <nav className="z-[150] flex items-center h-full">
+          <nav className="z-[150] flex items-center h-full pointer-events-none">
             <MagneticCTAButton text="Get in touch" href="/contact" />
           </nav>
 
