@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 import SmoothScroll from "@/components/SmoothScroll";
 import BackToTop from "@/components/BackToTop"; // <-- 1. Import the new component
+import SplashCursor from "@/components/SplashCursor";
 import CustomCursor from "@/components/CustomCursor"; // 1. Import the cursor
 import "./globals.css";
 
@@ -40,7 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </motion.div>
             )}
           </AnimatePresence>
-          
+          <SplashCursor /> {/* The new fluid cursor! */}
           <CustomCursor /> {/* 2. Add it globally here */}
           {/* 2. Place it here so it hovers over all pages */}
           <BackToTop /> 

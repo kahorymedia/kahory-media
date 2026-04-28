@@ -94,8 +94,8 @@ export default function Hero() {
           </span>
         </div>
 
-        {/* ELEMENT 2: Rotating Agency Stamp (Top Left - Symmetrical to the REC button) */}
-        <div className="absolute top-32 left-6 md:left-12 z-20 hidden md:block">
+        {/* ELEMENT 2: Rotating Agency Stamp (Top Left) */}
+        <div className="absolute top-32 left-6 md:left-12 z-20">
           <motion.div 
             animate={{ rotate: 360 }}
             transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
