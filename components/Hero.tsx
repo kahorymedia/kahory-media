@@ -54,15 +54,35 @@ export default function Hero() {
             "{siteData.hero.subtext}"
           </motion.p>
 
-          <Link href="/contact" className="group relative inline-block">
-            <motion.div className="px-12 py-5 border border-white/10 text-white rounded-full font-black uppercase tracking-[0.4em] text-[9px] overflow-hidden relative">
-              <span className="relative z-10 group-hover:text-black transition-colors duration-500">Get Started</span>
-              <motion.div 
-                whileHover={{ top: 0 }}
-                className="absolute top-full left-0 w-full h-full bg-white z-0 transition-all duration-500" 
-              />
+          {/* NEW: Button and Wheel Container (Flex row) */}
+          <div className="flex items-center gap-8 pt-4">
+            <Link href="/contact" className="group relative inline-block">
+              <motion.div className="px-12 py-5 border border-white/10 text-white rounded-full font-black uppercase tracking-[0.4em] text-[9px] overflow-hidden relative">
+                <span className="relative z-10 group-hover:text-black transition-colors duration-500">Get Started</span>
+                <motion.div 
+                  whileHover={{ top: 0 }}
+                  className="absolute top-full left-0 w-full h-full bg-white z-0 transition-all duration-500" 
+                />
+              </motion.div>
+            </Link>
+
+            {/* ELEMENT 2: Rotating Agency Stamp (Now perfectly aligned inline!) */}
+            <motion.div 
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+              className="w-16 h-16 md:w-20 md:h-20 relative flex items-center justify-center opacity-90"
+            >
+              <svg viewBox="0 0 100 100" className="w-full h-full text-[#E5D3B3] fill-current">
+                <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="transparent" />
+                <text fontSize="11" fontWeight="bold" letterSpacing="4">
+                  <textPath href="#circlePath">
+                    KAHORY MEDIA • EST 2026 • 
+                  </textPath>
+                </text>
+              </svg>
+              <div className="absolute w-1.5 h-1.5 bg-white rounded-full" />
             </motion.div>
-          </Link>
+          </div>
         </div>
 
         {/* Right Side: MASSIVE 3D ICON */}
@@ -78,7 +98,7 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* Aesthetic Bottom Info - PROPERLY CLOSED NOW */}
+      {/* Aesthetic Bottom Info */}
       <div className="absolute bottom-10 left-12 hidden md:flex items-center gap-4 opacity-10">
          <div className="w-16 h-[1px] bg-white" />
          <span className="text-[10px] uppercase tracking-[1em] text-white">Agency 2026</span>
@@ -94,25 +114,6 @@ export default function Hero() {
         <span className="text-[10px] md:text-xs font-mono uppercase tracking-[0.3em] text-white">
           REC • 00:00:00
         </span>
-      </div>
-
-      {/* ELEMENT 2: Rotating Agency Stamp (Top Left) */}
-      <div className="absolute top-32 left-6 md:left-12 z-20">
-        <motion.div 
-          animate={{ rotate: 360 }}
-          transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-          className="w-20 h-20 relative flex items-center justify-center opacity-90"
-        >
-          <svg viewBox="0 0 100 100" className="w-full h-full text-[#E5D3B3] fill-current">
-            <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="transparent" />
-            <text fontSize="11" fontWeight="bold" letterSpacing="4">
-              <textPath href="#circlePath">
-                KAHORY MEDIA • EST 2026 • 
-              </textPath>
-            </text>
-          </svg>
-          <div className="absolute w-1.5 h-1.5 bg-white rounded-full" />
-        </motion.div>
       </div>
       
     </section>
