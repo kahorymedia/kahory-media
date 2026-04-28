@@ -5,7 +5,7 @@ import { MouseEvent } from "react";
 const founders = [
   {
     name: "Aabhas Gupta",
-    role: "Founder & Creative Director",
+    role: "Founder & Creative Head",
     image: "/founder1.jpg", // Updated to your local image
     linkedin: "https://www.linkedin.com/in/aabhas911",
   },
@@ -30,7 +30,7 @@ export default function Founders() {
         ))}
       </div>
     </section>
-  );
+  );git add <div className=""></div>
 }
 
 function FounderCard({ founder }: { founder: any }) {
