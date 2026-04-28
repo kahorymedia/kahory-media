@@ -8,24 +8,22 @@ export default function Hero() {
   const [mounted, setMounted] = useState(false);
   const { scrollY } = useScroll();
 
-  // Parallax for the icon
   const yParallax = useTransform(scrollY, [0, 1000], [0, -300]);
 
   useEffect(() => setMounted(true), []);
   if (!mounted) return <div className="min-h-screen bg-black" />;
 
   return (
-    <section className="relative min-h-[110vh] w-full flex items-center overflow-hidden bg-black px-6 md:px-12 py-20">
+    <section className="relative min-h-[110vh] w-full flex justify-center items-center overflow-hidden bg-black px-6 md:px-12 py-20">
       
-      {/* SMOOTH BLENDED GRADIENT BOX */}
       <div className="absolute inset-0 z-0">
         <div className="hero-glow-mask absolute inset-0 w-full h-full opacity-60" />
         <div className="absolute bottom-0 left-0 w-full h-96 bg-gradient-to-t from-black via-black/80 to-transparent z-[1]" />
       </div>
 
-      <div className="relative flex flex-col md:flex-row items-center justify-between w-full z-10 gap-10">
+      {/* THE INNER WRAPPER: Locks max width and keeps absolute items contained */}
+      <div className="relative flex flex-col md:flex-row items-center justify-between w-full max-w-[1200px] z-10 gap-10">
         
-        {/* Left Side: Refined Typography */}
         <div className="flex-1 space-y-10">
           <div className="flex flex-col">
             <motion.h1 
@@ -33,7 +31,8 @@ export default function Hero() {
               whileInView={{ x: 0, opacity: 1 }}
               viewport={{ once: false }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="text-4xl md:text-8xl font-bold tracking-tighter leading-[0.85] uppercase text-white"
+              // FLUID TYPOGRAPHY: Uses clamp() to scale perfectly
+              className="text-[clamp(2.5rem,8vw,6rem)] font-bold tracking-tighter leading-[0.85] uppercase text-white"
             >
               Stop<br />
               <span className="italic font-serif font-light lowercase tracking-tighter text-[#E5D3B3]">posting.</span>
@@ -43,7 +42,7 @@ export default function Hero() {
               whileInView={{ x: 0, opacity: 1 }}
               viewport={{ once: false }}
               transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="text-4xl md:text-8xl font-bold tracking-tighter leading-[0.85] uppercase text-white mt-2"
+              className="text-[clamp(2.5rem,8vw,6rem)] font-bold tracking-tighter leading-[0.85] uppercase text-white mt-2"
             >
               Start<br />
               <span>Converting.</span>
@@ -54,7 +53,6 @@ export default function Hero() {
             "{siteData.hero.subtext}"
           </motion.p>
 
-          {/* NEW: Button and Wheel Container (Flex row) */}
           <div className="flex items-center gap-8 pt-4">
             <Link href="/contact" className="group relative inline-block">
               <motion.div className="px-12 py-5 border border-white/10 text-white rounded-full font-black uppercase tracking-[0.4em] text-[9px] overflow-hidden relative">
@@ -66,7 +64,6 @@ export default function Hero() {
               </motion.div>
             </Link>
 
-            {/* ELEMENT 2: Rotating Agency Stamp (Now perfectly aligned inline!) */}
             <motion.div 
               animate={{ rotate: 360 }}
               transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
@@ -85,7 +82,6 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Right Side: MASSIVE 3D ICON */}
         <motion.div 
           style={{ y: yParallax }} 
           className="flex-1 flex justify-center md:justify-end"
@@ -93,29 +89,27 @@ export default function Hero() {
           <img 
             src="/kahory media icon png 3-d.png" 
             alt="Kahory Icon" 
-            className="w-full max-w-[600px] lg:max-w-[1000px] h-auto drop-shadow-[0_0_150px_rgba(74,14,27,0.4)] select-none pointer-events-none"
+            className="w-full max-w-[600px] lg:max-w-[800px] h-auto drop-shadow-[0_0_150px_rgba(74,14,27,0.4)] select-none pointer-events-none"
           />
         </motion.div>
-      </div>
 
-      {/* Aesthetic Bottom Info */}
-      <div className="absolute bottom-10 left-12 hidden md:flex items-center gap-4 opacity-10">
-         <div className="w-16 h-[1px] bg-white" />
-         <span className="text-[10px] uppercase tracking-[1em] text-white">Agency 2026</span>
-      </div>
+        {/* LOCKED ABSOLUTE ELEMENTS: Now attached to the 1200px box, not the screen edge */}
+        <div className="absolute -bottom-20 left-0 hidden md:flex items-center gap-4 opacity-10">
+           <div className="w-16 h-[1px] bg-white" />
+           <span className="text-[10px] uppercase tracking-[1em] text-white">Agency 2026</span>
+        </div>
 
-      {/* ELEMENT 1: Blinking "REC" Indicator (Top Right) */}
-      <div className="absolute top-32 right-6 md:right-12 flex items-center gap-3 opacity-60 z-20">
-        <motion.div 
-          animate={{ opacity: [1, 0, 1] }}
-          transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-          className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)]"
-        />
-        <span className="text-[10px] md:text-xs font-mono uppercase tracking-[0.3em] text-white">
-          REC • 00:00:00
-        </span>
+        <div className="absolute -top-10 right-0 flex items-center gap-3 opacity-60 z-20">
+          <motion.div 
+            animate={{ opacity: [1, 0, 1] }}
+            transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+            className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)]"
+          />
+          <span className="text-[10px] md:text-xs font-mono uppercase tracking-[0.3em] text-white">
+            REC • 00:00:00
+          </span>
+        </div>
       </div>
-      
     </section>
   );
 }
