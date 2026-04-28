@@ -3,17 +3,26 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
-// --- THE GOOEY NEON BUTTON COMPONENT ---
-// Recreates the liquid particle explosion from your reference code using React & Framer Motion
-function GooeyNavButton({ item, onNavigate }: { item: any, onNavigate: any }) {
+// --- THE REUSABLE GOOEY NEON BUTTON ---
+// Handles both in-page scrolling links and external page routes
+function GooeyButton({ 
+  text, 
+  href, 
+  isScroll = false, 
+  onClick 
+}: { 
+  text: string; 
+  href: string; 
+  isScroll?: boolean;
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+}) {
   const [particles, setParticles] = useState<any[]>([]);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    onNavigate(e, item.href);
+    if (onClick) onClick(e);
 
     // Generate the explosive particles
     const newParticles = Array.from({ length: 12 }).map((_, i) => {
-      // Math to distribute particles in a 360-degree circle with slight randomness
       const angle = (Math.PI * 2 * i) / 12 + (Math.random() * 0.5);
       const dist = 50 + Math.random() * 40; 
       return {
@@ -31,25 +40,32 @@ function GooeyNavButton({ item, onNavigate }: { item: any, onNavigate: any }) {
     setTimeout(() => setParticles([]), 1000);
   };
 
+  // The actual button styling (identical for all header buttons)
+  const buttonContent = (
+    <>
+      <div className="absolute inset-0 rounded-full border border-[#E61919] opacity-0 group-hover:opacity-100 group-hover:shadow-[0_0_15px_rgba(230,25,25,0.6)] transition-all duration-300" />
+      <span className="relative z-30">{text}</span>
+    </>
+  );
+
+  const buttonClasses = "relative flex items-center justify-center px-8 py-3.5 rounded-full bg-[#050505] text-xs md:text-sm uppercase tracking-[0.2em] font-bold text-white z-20 cursor-pointer";
+
   return (
     <div className="relative group">
-      {/* 1. THE BUTTON ITSELF */}
-      <a
-        href={`#${item.href}`}
-        onClick={handleClick}
-        // Black button, larger size, white text
-        className="relative flex items-center justify-center px-8 py-3.5 rounded-full bg-[#050505] text-xs md:text-sm uppercase tracking-[0.2em] font-bold text-white z-20 cursor-pointer"
-      >
-        {/* HOVER BORDER: Invisible by default, flashes Neon Red ONLY on hover */}
-        <div className="absolute inset-0 rounded-full border border-[#E61919] opacity-0 group-hover:opacity-100 group-hover:shadow-[0_0_15px_rgba(230,25,25,0.6)] transition-all duration-300" />
-        
-        <span className="relative z-30">{item.name}</span>
-      </a>
+      
+      {/* Conditionally render an <a> tag for scrolling or a <Link> for Next.js routing */}
+      {isScroll ? (
+        <a href={`#${href}`} onClick={handleClick} className={buttonClasses}>
+          {buttonContent}
+        </a>
+      ) : (
+        <Link href={href} onClick={handleClick} className={buttonClasses}>
+          {buttonContent}
+        </Link>
+      )}
 
-      {/* 2. THE GOOEY EXPLOSION LAYER */}
-      {/* This uses the hidden SVG filter defined at the top of the Header to create the liquid merging effect */}
+      {/* THE GOOEY EXPLOSION LAYER */}
       <div className="absolute inset-0 z-10 pointer-events-none" style={{ filter: 'url(#gooey-nav)' }}>
-        {/* The center blob that flashes on click */}
         {particles.length > 0 && (
           <motion.div
             initial={{ opacity: 1, scale: 0.8 }}
@@ -59,7 +75,6 @@ function GooeyNavButton({ item, onNavigate }: { item: any, onNavigate: any }) {
           />
         )}
         
-        {/* The shooting particles */}
         {particles.map((p) => (
           <motion.div
             key={p.id}
@@ -99,7 +114,7 @@ export default function Header() {
 
   return (
     <>
-      {/* HIDDEN SVG FILTER: This acts as the mathematical engine for the "Gooey" liquid effect */}
+      {/* HIDDEN SVG FILTER FOR LIQUID EFFECT */}
       <svg className="pointer-events-none absolute w-0 h-0" aria-hidden="true">
         <defs>
           <filter id="gooey-nav">
@@ -125,21 +140,26 @@ export default function Header() {
             <img src="/kahory-full-logo.png" alt="Logo" className="h-full w-auto object-contain" />
           </Link>
 
-          {/* CENTER: The Individual Gooey Buttons */}
+          {/* CENTER: The In-Page Nav Buttons */}
           <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-6 z-[150]">
             {navLinks.map((item) => (
-              <GooeyNavButton key={item.name} item={item} onNavigate={handleScroll} />
+              <GooeyButton 
+                key={item.name} 
+                text={item.name} 
+                href={item.href} 
+                isScroll={true} 
+                onClick={(e) => handleScroll(e, item.href)} 
+              />
             ))}
           </nav>
 
-          {/* RIGHT: CTA */}
+          {/* RIGHT: CTA Contact Button */}
           <nav className="z-[150] flex items-center h-full">
-            <Link href="/contact" className="group relative flex items-center">
-              <motion.div className="text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] text-white leading-none relative">
-                Get in touch
-                <div className="absolute -bottom-2 left-0 h-[1px] w-0 bg-[#E5D3B3] group-hover:w-full transition-all duration-700" />
-              </motion.div>
-            </Link>
+            <GooeyButton 
+              text="Get in touch" 
+              href="/contact" 
+              isScroll={false} 
+            />
           </nav>
 
         </div>
