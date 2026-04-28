@@ -2,19 +2,18 @@
 import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
 import { MouseEvent } from "react";
 
-// Swap these image URLs with your actual photos later!
 const founders = [
   {
     name: "Aabhas Gupta",
-    role: "Founder & Director",
-    image: "https://i.pravatar.cc/600?img=11", 
-    linkedin: "https://www.linkedin.com/in/YOUR_PROFILE",
+    role: "Founder & Creative Director",
+    image: "/founder1.jpg", // Updated to your local image
+    linkedin: "https://www.linkedin.com/in/aabhas911",
   },
   {
     name: "Tanish Sharma",
-    role: "Founder & Creative Head",
-    image: "https://i.pravatar.cc/600?img=12",
-    linkedin: "https://www.linkedin.com/in/YOUR_PROFILE",
+    role: "Founder & Media Management Head",
+    image: "/founder2.jpg", // Updated to your local image
+    linkedin: "https://www.linkedin.com/in/tanishsharma1007",
   }
 ];
 
