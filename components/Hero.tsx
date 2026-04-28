@@ -1,18 +1,15 @@
 "use client";
 import { siteData } from "@/data/content";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useMotionValue, useMotionTemplate } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import DotField from "./DotField"; // IMPORT THE NEW COMPONENT
+import DotField from "./DotField"; 
 
 export default function Hero() {
   const [mounted, setMounted] = useState(false);
   const { scrollY } = useScroll();
 
-  // Parallax for the 3D Icon
   const yParallax = useTransform(scrollY, [0, 1000], [0, -300]);
-  
-  // SCROLL FADE OUT: The dots will fade from 100% opacity at the top to 0% opacity after 500px of scrolling
   const dotOpacity = useTransform(scrollY, [0, 500], [1, 0]);
 
   useEffect(() => setMounted(true), []);
@@ -24,7 +21,6 @@ export default function Hero() {
       {/* 1. THE INTERACTIVE DOT FIELD BACKGROUND */}
       <motion.div style={{ opacity: dotOpacity }} className="absolute inset-0 z-0">
         <DotField />
-        {/* A subtle gradient overlay at the bottom to blend the dots into the next section */}
         <div className="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-t from-black to-transparent pointer-events-none" />
       </motion.div>
 
@@ -60,15 +56,9 @@ export default function Hero() {
           </motion.p>
 
           <div className="flex items-center gap-8 pt-4">
-            <Link href="/contact" className="group relative inline-block">
-              <motion.div className="px-12 py-5 border border-white/10 text-white rounded-full font-black uppercase tracking-[0.4em] text-[9px] overflow-hidden relative">
-                <span className="relative z-10 group-hover:text-black transition-colors duration-500">Get Started</span>
-                <motion.div 
-                  whileHover={{ top: 0 }}
-                  className="absolute top-full left-0 w-full h-full bg-white z-0 transition-all duration-500" 
-                />
-              </motion.div>
-            </Link>
+            
+            {/* THE NEW SHAPE-BLUR BUTTON */}
+            <GetStartedButton />
 
             <motion.div 
               animate={{ rotate: 360 }}
@@ -117,5 +107,67 @@ export default function Hero() {
         </div>
       </div>
     </section>
+  );
+}
+
+// --- THE NEW SHAPE BLUR BUTTON ---
+function GetStartedButton() {
+  const mouseX = useMotionValue(-1000);
+  const mouseY = useMotionValue(-1000);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
+  function handleMouseLeave() {
+    // Resets the glow off-screen when not hovering
+    mouseX.set(-1000);
+    mouseY.set(-1000);
+  }
+
+  return (
+    <Link 
+      href="/contact" 
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="group relative inline-flex items-center justify-center"
+    >
+      {/* 1. The Shape Blur Outer Glow (Simulates the WebGL SDF Blur) */}
+      <motion.div
+        className="absolute -inset-[4px] rounded-full opacity-0 group-hover:opacity-100 blur-[8px] transition-opacity duration-500 z-0 pointer-events-none"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              120px circle at ${mouseX}px ${mouseY}px,
+              rgba(230, 25, 25, 0.8), /* Neon Red */
+              rgba(229, 211, 179, 0.4) 40%, /* Kahory Gold fade */
+              transparent 80%
+            )
+          `,
+        }}
+      />
+
+      {/* 2. The Hard Edge Border Glow (Simulates the WebGL Stroke) */}
+      <motion.div
+        className="absolute -inset-[1px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0 pointer-events-none"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              80px circle at ${mouseX}px ${mouseY}px,
+              rgba(230, 25, 25, 1),
+              transparent 100%
+            )
+          `,
+        }}
+      />
+
+      {/* 3. The Solid Button Body (Increased Size) */}
+      {/* px-14 py-6 makes it significantly larger than the old px-12 py-5 */}
+      <div className="relative z-10 px-14 py-6 bg-[#050505] border border-white/10 group-hover:border-transparent rounded-full font-black uppercase tracking-[0.4em] text-[10px] md:text-[11px] overflow-hidden transition-colors duration-500">
+        <span className="relative z-20 text-white">Get Started</span>
+      </div>
+    </Link>
   );
 }
