@@ -94,23 +94,25 @@ export default function Hero() {
           </span>
         </div>
 
-        {/* ELEMENT 2: Rotating Agency Stamp (Bottom Left) */}
-        <div className="absolute bottom-12 left-6 md:left-12 opacity-30 hidden md:block">
+        {/* ELEMENT 2: Rotating Agency Stamp (Left Side) */}
+        {/* Moved higher (top-[30%]), made more opaque, and anchored intentionally */}
+        <div className="absolute top-[30%] left-6 md:left-16 opacity-80 hidden md:block z-10">
           <motion.div 
             animate={{ rotate: 360 }}
             transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-            className="w-32 h-32 relative flex items-center justify-center"
+            className="w-24 h-24 relative flex items-center justify-center"
           >
-            {/* SVG Circle text */}
-            <svg viewBox="0 0 100 100" className="w-full h-full animate-spin-slow text-white fill-current">
+            {/* Colored using your premium Gold/Sand hex code */}
+            <svg viewBox="0 0 100 100" className="w-full h-full text-[#E5D3B3] fill-current">
               <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="transparent" />
-              <text fontSize="10.5" fontWeight="bold" letterSpacing="3.5">
+              <text fontSize="11" fontWeight="bold" letterSpacing="4">
                 <textPath href="#circlePath">
                   KAHORY MEDIA • EST 2024 • 
                 </textPath>
               </text>
             </svg>
-            <div className="absolute w-2 h-2 bg-[#E5D3B3] rounded-full" />
+            {/* Bright white dot in the center for contrast */}
+            <div className="absolute w-2 h-2 bg-white rounded-full" />
           </motion.div>
         </div>
       </div>

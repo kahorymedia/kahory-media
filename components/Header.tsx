@@ -28,9 +28,9 @@ export default function Header() {
       // 1. Removed standard backgrounds, added pointer-events-none so the invisible part doesn't block clicks
       className="fixed top-0 left-0 w-full z-[100] px-6 py-8 md:py-10 flex justify-center pointer-events-none"
     >
-      {/* 2. THE SEAMLESS FADE LAYER: Absolute positioned behind the header content */}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-md [mask-image:linear-gradient(to_bottom,black_60%,transparent_100%)] -z-10" />
-
+      {/* THE TALLER, SMOOTHER FADE LAYER */}
+      <div className="absolute top-0 left-0 w-full h-32 md:h-48 bg-black/60 backdrop-blur-xl [mask-image:linear-gradient(to_bottom,black_20%,transparent_100%)] -z-10 pointer-events-none" />
+      
       {/* 3. Added pointer-events-auto here so the links and buttons are actually clickable */}
       <div className="w-full max-w-[1200px] flex justify-between items-center relative pointer-events-auto">
         <Link href="/" className="block z-20">
