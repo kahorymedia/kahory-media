@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Header from "@/components/Header";
 import Affirmation from "@/components/Affirmation";
 import emailjs from '@emailjs/browser';
+import Footer from "@/components/Footer";
 
 export default function ContactPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -87,18 +88,7 @@ export default function ContactPage() {
         </div>
       </section>
       
-      <footer className="w-full py-12 px-6 md:px-12 border-t border-white/5 mt-auto">
-        <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8 opacity-40 text-[10px] uppercase tracking-[0.4em] font-bold">
-          <div className="flex gap-12">
-            <span>© 2026 Kahory Media</span>
-            <span className="hidden md:block">Aabhas Gupta • Tanish Sharma</span>
-          </div>
-          <div className="flex gap-10">
-            <a href="#" className="hover:text-[#E5D3B3] transition-colors">Instagram</a>
-            <a href="#" className="hover:text-[#E5D3B3] transition-colors">LinkedIn</a>
-          </div>
-        </div>
-      </footer>
+    <Footer />
     </main>
   );
 }
