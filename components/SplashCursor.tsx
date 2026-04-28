@@ -7,19 +7,19 @@ function SplashCursor({
   SIM_RESOLUTION = 128,
   DYE_RESOLUTION = 1440,
   CAPTURE_RESOLUTION = 512,
-  DENSITY_DISSIPATION = 3.5,
-  VELOCITY_DISSIPATION = 2,
+  DENSITY_DISSIPATION = 7.0,   // INCREASED (was 3.5): Makes the tail fade out much faster
+  VELOCITY_DISSIPATION = 3.0,  // INCREASED (was 2): Stops the smoke from spreading too far
   PRESSURE = 0.1,
   PRESSURE_ITERATIONS = 20,
-  CURL = 3,
-  SPLAT_RADIUS = 0.2,
-  SPLAT_FORCE = 6000,
+  CURL = 1.0,                  // DECREASED (was 3): Less chaotic swirling
+  SPLAT_RADIUS = 0.05,         // DECREASED (was 0.2): Makes the smoke trail much thinner
+  SPLAT_FORCE = 1500,          // DECREASED (was 6000): Lower interaction intensity
   SHADING = true,
   COLOR_UPDATE_SPEED = 10,
   BACK_COLOR = { r: 0, g: 0, b: 0 },
   TRANSPARENT = true,
   RAINBOW_MODE = false, 
-  COLOR = '#990000'     
+  COLOR = '#5a0000'            // Deep, darker red
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameId = useRef<number | null>(null);
@@ -601,7 +601,8 @@ function SplashCursor({
 
     function clickSplat(pointer: any) {
       const color = generateColor();
-      color.r *= 10.0; color.g *= 10.0; color.b *= 10.0;
+      // REDUCED THE CLICK MULTIPLIER (Was 10.0, now 2.0)
+      color.r *= 2.0; color.g *= 2.0; color.b *= 2.0;
       let dx = 10 * (Math.random() - 0.5);
       let dy = 30 * (Math.random() - 0.5);
       splat(pointer.texcoordX, pointer.texcoordY, dx, dy, color);
@@ -665,13 +666,15 @@ function SplashCursor({
       const r = parseInt(val.slice(0, 2), 16) / 255;
       const g = parseInt(val.slice(2, 4), 16) / 255;
       const b = parseInt(val.slice(4, 6), 16) / 255;
-      return { r: r * 0.15, g: g * 0.15, b: b * 0.15 };
+      // REDUCED THE GLOBAL COLOR MULTIPLIER (Was 0.15, now 0.05) to massively drop opacity
+      return { r: r * 0.05, g: g * 0.05, b: b * 0.05 };
     }
 
     function generateColor() {
       if (!config.RAINBOW_MODE) { return hexToRGB(config.COLOR); }
       let c = HSVtoRGB(Math.random(), 1.0, 1.0);
-      c.r *= 0.15; c.g *= 0.15; c.b *= 0.15;
+      // REDUCED RAINBOW MULTIPLIER (Was 0.15, now 0.05)
+      c.r *= 0.05; c.g *= 0.05; c.b *= 0.05;
       return c;
     }
 
