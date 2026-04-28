@@ -6,13 +6,13 @@ import { useEffect, useRef, memo } from 'react';
 const TWO_PI = Math.PI * 2;
 
 const DotField = memo(({
-  dotRadius = 1.5,
-  dotSpacing = 16,     // Slightly spaced out for a cleaner look
-  cursorRadius = 250,  // Reduced from 500 so the hover effect is more localized and precise
+  dotRadius = 2.5,     // INCREASED: Dots are now much more visible and substantial
+  dotSpacing = 22,     // Adjusted spacing so larger dots don't feel too cluttered
+  cursorRadius = 250,
   cursorForce = 0.15,
   bulgeStrength = 40,
-  centerColor = '#7a0000', // Kahory Deep Maroon
-  edgeColor = '#111111',   // Fades to almost black at the edges
+  centerColor = '#E61919', // BRIGHTER: Vibrant glowing maroon in the center
+  edgeColor = '#4A0808',   // BRIGHTER EDGE: Prevents the "cut off margin" illusion on ultrawides
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dotsRef = useRef<any[]>([]);
@@ -24,10 +24,11 @@ const DotField = memo(({
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d', { alpha: true });
-    const dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap at 2 for performance
+    const dpr = Math.min(window.devicePixelRatio || 1, 2); 
     let resizeTimer: any;
 
     function doResize() {
+      // Binds strictly to the absolute parent wrapper, ensuring true 100% full-bleed
       const rect = canvas.parentElement?.getBoundingClientRect();
       if (!rect) return;
       const w = rect.width;
@@ -84,7 +85,6 @@ const DotField = memo(({
       const { w, h } = sizeRef.current;
       const len = dots.length;
 
-      // Calculate mouse speed natively in the render loop (much more efficient than setInterval)
       const dxMouse = m.prevX - m.x;
       const dyMouse = m.prevY - m.y;
       const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
@@ -98,10 +98,11 @@ const DotField = memo(({
 
       ctx!.clearRect(0, 0, w, h);
 
-      // RADIAL GRADIENT: Maroon in the center, dark at the edges!
+      // FIXED MATH: Calculates absolute corner distance so the gradient fills 100% of horizontal screens
       const cx = w / 2;
       const cy = h / 2;
-      const maxDist = Math.max(cx, cy);
+      const maxDist = Math.sqrt(cx * cx + cy * cy); 
+      
       const grad = ctx!.createRadialGradient(cx, cy, 0, cx, cy, maxDist);
       grad.addColorStop(0, centerColor);
       grad.addColorStop(1, edgeColor);
@@ -109,7 +110,7 @@ const DotField = memo(({
 
       const cr = cursorRadius;
       const crSq = cr * cr;
-      const rad = dotRadius / 2;
+      const rad = dotRadius;
 
       ctx!.beginPath();
 
@@ -119,7 +120,6 @@ const DotField = memo(({
         const dy = m.y - d.ay;
         const distSq = dx * dx + dy * dy;
 
-        // Repel Physics
         if (distSq < crSq && eng > 0.01) {
           const dist = Math.sqrt(distSq);
           const angle = Math.atan2(dy, dx);
@@ -128,15 +128,13 @@ const DotField = memo(({
           d.vy += Math.sin(angle) * -move;
         } 
 
-        // Spring back to original position
-        d.vx *= 0.85; // Friction
+        d.vx *= 0.85; 
         d.vy *= 0.85;
         d.x = d.ax + d.vx;
         d.y = d.ay + d.vy;
-        d.sx += (d.x - d.sx) * 0.15; // Ease back to center
+        d.sx += (d.x - d.sx) * 0.15; 
         d.sy += (d.y - d.sy) * 0.15;
 
-        // Draw dot
         ctx!.moveTo(d.sx + rad, d.sy);
         ctx!.arc(d.sx, d.sy, rad, 0, TWO_PI);
       }
