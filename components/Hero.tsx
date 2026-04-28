@@ -57,7 +57,7 @@ export default function Hero() {
 
           <div className="flex items-center gap-8 pt-4">
             
-            {/* THE NEW SHAPE-BLUR BUTTON */}
+            {/* THE NEW TRANSPARENT SHAPE-BLUR BUTTON */}
             <GetStartedButton />
 
             <motion.div 
@@ -110,7 +110,7 @@ export default function Hero() {
   );
 }
 
-// --- THE NEW SHAPE BLUR BUTTON ---
+// --- THE TRANSPARENT SHAPE BLUR BUTTON ---
 function GetStartedButton() {
   const mouseX = useMotionValue(-1000);
   const mouseY = useMotionValue(-1000);
@@ -122,7 +122,6 @@ function GetStartedButton() {
   }
 
   function handleMouseLeave() {
-    // Resets the glow off-screen when not hovering
     mouseX.set(-1000);
     mouseY.set(-1000);
   }
@@ -134,22 +133,22 @@ function GetStartedButton() {
       onMouseLeave={handleMouseLeave}
       className="group relative inline-flex items-center justify-center"
     >
-      {/* 1. The Shape Blur Outer Glow (Simulates the WebGL SDF Blur) */}
+      {/* 1. The Shape Blur Outer Glow */}
       <motion.div
         className="absolute -inset-[4px] rounded-full opacity-0 group-hover:opacity-100 blur-[8px] transition-opacity duration-500 z-0 pointer-events-none"
         style={{
           background: useMotionTemplate`
             radial-gradient(
               120px circle at ${mouseX}px ${mouseY}px,
-              rgba(230, 25, 25, 0.8), /* Neon Red */
-              rgba(229, 211, 179, 0.4) 40%, /* Kahory Gold fade */
+              rgba(230, 25, 25, 0.8), 
+              rgba(229, 211, 179, 0.4) 40%, 
               transparent 80%
             )
           `,
         }}
       />
 
-      {/* 2. The Hard Edge Border Glow (Simulates the WebGL Stroke) */}
+      {/* 2. The Hard Edge Border Glow */}
       <motion.div
         className="absolute -inset-[1px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0 pointer-events-none"
         style={{
@@ -163,9 +162,8 @@ function GetStartedButton() {
         }}
       />
 
-      {/* 3. The Solid Button Body (Increased Size) */}
-      {/* px-14 py-6 makes it significantly larger than the old px-12 py-5 */}
-      <div className="relative z-10 px-14 py-6 bg-[#050505] border border-white/10 group-hover:border-transparent rounded-full font-black uppercase tracking-[0.4em] text-[10px] md:text-[11px] overflow-hidden transition-colors duration-500">
+      {/* 3. The Button Body (Transparent by default, fades to solid on hover to mask the inner glow) */}
+      <div className="relative z-10 px-14 py-6 bg-transparent group-hover:bg-[#050505] border border-white/10 group-hover:border-transparent rounded-full font-black uppercase tracking-[0.4em] text-[10px] md:text-[11px] overflow-hidden transition-colors duration-500">
         <span className="relative z-20 text-white">Get Started</span>
       </div>
     </Link>
