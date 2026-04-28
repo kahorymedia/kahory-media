@@ -3,10 +3,6 @@
 'use client';
 import { useEffect, useRef } from 'react';
 
-// ... rest of the code stays exactly the same
-'use client';
-import { useEffect, useRef } from 'react';
-
 function SplashCursor({
   SIM_RESOLUTION = 128,
   DYE_RESOLUTION = 1440,
@@ -22,8 +18,8 @@ function SplashCursor({
   COLOR_UPDATE_SPEED = 10,
   BACK_COLOR = { r: 0, g: 0, b: 0 },
   TRANSPARENT = true,
-  RAINBOW_MODE = false, // Disabled to lock in brand colors
-  COLOR = '#990000'     // Deep Maroon Brand Color
+  RAINBOW_MODE = false, 
+  COLOR = '#990000'     
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameId = useRef<number | null>(null);
@@ -794,6 +790,8 @@ function SplashCursor({
       window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('touchend', handleTouchEnd);
     };
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [SIM_RESOLUTION, DYE_RESOLUTION, CAPTURE_RESOLUTION, DENSITY_DISSIPATION, VELOCITY_DISSIPATION, PRESSURE, PRESSURE_ITERATIONS, CURL, SPLAT_RADIUS, SPLAT_FORCE, SHADING, COLOR_UPDATE_SPEED, BACK_COLOR, TRANSPARENT, RAINBOW_MODE, COLOR]);
 
   return (
