@@ -14,26 +14,20 @@ export default function CtaContact() {
         <div className="flex flex-col md:flex-row gap-6 items-center">
           <a 
             href={`mailto:${siteData.brand.email}`}
-            className="px-8 py-4 bg-background text-foreground rounded-full font-bold text-lg hover:bg-gold transition-colors"
+            className="px-8 py-4 bg-background text-foreground rounded-full font-bold text-lg hover:bg-[#E5D3B3] transition-colors"
           >
             hi@kahorymedia.com
           </a>
           <span className="text-sm opacity-50 uppercase tracking-widest">or</span>
           <a 
             href="#" 
-            className="text-lg font-medium hover:text-gold transition-colors border-b border-background/20 hover:border-gold pb-1"
+            className="text-lg font-medium hover:text-[#E5D3B3] transition-colors border-b border-background/20 hover:border-[#E5D3B3] pb-1"
           >
             Book a Discovery Call
           </a>
         </div>
         
-        <div className="w-full border-t border-background/20 mt-32 pt-8 flex flex-col md:flex-row justify-between items-center opacity-50 text-sm">
-          <p>© {new Date().getFullYear()} {siteData.brand.name}. All rights reserved.</p>
-          <div className="flex gap-4 mt-4 md:mt-0">
-             <span>Aabhas Gupta</span>
-             <span>Tanish Sharma</span>
-          </div>
-        </div>
+        {/* REDUNDANT FOOTER SECTION REMOVED FROM HERE */}
       </div>
     </section>
   );
