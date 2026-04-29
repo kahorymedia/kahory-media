@@ -6,12 +6,12 @@ import { useEffect, useRef, memo } from 'react';
 const TWO_PI = Math.PI * 2;
 
 const DotField = memo(({
-  dotRadius = 1.5,
-  dotSpacing = 16,     // Slightly spaced out for a cleaner look
-  cursorRadius = 250,  // Reduced from 500 so the hover effect is more localized and precise
+  dotRadius = 2,
+  dotSpacing = 15,     // Slightly spaced out for a cleaner look
+  cursorRadius = 350,  // Reduced from 500 so the hover effect is more localized and precise
   cursorForce = 0.15,
   bulgeStrength = 40,
-  centerColor = '#ff3333', // UPDATED: Increased intensity to Pure Bright Red
+  centerColor = '#ff0909', // UPDATED: Increased intensity to Pure Bright Red
   edgeColor = '#111111',   // Fades to almost black at the edges
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
