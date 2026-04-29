@@ -3,24 +3,28 @@
 'use client';
 import { useEffect, useRef } from 'react';
 
+// Inside components/SplashCursor.tsx
+
 function SplashCursor({
-  SIM_RESOLUTION = 128,
-  DYE_RESOLUTION = 1440,
+  // PERFORMANCE FIX: Slashed simulation resolutions by 50% to save GPU overhead
+  SIM_RESOLUTION = 64,       // Was 128
+  DYE_RESOLUTION = 512,      // Was 1440
   CAPTURE_RESOLUTION = 512,
-  DENSITY_DISSIPATION = 7.0,   // INCREASED (was 3.5): Makes the tail fade out much faster
-  VELOCITY_DISSIPATION = 3.0,  // INCREASED (was 2): Stops the smoke from spreading too far
+  DENSITY_DISSIPATION = 7.0, 
+  VELOCITY_DISSIPATION = 3.0,
   PRESSURE = 0.1,
-  PRESSURE_ITERATIONS = 20,
-  CURL = 1.0,                  // DECREASED (was 3): Less chaotic swirling
-  SPLAT_RADIUS = 0.05,         // DECREASED (was 0.2): Makes the smoke trail much thinner
-  SPLAT_FORCE = 1500,          // DECREASED (was 6000): Lower interaction intensity
-  SHADING = true,
+  PRESSURE_ITERATIONS = 10,  // Was 20
+  CURL = 1.0, 
+  SPLAT_RADIUS = 0.05, 
+  SPLAT_FORCE = 1500, 
+  SHADING = false,           // PERFORMANCE FIX: Disabled shading (Removes a huge rendering pass)
   COLOR_UPDATE_SPEED = 10,
   BACK_COLOR = { r: 0, g: 0, b: 0 },
   TRANSPARENT = true,
   RAINBOW_MODE = false, 
-  COLOR = '#5a0000'            // Deep, darker red
+  COLOR = '#5a0000' 
 }) {
+  // ... Keep the rest of the file exactly the same
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameId = useRef<number | null>(null);
 

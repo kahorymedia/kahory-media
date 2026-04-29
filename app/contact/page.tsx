@@ -53,11 +53,17 @@ export default function ContactPage() {
   };
 
   return (
-    <main className="bg-[#080808] min-h-screen text-white flex flex-col selection:bg-[#E5D3B3] selection:text-black">
+    // FIX: Added 'relative overflow-hidden' to the main tag to contain the background glow
+    <main className="bg-[#080808] min-h-screen text-white flex flex-col selection:bg-[#E5D3B3] selection:text-black relative overflow-hidden">
+      
+      {/* FIX: Re-added the missing background glow and applied GPU acceleration */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#E61919]/5 blur-[120px] rounded-full pointer-events-none will-change-transform transform-gpu" />
+
       <Affirmation show={isSubmitted} />
       <Header />
       
-      <section className="flex-grow pt-80 pb-32 px-6 md:px-12 w-full max-w-[1400px] mx-auto overflow-hidden">
+      {/* FIX: Added relative z-10 so the content sits correctly above the glow */}
+      <section className="flex-grow pt-80 pb-32 px-6 md:px-12 w-full max-w-[1400px] mx-auto relative z-10">
         <div className="mt-12 mb-24">
           <a href="/" className="group inline-flex items-center gap-4 text-[10px] uppercase tracking-[0.4em] text-white/30 hover:text-[#E5D3B3] transition-all cursor-pointer relative z-[110]">
             <span className="group-hover:-translate-x-2 transition-transform duration-500">←</span> Return Home
@@ -76,7 +82,9 @@ export default function ContactPage() {
           <motion.div 
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="bg-zinc-900/20 p-8 md:p-12 rounded-3xl border border-white/5 backdrop-blur-xl"
+            // MAJOR PERFORMANCE FIX: Added 'will-change-transform transform-gpu' here. 
+            // This forces the heavy 'backdrop-blur-xl' to be rendered by the dedicated GPU, eliminating WebGL lag!
+            className="bg-zinc-900/20 p-8 md:p-12 rounded-3xl border border-white/5 backdrop-blur-xl will-change-transform transform-gpu"
           >
             <form onSubmit={handleSubmit} className="space-y-12">
               <div className="flex flex-col space-y-4">
