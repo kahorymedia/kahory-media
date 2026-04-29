@@ -46,7 +46,7 @@ function MailIcon({ className }: { className?: string }) {
 const DOCK_ITEMS = [
   { name: "Home", url: "/", icon: HomeIcon },
   { name: "Instagram", url: "https://www.instagram.com/kahorymedia", icon: InstagramIcon },
-  { name: "LinkedIn", url: "https://www.linkedin.com/in/aabhas911", icon: LinkedInIcon },
+  { name: "LinkedIn", url: "https://www.linkedin.com/in", icon: LinkedInIcon },
   { name: "Contact", url: "/contact", icon: MailIcon },
 ];
 

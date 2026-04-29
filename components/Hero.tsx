@@ -1,7 +1,6 @@
 "use client";
 import { siteData } from "@/data/content";
-import { motion, useScroll, useTransform, useMotionValue, useMotionTemplate } from "framer-motion";
-import Link from "next/link";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
 import DotField from "./DotField"; 
 
@@ -56,29 +55,8 @@ export default function Hero() {
           <motion.p className="text-sm md:text-xl text-white/40 max-w-md font-light italic">
             "{siteData.hero.subtext}"
           </motion.p>
-
-          {/* MOBILE OPTIMIZED: Stacks vertically on mobile, side-by-side on desktop */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 md:gap-8 pt-4">
-            
-            <GetStartedButton />
-
-            <motion.div 
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-              // MOBILE OPTIMIZED: Smaller spinning circle on phones
-              className="w-14 h-14 md:w-20 md:h-20 relative flex items-center justify-center opacity-90"
-            >
-              <svg viewBox="0 0 100 100" className="w-full h-full text-[#E5D3B3] fill-current">
-                <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="transparent" />
-                <text fontSize="11" fontWeight="bold" letterSpacing="4">
-                  <textPath href="#circlePath">
-                    KAHORY MEDIA • EST 2026 • 
-                  </textPath>
-                </text>
-              </svg>
-              <div className="absolute w-1.5 h-1.5 bg-white rounded-full" />
-            </motion.div>
-          </div>
+          
+          {/* Note: The old inline GetStartedButton and rotating circle were removed from here */}
         </div>
 
         {/* 3D ICON */}
@@ -96,6 +74,24 @@ export default function Hero() {
         </motion.div>
 
         {/* ABSOLUTE ELEMENTS */}
+        
+        {/* RELOCATED: The Spinning Seal now acts as a stamp on the bottom-left corner */}
+        <motion.div 
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+          className="absolute -bottom-20 md:-bottom-24 left-0 w-16 h-16 md:w-20 md:h-20 flex items-center justify-center opacity-60 z-20 pointer-events-none"
+        >
+          <svg viewBox="0 0 100 100" className="w-full h-full text-[#E5D3B3] fill-current">
+            <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="transparent" />
+            <text fontSize="11" fontWeight="bold" letterSpacing="4">
+              <textPath href="#circlePath">
+                KAHORY MEDIA • EST 2026 • 
+              </textPath>
+            </text>
+          </svg>
+          <div className="absolute w-1.5 h-1.5 bg-white rounded-full" />
+        </motion.div>
+
         <div className="absolute -bottom-32 left-0 hidden md:flex items-center gap-4 opacity-10">
            <div className="w-16 h-[1px] bg-white" />
            <span className="text-[10px] uppercase tracking-[1em] text-white">Agency 2026</span>
@@ -114,60 +110,5 @@ export default function Hero() {
         </div>
       </div>
     </section>
-  );
-}
-
-function GetStartedButton() {
-  const mouseX = useMotionValue(-1000);
-  const mouseY = useMotionValue(-1000);
-
-  function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
-    const { left, top } = currentTarget.getBoundingClientRect();
-    mouseX.set(clientX - left);
-    mouseY.set(clientY - top);
-  }
-
-  function handleMouseLeave() {
-    mouseX.set(-1000);
-    mouseY.set(-1000);
-  }
-
-  return (
-    <Link 
-      href="/contact" 
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="group relative inline-flex items-center justify-center pointer-events-auto"
-    >
-      <motion.div
-        className="absolute -inset-[4px] rounded-full opacity-0 group-hover:opacity-100 blur-[8px] transition-opacity duration-500 z-0 pointer-events-none"
-        style={{
-          background: useMotionTemplate`
-            radial-gradient(
-              120px circle at ${mouseX}px ${mouseY}px,
-              rgba(230, 25, 25, 0.8), 
-              rgba(229, 211, 179, 0.4) 40%, 
-              transparent 80%
-            )
-          `,
-        }}
-      />
-      <motion.div
-        className="absolute -inset-[1px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0 pointer-events-none"
-        style={{
-          background: useMotionTemplate`
-            radial-gradient(
-              80px circle at ${mouseX}px ${mouseY}px,
-              rgba(230, 25, 25, 1),
-              transparent 100%
-            )
-          `,
-        }}
-      />
-      {/* MOBILE OPTIMIZED: Smaller button padding on phones */}
-      <div className="relative z-10 px-8 py-4 md:px-14 md:py-6 bg-transparent group-hover:bg-[#050505] border border-white/10 group-hover:border-transparent rounded-full font-black uppercase tracking-[0.4em] text-[9px] md:text-[11px] overflow-hidden transition-colors duration-500">
-        <span className="relative z-20 text-white">Get Started</span>
-      </div>
-    </Link>
   );
 }
