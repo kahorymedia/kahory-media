@@ -8,6 +8,7 @@ import SplashCursor from "@/components/SplashCursor";
 import CustomCursor from "@/components/CustomCursor"; 
 import FloatingCTA from "@/components/FloatingCTA";
 import FloatingDock from "@/components/FloatingDock";
+import AIChat from "@/components/AIChat";
 import "./globals.css";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -30,12 +31,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return () => clearTimeout(timer);
   }, [pathname]);
 
-  // --- NEW: GLOBAL SECURITY DETERRENTS ---
+  // --- GLOBAL SECURITY DETERRENTS ---
   useEffect(() => {
-    // 1. Disable Right-Click (Context Menu)
     const handleContextMenu = (e: MouseEvent) => e.preventDefault();
 
-    // 2. Disable Keyboard Shortcuts (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+S)
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
         e.key === "F12" || 
@@ -47,7 +46,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       }
     };
 
-    // 3. Disable Dragging (prevents dragging images to desktop globally)
     const handleDragStart = (e: DragEvent) => e.preventDefault();
 
     window.addEventListener("contextmenu", handleContextMenu);
@@ -60,23 +58,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       window.removeEventListener("dragstart", handleDragStart);
     };
   }, []);
-  // ----------------------------------------
 
   return (
     <html lang="en">
-      {/* Added select-none to prevent text highlighting/copying across the site */}
       <body className="bg-black antialiased font-sans select-none">
         <SmoothScroll>
           <AnimatePresence mode="wait">
             {isLoading && (
               <motion.div 
                 key="loader"
-                // Initial opacity set to 1. It starts pitch black, no fade-in flash!
                 initial={{ opacity: 1 }} 
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
-                // Increased z-index to 9999 to guarantee it covers the header and cursor
                 className="fixed inset-0 z-[9999] bg-black flex items-center justify-center pointer-events-none"
               >
                 <motion.img 
@@ -86,7 +80,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   src="/kahory media icon png 3-d.png" 
                   className="h-24 w-auto grayscale"
                   alt="Kahory Loading"
-                  draggable="false" // Extra protection on the loader image
+                  draggable="false"
                 />
               </motion.div>
             )}
@@ -95,6 +89,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <SplashCursor /> 
           <CustomCursor /> 
           <BackToTop /> 
+          <AIChat />
           <FloatingCTA />
           <FloatingDock />
           {children}
