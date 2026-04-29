@@ -67,15 +67,15 @@ export default function ContactPage() {
             <form ref={formRef} onSubmit={handleSubmit} className="space-y-12">
               <div className="flex flex-col space-y-4">
                 <label className="text-[10px] uppercase tracking-[0.4em] text-[#E5D3B3]">Full Name</label>
-                <input required name="user_name" type="text" className="bg-transparent border-b border-white/10 py-3 outline-none focus:border-[#E5D3B3] transition-colors text-xl" placeholder="John Doe" />
+                <input required name="user_name" type="text" className="bg-transparent border-b border-white/10 py-3 outline-none focus:border-[#E5D3B3] transition-colors text-xl" placeholder="Your full name" />
               </div>
               <div className="flex flex-col space-y-4">
                 <label className="text-[10px] uppercase tracking-[0.4em] text-[#E5D3B3]">Email Address</label>
-                <input required name="user_email" type="email" className="bg-transparent border-b border-white/10 py-3 outline-none focus:border-[#E5D3B3] transition-colors text-xl" placeholder="hello@brand.com" />
+                <input required name="user_email" type="email" className="bg-transparent border-b border-white/10 py-3 outline-none focus:border-[#E5D3B3] transition-colors text-xl" placeholder="xyz@brand.com OR xyz@gmail.com" />
               </div>
               <div className="flex flex-col space-y-4">
                 <label className="text-[10px] uppercase tracking-[0.4em] text-[#E5D3B3]">Message</label>
-                <textarea required name="message" rows={4} className="bg-transparent border-b border-white/10 py-3 outline-none focus:border-[#E5D3B3] transition-colors text-xl resize-none" placeholder="Tell us about your project" />
+                <textarea required name="message" rows={4} className="bg-transparent border-b border-white/10 py-3 outline-none focus:border-[#E5D3B3] transition-colors text-xl resize-none" placeholder="How can we help you? Start with introducing your project or idea." />
               </div>
               <button 
                 disabled={loading}
