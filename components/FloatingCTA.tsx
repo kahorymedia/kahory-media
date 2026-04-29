@@ -6,6 +6,7 @@ import GlassSurface from "./GlassSurface";
 export default function FloatingCTA() {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState(1);
+  const [showExitConfirm, setShowExitConfirm] = useState(false); // NEW: State for the confirmation dialogue
   const [formData, setFormData] = useState({
     objective: "",
     budget: "",
@@ -22,9 +23,24 @@ export default function FloatingCTA() {
 
   const handleNext = () => setStep((prev) => Math.min(prev + 1, 4));
   const handleBack = () => setStep((prev) => Math.max(prev - 1, 1));
+  
   const closeFunnel = () => {
     setIsOpen(false);
-    setTimeout(() => setStep(1), 500); // Reset after closing animation
+    setShowExitConfirm(false);
+    setTimeout(() => {
+      setStep(1); // Reset step after closing animation finishes
+      setFormData({ objective: "", budget: "", name: "", email: "", brandLink: "" }); // Clear form
+    }, 500); 
+  };
+
+  // NEW: Handles the logic for attempting to close
+  const attemptClose = () => {
+    // If they are on the success screen, just close it. Otherwise, ask for confirmation.
+    if (step === 4) {
+      closeFunnel();
+    } else {
+      setShowExitConfirm(true);
+    }
   };
 
   // Simulate form submission
@@ -37,10 +53,9 @@ export default function FloatingCTA() {
 
   return (
     <>
-    {/* 1. THE FLOATING GLASS BUTTON */}
+      {/* 1. THE FLOATING GLASS BUTTON */}
       <div className="fixed bottom-[110px] md:bottom-[120px] left-1/2 -translate-x-1/2 z-[400] pointer-events-auto">
         <div onClick={() => setIsOpen(true)} className="group cursor-pointer">
-          {/* Note: Increased distortionScale slightly so it pulls more background through the softened blur */}
           <GlassSurface 
             width={260} 
             height={64} 
@@ -66,6 +81,8 @@ export default function FloatingCTA() {
             initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
             animate={{ opacity: 1, backdropFilter: "blur(20px)" }}
             exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
+            // NEW: Clicking the blurred background triggers the close attempt
+            onClick={attemptClose}
             className="fixed inset-0 z-[9999] bg-black/80 flex items-center justify-center p-4 md:p-6 pointer-events-auto"
           >
             {/* Modal Container */}
@@ -73,14 +90,54 @@ export default function FloatingCTA() {
               initial={{ scale: 0.95, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 20 }}
+              // NEW: stopPropagation prevents clicks inside the modal from closing it
+              onClick={(e) => e.stopPropagation()}
               className="w-full max-w-2xl bg-[#050505] border border-white/10 rounded-3xl overflow-hidden relative shadow-[0_0_50px_rgba(0,0,0,0.8)] flex flex-col max-h-[90vh]"
             >
+              
+              {/* NEW: EXIT CONFIRMATION OVERLAY */}
+              <AnimatePresence>
+                {showExitConfirm && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col items-center justify-center text-center p-8"
+                  >
+                    <h4 className="text-3xl font-bold text-white tracking-tighter mb-4">Discard Progress?</h4>
+                    <p className="text-white/40 text-sm mb-8 max-w-sm">
+                      You haven't submitted your request yet. Are you sure you want to close this window?
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                      <button 
+                        onClick={() => setShowExitConfirm(false)} 
+                        className="px-8 py-4 rounded-full border border-white/20 text-white text-xs uppercase tracking-widest font-bold hover:bg-white/10 transition-colors"
+                      >
+                        No, Resume
+                      </button>
+                      <button 
+                        onClick={closeFunnel} 
+                        className="px-8 py-4 rounded-full bg-[#E61919] text-white text-xs uppercase tracking-widest font-bold hover:bg-red-600 transition-colors shadow-[0_0_15px_rgba(230,25,25,0.4)]"
+                      >
+                        Yes, Exit
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               {/* Header & Progress Bar */}
               <div className="px-8 pt-8 pb-4 flex justify-between items-center relative z-10">
                 <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/40">
                   {step < 4 ? `Step 0${step} of 03` : "Transmission Sent"}
                 </span>
-                <button onClick={closeFunnel} className="text-white/40 hover:text-white transition-colors">
+                
+                {/* NEW: Massively increased the clickable padding (p-4) but offset it (-mr-4 -mt-4) so it looks normal visually */}
+                <button 
+                  onClick={attemptClose} 
+                  className="p-4 -mr-4 -mt-4 text-white/40 hover:text-white transition-colors"
+                  aria-label="Close modal"
+                >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
                   </svg>
