@@ -16,7 +16,8 @@ export default function Hero() {
   if (!mounted) return <div className="min-h-screen bg-black" />;
 
   return (
-    <section className="relative min-h-[110vh] w-full flex justify-center items-center overflow-hidden bg-black px-6 md:px-12 py-20">
+    // FIX: Changed min-h-[110vh] to min-h-screen
+    <section className="relative min-h-screen w-full flex justify-center items-center overflow-hidden bg-black px-6 md:px-12 py-20">
       
       {/* 1. THE INTERACTIVE DOT FIELD BACKGROUND */}
       <motion.div style={{ opacity: dotOpacity }} className="absolute inset-0 z-0">
@@ -90,7 +91,6 @@ export default function Hero() {
         </motion.div>
 
         {/* LOCKED ABSOLUTE ELEMENTS */}
-        {/* FIX: Changed -bottom-20 to -bottom-32 to push the text significantly lower */}
         <div className="absolute -bottom-32 left-0 hidden md:flex items-center gap-4 opacity-10">
            <div className="w-16 h-[1px] bg-white" />
            <span className="text-[10px] uppercase tracking-[1em] text-white">Agency 2026</span>
@@ -134,7 +134,6 @@ function GetStartedButton() {
       onMouseLeave={handleMouseLeave}
       className="group relative inline-flex items-center justify-center pointer-events-auto"
     >
-      {/* 1. The Shape Blur Outer Glow */}
       <motion.div
         className="absolute -inset-[4px] rounded-full opacity-0 group-hover:opacity-100 blur-[8px] transition-opacity duration-500 z-0 pointer-events-none"
         style={{
@@ -148,8 +147,6 @@ function GetStartedButton() {
           `,
         }}
       />
-
-      {/* 2. The Hard Edge Border Glow */}
       <motion.div
         className="absolute -inset-[1px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0 pointer-events-none"
         style={{
@@ -162,8 +159,6 @@ function GetStartedButton() {
           `,
         }}
       />
-
-      {/* 3. The Button Body */}
       <div className="relative z-10 px-14 py-6 bg-transparent group-hover:bg-[#050505] border border-white/10 group-hover:border-transparent rounded-full font-black uppercase tracking-[0.4em] text-[10px] md:text-[11px] overflow-hidden transition-colors duration-500">
         <span className="relative z-20 text-white">Get Started</span>
       </div>

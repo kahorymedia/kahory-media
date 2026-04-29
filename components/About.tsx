@@ -13,7 +13,9 @@ export default function About() {
   });
 
   return (
-    <section id="about" ref={container} className="w-full pt-32 pb-16 md:py-64 px-6 md:px-12 bg-black flex justify-center min-h-[80vh]">
+    // FIX: Changed padding from 'pt-32 pb-16 md:py-64' to 'py-20 md:py-32'
+    // FIX: Reduced min-h-[80vh] to min-h-[60vh]
+    <section id="about" ref={container} className="w-full py-20 md:py-32 px-6 md:px-12 bg-black flex justify-center min-h-[60vh]">
       {/* INNER WRAPPER */}
       <div className="w-full max-w-[1200px] flex justify-center">
         <div className="max-w-[1000px] w-full">
