@@ -37,13 +37,15 @@ export default function FloatingCTA() {
 
   return (
     <>
-      {/* 1. THE FLOATING GLASS BUTTON */}
+    {/* 1. THE FLOATING GLASS BUTTON */}
       <div className="fixed bottom-[110px] md:bottom-[120px] left-1/2 -translate-x-1/2 z-[400] pointer-events-auto">
-        <div onClick={() => setIsOpen(true)} className="group cursor-pointer">
-          <GlassSurface width={220} height={54} borderRadius={27} blur={8} opacity={0.8}>
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-[#E61919] rounded-full animate-pulse shadow-[0_0_8px_#E61919]" />
-              <span className="text-white font-bold tracking-[0.2em] text-[10px] md:text-[11px] uppercase group-hover:text-[#E5D3B3] transition-colors">
+        {/* Added a subtle white outer glow/ring to make it pop against the black */}
+        <div onClick={() => setIsOpen(true)} className="group cursor-pointer rounded-[32px] p-[1px] bg-gradient-to-b from-white/30 to-transparent shadow-[0_0_30px_rgba(255,255,255,0.1)]">
+          {/* Increased width to 260, height to 64, opacity to 0.95 */}
+          <GlassSurface width={260} height={64} borderRadius={31} blur={12} opacity={0.95} brightness={70}>
+            <div className="flex items-center gap-4">
+              <div className="w-2.5 h-2.5 bg-[#E61919] rounded-full animate-pulse shadow-[0_0_12px_#E61919]" />
+              <span className="text-white font-bold tracking-[0.25em] text-[11px] md:text-[13px] uppercase group-hover:text-[#E5D3B3] transition-colors">
                 Start a Project
               </span>
             </div>
