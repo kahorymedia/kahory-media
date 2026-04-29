@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import SmoothScroll from "@/components/SmoothScroll";
 import BackToTop from "@/components/BackToTop"; // <-- 1. Import the new component
 import CustomCursor from "@/components/CustomCursor"; // 1. Import the cursor
+import AIChat from "@/components/AIChat";
 import "./globals.css";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -44,7 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <CustomCursor /> {/* 2. Add it globally here */}
           {/* 2. Place it here so it hovers over all pages */}
           <BackToTop /> 
-          
+          <AIChat />
           {children}
         </SmoothScroll>
       </body>
