@@ -6,6 +6,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 import BackToTop from "@/components/BackToTop"; 
 import SplashCursor from "@/components/SplashCursor";
 import CustomCursor from "@/components/CustomCursor"; 
+import FloatingDock from "@/components/FloatingDock";
 import "./globals.css";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -93,7 +94,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <SplashCursor /> 
           <CustomCursor /> 
           <BackToTop /> 
-          
+          <FloatingDock />
           {children}
         </SmoothScroll>
       </body>
