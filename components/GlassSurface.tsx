@@ -118,7 +118,7 @@ const GlassSurface = ({
     '--glass-frost': backgroundOpacity,
     '--glass-saturation': saturation,
     '--filter-id': `url(#${filterId})`
-  } as React.CSSProperties;
+  } as any;
 
   return (
     <div ref={containerRef} className={`glass-surface ${svgSupported ? 'glass-surface--svg' : 'glass-surface--fallback'} ${className}`} style={containerStyle}>
