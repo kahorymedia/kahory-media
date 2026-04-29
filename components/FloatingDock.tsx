@@ -1,9 +1,9 @@
 "use client";
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
-import Link from "next/link";
 import { useRef, useState } from "react";
+import { useRouter } from "next/navigation"; // <-- NEW: Handles stealth navigation
 
-// --- NATIVE SVG ICONS (No external libraries needed) ---
+// --- NATIVE SVG ICONS ---
 function HomeIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -51,15 +51,16 @@ const DOCK_ITEMS = [
 ];
 
 export default function FloatingDock() {
-  // Tracks the cursor's horizontal position across the dock
   const mouseX = useMotionValue(Infinity);
 
   return (
-    <div className="fixed bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-[500] pointer-events-auto">
+    // FIX: pointer-events-none hides the outer container from the custom cursor
+    <div className="fixed bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-[500] pointer-events-none">
       <motion.div
         onMouseMove={(e) => mouseX.set(e.clientX)}
         onMouseLeave={() => mouseX.set(Infinity)}
-        className="mx-auto flex h-16 items-end gap-3 md:gap-4 rounded-full bg-[#050505]/80 px-4 pb-3 backdrop-blur-md border border-white/10 shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+        // FIX: cursor-default forces the cursor to stay normal over the empty space in the dock
+        className="mx-auto flex h-16 items-end gap-3 md:gap-4 rounded-full bg-[#050505]/80 px-4 pb-3 backdrop-blur-md border border-white/10 shadow-[0_0_20px_rgba(0,0,0,0.5)] pointer-events-auto cursor-default"
       >
         {DOCK_ITEMS.map((item) => (
           <DockItem key={item.name} item={item} mouseX={mouseX} />
@@ -72,23 +73,29 @@ export default function FloatingDock() {
 function DockItem({ item, mouseX }: { item: typeof DOCK_ITEMS[0]; mouseX: any }) {
   const ref = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const router = useRouter(); // <-- Used to route without an <a> tag
 
-  // Measure the distance from the mouse to the absolute center of this specific icon
   const distance = useTransform(mouseX, (val: number) => {
     const bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };
     return val - bounds.x - bounds.width / 2;
   });
 
-  // Calculate dynamic width. If mouse is perfectly centered (0 distance), it scales to 60px. 
-  // If the mouse is far away (150px+ distance), it stays at 40px.
   const widthSync = useTransform(distance, [-150, 0, 150], [40, 60, 40]);
-  
-  // Wrap the width calculation in a physics spring so it feels "bouncy" and fluid
   const width = useSpring(widthSync, { mass: 0.1, stiffness: 150, damping: 12 });
 
+  // Custom click handler
+  const handleClick = () => {
+    if (item.url.startsWith("http")) {
+      window.open(item.url, "_blank"); // Open external links in a new tab
+    } else {
+      router.push(item.url); // Navigate internal links instantly
+    }
+  };
+
   return (
-    <div className="relative flex flex-col items-center">
-      {/* THE NATIVE TOOLTIP */}
+    // FIX: pointer-events-none on the wrapper
+    <div className="relative flex flex-col items-center pointer-events-none">
+      
       <AnimatePresence>
         {isHovered && (
           <motion.div
@@ -98,25 +105,23 @@ function DockItem({ item, mouseX }: { item: typeof DOCK_ITEMS[0]; mouseX: any })
             className="absolute -top-12 px-3 py-1.5 bg-[#E61919] text-white text-[10px] font-bold uppercase tracking-widest rounded-md whitespace-nowrap pointer-events-none"
           >
             {item.name}
-            {/* The little triangle pointing down from the tooltip */}
             <div className="absolute left-1/2 -bottom-1 -translate-x-1/2 border-[5px] border-transparent border-t-[#E61919]" />
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* THE MAGNIFYING ICON WRAPPER */}
       <motion.div
         ref={ref}
         style={{ width, height: width }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        onClick={handleClick}
+        // FIX: The button is now a motion.div instead of a <Link>. 
+        // We restore pointer-events-auto and cursor-pointer explicitly here.
+        className="pointer-events-auto flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white/70 hover:text-[#E5D3B3] hover:border-[#E5D3B3]/50 transition-colors cursor-pointer"
       >
-        <Link 
-          href={item.url} 
-          className="flex w-full h-full items-center justify-center rounded-full bg-white/5 border border-white/10 text-white/70 hover:text-[#E5D3B3] hover:border-[#E5D3B3]/50 transition-colors"
-        >
-          <item.icon className="w-1/2 h-1/2" />
-        </Link>
+        {/* FIX: Ensure the SVG itself doesn't trigger extra cursor events */}
+        <item.icon className="w-1/2 h-1/2 pointer-events-none" />
       </motion.div>
     </div>
   );
