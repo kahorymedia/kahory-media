@@ -18,7 +18,6 @@ function RollingNumber({ value }: { value: string }) {
   });
 
   const displayValue = useTransform(springValue, (latest) => Math.floor(latest));
-  const blurValue = useTransform(springValue, [0, numericValue * 0.5, numericValue], ["blur(0px)", "blur(4px)", "blur(0px)"]);
 
   useEffect(() => {
     if (isInView) count.set(numericValue);
@@ -27,9 +26,8 @@ function RollingNumber({ value }: { value: string }) {
 
   return (
     <motion.div ref={ref} className="flex items-baseline text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tighter leading-none text-white drop-shadow-lg">
-      <motion.span style={{ filter: blurValue }}>
-        <motion.span>{displayValue}</motion.span>
-      </motion.span>
+      {/* Removed the blur filter completely so numbers are always crisp */}
+      <motion.span>{displayValue}</motion.span>
       <span className="text-[#E5D3B3]">{suffix}</span>
     </motion.div>
   );
@@ -101,9 +99,10 @@ export default function BentoAbout() {
             <div className="relative z-10 h-full flex flex-col justify-between gap-8">
               <div className="grid grid-cols-2 gap-8 w-full h-full items-center">
                 {siteData.stats.map((stat, i) => (
-                  <div key={i} className="flex flex-col gap-2">
+                  // Added opacity-70 default, snapping to opacity-100 on hover
+                  <div key={i} className="flex flex-col gap-2 opacity-70 group-hover:opacity-100 transition-opacity duration-500">
                     <RollingNumber value={stat.value} />
-                    <span className="text-[9px] md:text-[10px] uppercase tracking-[0.4em] text-white/40 font-black">
+                    <span className="text-[9px] md:text-[10px] uppercase tracking-[0.4em] text-white/40 font-black group-hover:text-white/70 transition-colors duration-500">
                       {stat.label}
                     </span>
                   </div>
@@ -120,48 +119,20 @@ export default function BentoAbout() {
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
             className="lg:col-span-2 relative overflow-hidden rounded-[2rem] bg-white/[0.02] border border-white/5 p-8 group transition-colors duration-500 hover:border-[#E61919]/30 hover:bg-white/[0.04] min-h-[250px] flex flex-col justify-end"
           >
-            {/* Abstract SVG Pipeline Animation */}
-            <svg 
-              className="absolute inset-0 w-full h-full opacity-20 group-hover:opacity-60 transition-opacity duration-700 pointer-events-none scale-110" 
-              viewBox="0 0 400 300" 
-              fill="none" 
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <motion.path 
-                d="M-50,250 C100,250 150,50 250,50 C300,50 350,150 450,150" 
-                stroke="url(#redGlow)" 
-                strokeWidth="2" 
-                strokeDasharray="20 10" 
-                className="animate-[dash_10s_linear_infinite] group-hover:animate-[dash_3s_linear_infinite]" 
-              />
-              <motion.path 
-                d="M-50,200 C50,200 100,100 200,100 C300,100 300,250 450,250" 
-                stroke="url(#goldGlow)" 
-                strokeWidth="1.5" 
-                strokeDasharray="15 15" 
-                className="animate-[dash_15s_linear_infinite_reverse] group-hover:animate-[dash_5s_linear_infinite_reverse]" 
-              />
-              <defs>
-                <linearGradient id="redGlow" x1="0" y1="0" x2="400" y2="0" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#E61919" stopOpacity="0" />
-                  <stop offset="0.5" stopColor="#E61919" />
-                  <stop offset="1" stopColor="#E61919" stopOpacity="0" />
-                </linearGradient>
-                <linearGradient id="goldGlow" x1="0" y1="0" x2="400" y2="0" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#E5D3B3" stopOpacity="0" />
-                  <stop offset="0.5" stopColor="#E5D3B3" />
-                  <stop offset="1" stopColor="#E5D3B3" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-            </svg>
+            {/* NEW GRAPHIC: Architectural Tech Grid */}
+            <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:32px_32px] opacity-30 group-hover:opacity-60 transition-opacity duration-700 pointer-events-none" />
+            
+            {/* NEW GRAPHIC: Breathing Maroon & Gold Auras */}
+            <div className="absolute -bottom-12 -right-12 w-56 h-56 bg-[#E61919] rounded-full blur-[60px] opacity-10 group-hover:opacity-30 group-hover:scale-150 transition-all duration-1000 ease-out pointer-events-none will-change-transform transform-gpu" />
+            <div className="absolute -top-12 -left-12 w-40 h-40 bg-[#E5D3B3] rounded-full blur-[50px] opacity-0 group-hover:opacity-20 group-hover:scale-125 transition-all duration-1000 ease-out delay-100 pointer-events-none will-change-transform transform-gpu" />
 
-            {/* Content that comes into focus on hover */}
-            <div className="relative z-10 filter blur-[1px] group-hover:blur-0 transition-all duration-500 transform group-hover:-translate-y-1">
-              <h3 className="text-xl md:text-2xl font-bold text-white tracking-tighter mb-2">
+            {/* CONTENT: Razor crisp text that brightens on hover (No Blur!) */}
+            <div className="relative z-10 transition-all duration-500 transform group-hover:-translate-y-1">
+              <h3 className="text-xl md:text-2xl font-bold text-white/60 group-hover:text-white tracking-tighter mb-2 transition-colors duration-500">
                 Attention is cheap. <br/>
-                <span className="text-[#E61919]">Retention is priceless.</span>
+                <span className="text-[#E61919]/70 group-hover:text-[#E61919] transition-colors duration-500">Retention is priceless.</span>
               </h3>
-              <p className="text-white/50 text-xs md:text-sm leading-relaxed max-w-sm">
+              <p className="text-white/40 group-hover:text-white/70 text-xs md:text-sm leading-relaxed max-w-sm transition-colors duration-500">
                 We build cinematic pipelines designed to turn passive scrollers into absolute loyalists for your brand.
               </p>
             </div>
@@ -169,13 +140,6 @@ export default function BentoAbout() {
 
         </div>
       </div>
-
-      {/* Global CSS for the custom SVG dash animation */}
-      <style dangerouslySetInnerHTML={{__html: `
-        @keyframes dash {
-          to { stroke-dashoffset: -100; }
-        }
-      `}} />
     </section>
   );
 }
