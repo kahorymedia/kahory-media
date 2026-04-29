@@ -8,7 +8,6 @@ import SplashCursor from "@/components/SplashCursor";
 import CustomCursor from "@/components/CustomCursor"; 
 import FloatingCTA from "@/components/FloatingCTA";
 import FloatingDock from "@/components/FloatingDock";
-import AIChat from "@/components/AIChat";
 import "./globals.css";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -89,7 +88,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <SplashCursor /> 
           <CustomCursor /> 
           <BackToTop /> 
-          <AIChat />
           <FloatingCTA />
           <FloatingDock />
           {children}
