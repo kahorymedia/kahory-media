@@ -3,17 +3,18 @@ import { siteData } from "@/data/content";
 
 export default function CtaContact() {
   
-  // Triggers the event listener we just added to the FloatingCTA component!
   const triggerFunnel = (e: React.MouseEvent) => {
     e.preventDefault();
     window.dispatchEvent(new CustomEvent('open-funnel'));
   };
 
   return (
-    <section className="w-full pt-16 pb-24 md:pt-24 md:pb-32 px-6 md:px-12 bg-foreground text-background flex justify-center">
+    // FIX: Removed hardcoded paddings.
+    <section className="w-full bg-foreground text-background flex justify-center">
       <div className="w-full max-w-[1200px] flex flex-col items-center text-center">
         
-        <h2 className="text-[11vw] sm:text-6xl md:text-7xl font-bold tracking-tighter max-w-4xl mb-4 md:mb-6 leading-[1.1]">
+        {/* FIX: Implemented fluid clamp() typography! */}
+        <h2 className="text-[clamp(2.5rem,8vw,5.5rem)] font-bold tracking-tighter max-w-4xl mb-4 md:mb-6 leading-[1.1]">
           {siteData.contact.headline}
         </h2>
         

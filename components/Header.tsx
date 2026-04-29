@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
-import { motion, useSpring, useMotionValue } from "framer-motion";
-import { useState, useRef } from "react";
+import { motion, useSpring, useMotionValue, AnimatePresence } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
 
 // --- THE STANDARD GOOEY NAV BUTTON (Center Links) ---
 function GooeyButton({ text, href, isScroll = false, onClick }: { text: string; href: string; isScroll?: boolean; onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void; }) {
@@ -105,22 +105,27 @@ function MagneticCTAButton({ text, href }: { text: string; href: string; }) {
 }
 
 export default function Header() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMenuOpen) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "unset";
+  }, [isMenuOpen]);
+
   const navLinks = [
     { name: "About", href: "about" },
     { name: "Expertise", href: "results" }, 
     { name: "Watch", href: "work" }
   ];
 
-  // --- NEW PRECISION SCROLL LOGIC ---
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
+    setIsMenuOpen(false); // Close menu on click
     const element = document.getElementById(id);
     
     if (element) {
-      // Offset defines how many pixels ABOVE the element we should stop scrolling.
-      // 120px perfectly accounts for your fixed header height.
       const headerOffset = 120; 
-      
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.scrollY - headerOffset;
 
@@ -148,34 +153,82 @@ export default function Header() {
       <motion.header 
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className="fixed top-0 left-0 w-full z-[100] px-6 py-12 md:py-16 flex justify-center pointer-events-none"
+        // FIX: Scaled down the padding on laptops (md:py-8) but kept it cinematic on big screens (lg:py-12)
+        className="fixed top-0 left-0 w-full z-[100] px-6 py-6 md:py-8 lg:py-12 flex justify-center pointer-events-none"
       >
-        <div className="absolute top-0 left-0 w-full h-56 md:h-72 bg-black/70 backdrop-blur-md [mask-image:linear-gradient(to_bottom,black_60%,transparent_100%)] -z-10 pointer-events-none" />
+        {/* FIX: Scaled down the blackout gradient background height to match the new header sizing */}
+        <div className="absolute top-0 left-0 w-full h-32 md:h-48 lg:h-64 bg-black/80 md:bg-black/70 backdrop-blur-md [mask-image:linear-gradient(to_bottom,black_60%,transparent_100%)] -z-10 pointer-events-none" />
         
-        <div className="w-full max-w-[1200px] flex justify-between items-center relative pointer-events-none h-16 md:h-24">
+        {/* FIX: Optimized the height of the inner container */}
+        <div className="w-full max-w-[1200px] flex justify-between items-center relative pointer-events-none h-16 md:h-20 lg:h-24">
           
-          <Link href="/" className="block z-[150] flex items-center h-full pointer-events-auto">
+          <Link href="/" className="block z-[200] flex items-center h-full pointer-events-auto">
             <img src="/kahory-full-logo.png" alt="Logo" className="h-full w-auto object-contain" />
           </Link>
 
-          <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-6 z-[150] pointer-events-none">
+          {/* DESKTOP NAV */}
+          <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-4 lg:gap-6 z-[150] pointer-events-none">
             {navLinks.map((item) => (
-              <GooeyButton 
-                key={item.name} 
-                text={item.name} 
-                href={item.href} 
-                isScroll={true} 
-                onClick={(e) => handleScroll(e, item.href)} 
-              />
+              <GooeyButton key={item.name} text={item.name} href={item.href} isScroll={true} onClick={(e) => handleScroll(e, item.href)} />
             ))}
           </nav>
 
-          <nav className="z-[150] flex items-center h-full pointer-events-none">
-            <MagneticCTAButton text="Get in touch" href="/contact" />
-          </nav>
+          {/* RIGHT CTA / MOBILE MENU TOGGLE */}
+          <div className="z-[200] flex items-center h-full pointer-events-auto">
+            <div className="hidden md:block">
+              <MagneticCTAButton text="Get in touch" href="/contact" />
+            </div>
+            
+            {/* Mobile Hamburger Icon */}
+            <button 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 relative z-[200]"
+            >
+              <motion.span animate={isMenuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }} className="w-6 h-[2px] bg-white block transition-all" />
+              <motion.span animate={isMenuOpen ? { opacity: 0 } : { opacity: 1 }} className="w-6 h-[2px] bg-white block transition-all" />
+              <motion.span animate={isMenuOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }} className="w-6 h-[2px] bg-white block transition-all" />
+            </button>
+          </div>
 
         </div>
       </motion.header>
+
+      {/* FULLSCREEN MOBILE MENU OVERLAY */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
+            animate={{ opacity: 1, backdropFilter: "blur(20px)" }}
+            exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
+            className="fixed inset-0 z-[140] bg-black/95 flex flex-col items-center justify-center md:hidden pointer-events-auto"
+          >
+            <nav className="flex flex-col items-center gap-8">
+              {navLinks.map((item, i) => (
+                <motion.a
+                  key={item.name}
+                  href={`#${item.href}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                  onClick={(e) => handleScroll(e, item.href)}
+                  className="text-3xl font-bold uppercase tracking-[0.2em] text-white/70 hover:text-white"
+                >
+                  {item.name}
+                </motion.a>
+              ))}
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mt-8">
+                <Link 
+                  href="/contact" 
+                  onClick={() => setIsMenuOpen(false)}
+                  className="px-10 py-4 rounded-full border border-[#E61919] text-sm uppercase tracking-[0.2em] font-bold text-white bg-[#E61919]/10 shadow-[0_0_20px_rgba(230,25,25,0.4)]"
+                >
+                  Get in touch
+                </Link>
+              </motion.div>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
