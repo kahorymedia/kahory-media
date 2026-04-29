@@ -6,7 +6,9 @@ import GlassSurface from "./GlassSurface";
 export default function FloatingCTA() {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState(1);
-  const [showExitConfirm, setShowExitConfirm] = useState(false); // NEW: State for the confirmation dialogue
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [formData, setFormData] = useState({
     objective: "",
     budget: "",
@@ -21,6 +23,13 @@ export default function FloatingCTA() {
     else document.body.style.overflow = "unset";
   }, [isOpen]);
 
+  // Listen for events from other components (like the Contact section) to open the funnel
+  useEffect(() => {
+    const openFunnelEvent = () => setIsOpen(true);
+    window.addEventListener('open-funnel', openFunnelEvent);
+    return () => window.removeEventListener('open-funnel', openFunnelEvent);
+  }, []);
+
   const handleNext = () => setStep((prev) => Math.min(prev + 1, 4));
   const handleBack = () => setStep((prev) => Math.max(prev - 1, 1));
   
@@ -28,32 +37,46 @@ export default function FloatingCTA() {
     setIsOpen(false);
     setShowExitConfirm(false);
     setTimeout(() => {
-      setStep(1); // Reset step after closing animation finishes
-      setFormData({ objective: "", budget: "", name: "", email: "", brandLink: "" }); // Clear form
+      setStep(1); 
+      setFormData({ objective: "", budget: "", name: "", email: "", brandLink: "" }); 
     }, 500); 
   };
 
-  // NEW: Handles the logic for attempting to close
   const attemptClose = () => {
-    // If they are on the success screen, just close it. Otherwise, ask for confirmation.
-    if (step === 4) {
-      closeFunnel();
-    } else {
-      setShowExitConfirm(true);
-    }
+    if (step === 4) closeFunnel();
+    else setShowExitConfirm(true);
   };
 
-  // Simulate form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  // THE GOOGLE SHEETS API CONNECTION
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would connect to your backend (FormSpree, Resend, or your own API)
-    console.log("Form Submitted:", formData);
-    handleNext(); // Move to the success screen
+    setIsSubmitting(true);
+
+    // LIVE WEB APP URL INJECTED HERE:
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwcBWql6IQEkZ78oWPCGpuFt3M0WPKxHidAfVmbt8qwmhAOnwDB4yjsVP3mvOPgNi_0/exec";
+
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors", // Bypasses strict CORS policies
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      
+      // Move to the Success Screen instantly!
+      handleNext(); 
+    } catch (error) {
+      console.error("Transmission Error:", error);
+      alert("Transmission failed. Please email us directly at hi@kahorymedia.com");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <>
-      {/* 1. THE FLOATING GLASS BUTTON */}
       <div className="fixed bottom-[110px] md:bottom-[120px] left-1/2 -translate-x-1/2 z-[400] pointer-events-auto">
         <div onClick={() => setIsOpen(true)} className="group cursor-pointer">
           <GlassSurface 
@@ -74,28 +97,23 @@ export default function FloatingCTA() {
         </div>
       </div>
 
-      {/* 2. THE INTERACTIVE FUNNEL MODAL */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
             animate={{ opacity: 1, backdropFilter: "blur(20px)" }}
             exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
-            // NEW: Clicking the blurred background triggers the close attempt
             onClick={attemptClose}
             className="fixed inset-0 z-[9999] bg-black/80 flex items-center justify-center p-4 md:p-6 pointer-events-auto"
           >
-            {/* Modal Container */}
             <motion.div
               initial={{ scale: 0.95, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 20 }}
-              // NEW: stopPropagation prevents clicks inside the modal from closing it
               onClick={(e) => e.stopPropagation()}
               className="w-full max-w-2xl bg-[#050505] border border-white/10 rounded-3xl overflow-hidden relative shadow-[0_0_50px_rgba(0,0,0,0.8)] flex flex-col max-h-[90vh]"
             >
               
-              {/* NEW: EXIT CONFIRMATION OVERLAY */}
               <AnimatePresence>
                 {showExitConfirm && (
                   <motion.div
@@ -109,16 +127,10 @@ export default function FloatingCTA() {
                       You haven't submitted your request yet. Are you sure you want to close this window?
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                      <button 
-                        onClick={() => setShowExitConfirm(false)} 
-                        className="px-8 py-4 rounded-full border border-white/20 text-white text-xs uppercase tracking-widest font-bold hover:bg-white/10 transition-colors"
-                      >
+                      <button onClick={() => setShowExitConfirm(false)} className="px-8 py-4 rounded-full border border-white/20 text-white text-xs uppercase tracking-widest font-bold hover:bg-white/10 transition-colors">
                         No, Resume
                       </button>
-                      <button 
-                        onClick={closeFunnel} 
-                        className="px-8 py-4 rounded-full bg-[#E61919] text-white text-xs uppercase tracking-widest font-bold hover:bg-red-600 transition-colors shadow-[0_0_15px_rgba(230,25,25,0.4)]"
-                      >
+                      <button onClick={closeFunnel} className="px-8 py-4 rounded-full bg-[#E61919] text-white text-xs uppercase tracking-widest font-bold hover:bg-red-600 transition-colors shadow-[0_0_15px_rgba(230,25,25,0.4)]">
                         Yes, Exit
                       </button>
                     </div>
@@ -126,25 +138,18 @@ export default function FloatingCTA() {
                 )}
               </AnimatePresence>
 
-              {/* Header & Progress Bar */}
               <div className="px-8 pt-8 pb-4 flex justify-between items-center relative z-10">
                 <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/40">
                   {step < 4 ? `Step 0${step} of 03` : "Transmission Sent"}
                 </span>
                 
-                {/* NEW: Massively increased the clickable padding (p-4) but offset it (-mr-4 -mt-4) so it looks normal visually */}
-                <button 
-                  onClick={attemptClose} 
-                  className="p-4 -mr-4 -mt-4 text-white/40 hover:text-white transition-colors"
-                  aria-label="Close modal"
-                >
+                <button onClick={attemptClose} className="p-4 -mr-4 -mt-4 text-white/40 hover:text-white transition-colors" aria-label="Close modal">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
                   </svg>
                 </button>
               </div>
 
-              {/* Progress Line */}
               <div className="w-full h-[1px] bg-white/5 relative">
                 <motion.div 
                   className="absolute top-0 left-0 h-full bg-[#E5D3B3]" 
@@ -154,11 +159,9 @@ export default function FloatingCTA() {
                 />
               </div>
 
-              {/* Dynamic Step Content */}
               <div className="p-8 flex-1 overflow-y-auto custom-scrollbar relative">
                 <AnimatePresence mode="wait">
                   
-                  {/* STEP 1: OBJECTIVE */}
                   {step === 1 && (
                     <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex flex-col gap-6">
                       <div>
@@ -184,7 +187,6 @@ export default function FloatingCTA() {
                     </motion.div>
                   )}
 
-                  {/* STEP 2: BUDGET */}
                   {step === 2 && (
                     <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex flex-col gap-6">
                       <div>
@@ -205,7 +207,6 @@ export default function FloatingCTA() {
                     </motion.div>
                   )}
 
-                  {/* STEP 3: CONTACT DETAILS */}
                   {step === 3 && (
                     <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex flex-col gap-6">
                       <div>
@@ -229,7 +230,6 @@ export default function FloatingCTA() {
                     </motion.div>
                   )}
 
-                  {/* STEP 4: SUCCESS */}
                   {step === 4 && (
                     <motion.div key="step4" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center justify-center text-center py-12 gap-6">
                       <div className="w-20 h-20 rounded-full bg-[#E5D3B3]/10 border border-[#E5D3B3] flex items-center justify-center text-[#E5D3B3]">
@@ -248,19 +248,18 @@ export default function FloatingCTA() {
                 </AnimatePresence>
               </div>
 
-              {/* Footer Controls */}
               {step < 4 && (
                 <div className="px-8 py-6 bg-white/[0.02] border-t border-white/5 flex justify-between items-center z-10">
                   {step > 1 ? (
-                    <button onClick={handleBack} className="text-xs uppercase tracking-widest font-bold text-white/40 hover:text-white transition-colors">
+                    <button onClick={handleBack} disabled={isSubmitting} className="text-xs uppercase tracking-widest font-bold text-white/40 hover:text-white transition-colors disabled:opacity-50">
                       Back
                     </button>
                   ) : (
-                    <div /> // Empty div for spacing
+                    <div />
                   )}
                   {step === 3 ? (
-                    <button type="submit" form="lead-form" className="px-8 py-3 bg-[#E61919] text-white rounded-full text-xs uppercase tracking-widest font-bold hover:bg-red-600 transition-colors shadow-[0_0_15px_rgba(230,25,25,0.4)]">
-                      Submit Request
+                    <button disabled={isSubmitting} type="submit" form="lead-form" className="px-8 py-3 bg-[#E61919] text-white rounded-full text-xs uppercase tracking-widest font-bold hover:bg-red-600 transition-colors shadow-[0_0_15px_rgba(230,25,25,0.4)] disabled:opacity-50 disabled:cursor-not-allowed">
+                      {isSubmitting ? "Sending..." : "Submit Request"}
                     </button>
                   ) : null}
                 </div>
