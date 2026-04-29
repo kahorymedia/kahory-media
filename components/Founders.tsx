@@ -1,6 +1,6 @@
 "use client";
-import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
-import { MouseEvent } from "react";
+import { motion, useMotionTemplate, useMotionValue, useInView } from "framer-motion";
+import { MouseEvent, useRef, useEffect, useState } from "react";
 
 const founders = [
   {
@@ -17,14 +17,85 @@ const founders = [
   }
 ];
 
-export default function Founders() {
+// --- NATIVE BRANDED METEORS COMPONENT ---
+function KahoryMeteors({ count = 25 }: { count?: number }) {
+  const [meteors, setMeteors] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Generate random properties for each meteor on mount
+    setMeteors(
+      new Array(count).fill(true).map(() => ({
+        id: Math.random(),
+        // Randomly start across the top and right side of the screen
+        left: Math.floor(Math.random() * 150) - 20 + "%", 
+        top: Math.floor(Math.random() * -50) + "%", 
+        animationDuration: Math.floor(Math.random() * (8 - 3) + 3) + "s",
+        animationDelay: Math.random() * 2 + "s",
+        // Randomly alternate between Kahory Gold and Deep Maroon tails
+        isGold: Math.random() > 0.4,
+      }))
+    );
+  }, [count]);
+
   return (
-    <section className="w-full py-24 px-6 md:px-12 bg-black border-t border-white/5 flex flex-col items-center relative z-10">
-      <p className="text-[10px] md:text-xs uppercase tracking-[0.4em] text-white/40 mb-16 font-bold text-center">
+    <>
+      <style>{`
+        @keyframes meteor-fall {
+          0% { transform: rotate(215deg) translateX(0); opacity: 0; }
+          10% { opacity: 1; }
+          70% { opacity: 1; }
+          100% { transform: rotate(215deg) translateX(-1200px); opacity: 0; }
+        }
+      `}</style>
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        {meteors.map((m) => (
+          <span
+            key={m.id}
+            className="absolute h-0.5 w-0.5 rounded-[9999px] bg-white/80 shadow-[0_0_0_1px_#ffffff10] rotate-[215deg]"
+            style={{
+              top: m.top,
+              left: m.left,
+              animation: `meteor-fall ${m.animationDuration} linear infinite`,
+              animationDelay: m.animationDelay,
+            }}
+          >
+            {/* The Glowing Tail */}
+            <div 
+              className={`absolute top-1/2 -translate-y-1/2 w-[60px] h-[1px] bg-gradient-to-r to-transparent ${
+                m.isGold ? 'from-[#E5D3B3]' : 'from-[#E61919]'
+              }`} 
+            />
+          </span>
+        ))}
+      </div>
+    </>
+  );
+}
+
+export default function Founders() {
+  const sectionRef = useRef<HTMLElement>(null);
+  // Trigger animation when the section is 10% visible in the viewport
+  const isInView = useInView(sectionRef, { once: true, margin: "0px 0px -10% 0px" });
+
+  return (
+    <section 
+      ref={sectionRef} 
+      // Added overflow-hidden so meteors don't bleed into other sections
+      className="w-full py-24 px-6 md:px-12 bg-black border-t border-white/5 flex flex-col items-center relative overflow-hidden"
+    >
+      {/* 1. THE METEOR BACKGROUND */}
+      {isInView && <KahoryMeteors count={30} />}
+
+      {/* 2. THE BOTTOM FADE MASK */}
+      {/* This ensures the meteors fade out gracefully into pitch black before hitting the CTA section */}
+      <div className="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-t from-black via-black/80 to-transparent z-0 pointer-events-none" />
+
+      {/* 3. THE CONTENT */}
+      <p className="text-[10px] md:text-xs uppercase tracking-[0.4em] text-white/40 mb-16 font-bold text-center relative z-10">
         The Minds Behind Kahory
       </p>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 w-full max-w-4xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 w-full max-w-4xl relative z-10">
         {founders.map((founder, idx) => (
           <FounderCard key={idx} founder={founder} />
         ))}
