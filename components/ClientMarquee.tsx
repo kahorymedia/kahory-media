@@ -15,7 +15,7 @@ export default function ClientMarquee() {
   
   // Custom scroll logic for smooth deceleration
   // 1.5 is the base speed. Adjust this number to make the base scroll faster/slower.
-  const baseVelocity = -2.5; 
+  const baseVelocity = -0.5; 
   const velocityFactor = useRef(baseVelocity);
 
   useAnimationFrame(() => {
