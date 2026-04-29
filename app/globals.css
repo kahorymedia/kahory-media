@@ -12,11 +12,10 @@
 
 html, body {
   overflow-x: hidden;
-  height: auto !important; /* Forces the page to allow scrolling */
+  height: auto !important;
   background: #000000;
 }
 
-/* Smooth radial mask for the Hero background */
 .hero-glow-mask {
   background: radial-gradient(
     circle at center,
@@ -24,31 +23,31 @@ html, body {
     rgba(26, 5, 10, 0.4) 40%,
     rgba(0, 0, 0, 0) 70%
   );
-  /* This creates the smooth blend on left/right edges */
   mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
 }
 
-/* Expand containers for that wide, premium feel */
+/* --- UNIFIED SCALING SYSTEM --- */
 section {
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 8rem 2rem;
+  /* FIX: Fluid padding! 
+     Min: 4rem (mobile) 
+     Ideal: 10vh (Scales based on SCREEN HEIGHT) 
+     Max: 8rem (Big desktop monitors) */
+  padding: clamp(4rem, 10vh, 8rem) clamp(1.5rem, 4vw, 3rem);
 }
 
-/* Custom smooth selection color */
 ::selection {
   background: var(--gold);
   color: #000000;
 }
 
-/* Hide default cursor only on devices that have a real mouse (desktops) */
 @media (pointer: fine) {
   body {
     cursor: none;
   }
   
-  /* Force links and buttons to hide their default pointer hands too */
   a, button, input, textarea, select {
     cursor: none !important;
   }

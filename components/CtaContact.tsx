@@ -2,37 +2,42 @@
 import { siteData } from "@/data/content";
 
 export default function CtaContact() {
+  
+  const triggerFunnel = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.dispatchEvent(new CustomEvent('open-funnel'));
+  };
+
   return (
-    <section className="w-full py-32 px-6 md:px-12 bg-foreground text-background">
-      <div className="max-w-7xl mx-auto flex flex-col items-center text-center">
-        <h2 className="text-4xl md:text-7xl font-bold tracking-tighter max-w-4xl mb-6">
+    // FIX: Removed hardcoded paddings.
+    <section className="w-full bg-foreground text-background flex justify-center">
+      <div className="w-full max-w-[1200px] flex flex-col items-center text-center">
+        
+        {/* FIX: Implemented fluid clamp() typography! */}
+        <h2 className="text-[clamp(2.5rem,8vw,5.5rem)] font-bold tracking-tighter max-w-4xl mb-4 md:mb-6 leading-[1.1]">
           {siteData.contact.headline}
         </h2>
-        <p className="text-lg md:text-xl opacity-70 mb-12 max-w-xl">
+        
+        <p className="text-sm md:text-xl opacity-70 mb-10 md:mb-12 max-w-xl px-4">
           {siteData.contact.subtext}
         </p>
-        <div className="flex flex-col md:flex-row gap-6 items-center">
+        
+        <div className="flex flex-col md:flex-row gap-6 items-center w-full justify-center">
           <a 
             href={`mailto:${siteData.brand.email}`}
-            className="px-8 py-4 bg-background text-foreground rounded-full font-bold text-lg hover:bg-gold transition-colors"
+            className="w-full md:w-auto px-6 py-4 md:px-8 bg-background text-foreground rounded-full font-bold text-sm sm:text-base md:text-lg hover:bg-[#E5D3B3] transition-colors"
           >
             hi@kahorymedia.com
           </a>
-          <span className="text-sm opacity-50 uppercase tracking-widest">or</span>
-          <a 
-            href="#" 
-            className="text-lg font-medium hover:text-gold transition-colors border-b border-background/20 hover:border-gold pb-1"
+          
+          <span className="text-xs md:text-sm opacity-50 uppercase tracking-widest">or</span>
+          
+          <button 
+            onClick={triggerFunnel}
+            className="text-base md:text-lg font-medium hover:text-[#E5D3B3] transition-colors border-b border-background/20 hover:border-[#E5D3B3] pb-1 cursor-pointer"
           >
             Book a Discovery Call
-          </a>
-        </div>
-        
-        <div className="w-full border-t border-background/20 mt-32 pt-8 flex flex-col md:flex-row justify-between items-center opacity-50 text-sm">
-          <p>© {new Date().getFullYear()} {siteData.brand.name}. All rights reserved.</p>
-          <div className="flex gap-4 mt-4 md:mt-0">
-             <span>Aabhas Gupta</span>
-             <span>Tanish Sharma</span>
-          </div>
+          </button>
         </div>
       </div>
     </section>
