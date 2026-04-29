@@ -3,40 +3,37 @@ import { motion, useAnimationFrame, useMotionValue } from "framer-motion";
 import { useRef, useState } from "react";
 
 export default function ClientMarquee() {
-  const clients = ["Fitness Brand", "F&B Company", "Lifestyle Co.", "Tech Startup", "Infotainment", "Agency Partner"];
+  // 1. UPDATE THESE PATHS ONCE YOU ADD YOUR LOGOS TO THE PUBLIC FOLDER
+  // Ensure the logos are high-quality PNGs with transparent backgrounds!
+  const clients = [
+    { name: "Brand One", src: "/clients/logo1.png" },
+    { name: "Brand Two", src: "/clients/logo2.png" },
+    { name: "Brand Three", src: "/clients/logo3.png" },
+    { name: "Brand Four", src: "/clients/logo4.png" }
+  ];
   
-  // We duplicate it enough times so the loop never breaks
-  const duplicatedClients = [...clients, ...clients, ...clients, ...clients];
+  // 2. We duplicate it 6 times to ensure it never breaks on ultrawide monitors.
+  const duplicatedClients = [...clients, ...clients, ...clients, ...clients, ...clients, ...clients];
   
   const containerRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   
   const x = useMotionValue(0);
   
-  // Custom scroll logic for smooth deceleration
-  // 1.5 is the base speed. Adjust this number to make the base scroll faster/slower.
   const baseVelocity = -0.85; 
   const velocityFactor = useRef(baseVelocity);
 
   useAnimationFrame(() => {
     if (!containerRef.current) return;
 
-    // Smoothly interpolate the speed
-    // If hovered, target speed is 0. If not hovered, target speed is baseVelocity.
     const targetVelocity = isHovered ? 0 : baseVelocity;
     
-    // 0.05 is the "damping" factor. A lower number makes the stop/start smoother and slower.
     velocityFactor.current += (targetVelocity - velocityFactor.current) * 0.04;
 
     let moveBy = velocityFactor.current;
-    
-    // Get the current position
     let currentX = x.get();
     currentX += moveBy;
 
-    // INFINITE LOOP LOGIC:
-    // When the container has scrolled exactly 50% of its width, snap it back to 0.
-    // Because the content is duplicated, the user will never see the snap.
     const containerWidth = containerRef.current.scrollWidth;
     if (currentX <= -(containerWidth / 2)) {
       currentX = 0;
@@ -46,8 +43,9 @@ export default function ClientMarquee() {
   });
 
   return (
+    // FIX: Removed py-20 so it adheres to the global Unified Scaling padding
     <section 
-      className="w-full py-20 bg-black overflow-hidden flex flex-col items-center relative border-y border-white/5"
+      className="w-full bg-black overflow-hidden flex flex-col items-center relative border-y border-white/5"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -71,13 +69,17 @@ export default function ClientMarquee() {
           {duplicatedClients.map((client, index) => (
             <div 
               key={index} 
+              // EXACT ORIGINAL BEHAVIOR: scale-[1.3] on hover
               className="group/item flex items-center justify-center min-w-[150px] transition-transform duration-700 hover:scale-[1.3] px-4 cursor-default"
             >
-              {/* FIX: pointer-events-none stops the cursor from glitching/expanding over the text */}
-              {/* FIX: Custom text-shadow replaces drop-shadow to fix the boxy glow */}
-              <span className="text-white/30 group-hover/item:text-white transition-all duration-700 text-xl md:text-3xl font-bold uppercase tracking-[0.2em] pointer-events-none [text-shadow:0_0_0_transparent] group-hover/item:[text-shadow:0_0_20px_rgba(255,255,255,0.8)]">
-                {client}
-              </span>
+              {/* IMAGE REPLACES TEXT */}
+              <img 
+                src={client.src} 
+                alt={client.name} 
+                // EXACT ORIGINAL BEHAVIOR: opacity-30 default, full opacity and glow on hover
+                className="h-8 md:h-12 w-auto object-contain opacity-30 transition-all duration-700 group-hover/item:opacity-100 group-hover/item:drop-shadow-[0_0_20px_rgba(255,255,255,0.8)] pointer-events-none"
+                draggable="false"
+              />
             </div>
           ))}
         </motion.div>
