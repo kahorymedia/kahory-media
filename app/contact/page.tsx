@@ -1,37 +1,52 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import Header from "@/components/Header";
 import Affirmation from "@/components/Affirmation";
-import emailjs from '@emailjs/browser';
 import Footer from "@/components/Footer";
 
 export default function ContactPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
+  
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: ""
+  });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwcBWql6IQEkZ78oWPCGpuFt3M0WPKxHidAfVmbt8qwmhAOnwDB4yjsVP3mvOPgNi_0/exec";
+
+    // Format the payload to match the Google Sheet structure perfectly
+    const payload = {
+      name: formData.name,
+      email: formData.email,
+      message: formData.message,
+      brandLink: "N/A", 
+      objective: "Direct Contact Form", 
+      budget: "N/A"
+    };
+
     try {
-      // EMAILJS INTEGRATION
-      await emailjs.sendForm(
-        'service_3tvs6kx',   // e.g., 'service_abc123'
-        'template_agkpttj',  // e.g., 'template_xyz789'
-        formRef.current!,
-        '_N1HP2QGhSzFF1p3n'    // e.g., 'aBcDeFgHiJkLmNoP'
-      );
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
       // Trigger the Green Affirmation Message
       setIsSubmitted(true);
-      formRef.current?.reset(); 
+      setFormData({ name: "", email: "", message: "" }); // Reset local state
       setTimeout(() => setIsSubmitted(false), 5000); 
 
     } catch (err) {
-      alert("Failed to send the inquiry. Please try again.");
-      console.error("EmailJS Error:", err);
+      alert("Failed to send the inquiry. Please try again or email hi@kahorymedia.com directly.");
+      console.error("API Error:", err);
     } finally {
       setLoading(false);
     }
@@ -63,19 +78,18 @@ export default function ContactPage() {
             animate={{ opacity: 1, x: 0 }}
             className="bg-zinc-900/20 p-8 md:p-12 rounded-3xl border border-white/5 backdrop-blur-xl"
           >
-            {/* Added ref={formRef} here so EmailJS can read the inputs */}
-            <form ref={formRef} onSubmit={handleSubmit} className="space-y-12">
+            <form onSubmit={handleSubmit} className="space-y-12">
               <div className="flex flex-col space-y-4">
                 <label className="text-[10px] uppercase tracking-[0.4em] text-[#E5D3B3]">Full Name</label>
-                <input required name="user_name" type="text" className="bg-transparent border-b border-white/10 py-3 outline-none focus:border-[#E5D3B3] transition-colors text-xl" placeholder="Your full name" />
+                <input required value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} type="text" className="bg-transparent border-b border-white/10 py-3 outline-none focus:border-[#E5D3B3] transition-colors text-xl" placeholder="Your full name" />
               </div>
               <div className="flex flex-col space-y-4">
                 <label className="text-[10px] uppercase tracking-[0.4em] text-[#E5D3B3]">Email Address</label>
-                <input required name="user_email" type="email" className="bg-transparent border-b border-white/10 py-3 outline-none focus:border-[#E5D3B3] transition-colors text-xl" placeholder="xyz@brand.com OR xyz@gmail.com" />
+                <input required value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} type="email" className="bg-transparent border-b border-white/10 py-3 outline-none focus:border-[#E5D3B3] transition-colors text-xl" placeholder="xyz@brand.com OR xyz@gmail.com" />
               </div>
               <div className="flex flex-col space-y-4">
                 <label className="text-[10px] uppercase tracking-[0.4em] text-[#E5D3B3]">Message</label>
-                <textarea required name="message" rows={4} className="bg-transparent border-b border-white/10 py-3 outline-none focus:border-[#E5D3B3] transition-colors text-xl resize-none" placeholder="How can we help you? Start with introducing your project or idea." />
+                <textarea required value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} rows={4} className="bg-transparent border-b border-white/10 py-3 outline-none focus:border-[#E5D3B3] transition-colors text-xl resize-none" placeholder="How can we help you? Start with introducing your project or idea." />
               </div>
               <button 
                 disabled={loading}
@@ -88,7 +102,7 @@ export default function ContactPage() {
         </div>
       </section>
       
-    <Footer />
+      <Footer />
     </main>
   );
 }
