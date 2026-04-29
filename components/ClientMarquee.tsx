@@ -3,8 +3,6 @@ import { motion, useAnimationFrame, useMotionValue } from "framer-motion";
 import { useRef, useState } from "react";
 
 export default function ClientMarquee() {
-  // 1. UPDATE THESE PATHS ONCE YOU ADD YOUR LOGOS TO THE PUBLIC FOLDER
-  // Ensure the logos are high-quality PNGs with transparent backgrounds!
   const clients = [
     { name: "Brand One", src: "/clients/logo1.png" },
     { name: "Brand Two", src: "/clients/logo2.png" },
@@ -12,7 +10,6 @@ export default function ClientMarquee() {
     { name: "Brand Four", src: "/clients/logo4.png" }
   ];
   
-  // 2. We duplicate it 6 times to ensure it never breaks on ultrawide monitors.
   const duplicatedClients = [...clients, ...clients, ...clients, ...clients, ...clients, ...clients];
   
   const containerRef = useRef<HTMLDivElement>(null);
@@ -43,7 +40,6 @@ export default function ClientMarquee() {
   });
 
   return (
-    // FIX: Removed py-20 so it adheres to the global Unified Scaling padding
     <section 
       className="w-full bg-black overflow-hidden flex flex-col items-center relative border-y border-white/5"
       onMouseEnter={() => setIsHovered(true)}
@@ -69,15 +65,14 @@ export default function ClientMarquee() {
           {duplicatedClients.map((client, index) => (
             <div 
               key={index} 
-              // EXACT ORIGINAL BEHAVIOR: scale-[1.3] on hover
-              className="group/item flex items-center justify-center min-w-[150px] transition-transform duration-700 hover:scale-[1.3] px-4 cursor-default"
+              // Adjusted min-width slightly so the larger square boxes don't crowd each other
+              className="group/item flex items-center justify-center min-w-[120px] md:min-w-[200px] transition-transform duration-700 hover:scale-[1.3] px-4 cursor-default"
             >
-              {/* IMAGE REPLACES TEXT */}
+              {/* FIX: Massively increased the height constraint (h-20 md:h-32) so square logos render large and legible */}
               <img 
                 src={client.src} 
                 alt={client.name} 
-                // EXACT ORIGINAL BEHAVIOR: opacity-30 default, full opacity and glow on hover
-                className="h-8 md:h-12 w-auto object-contain opacity-30 transition-all duration-700 group-hover/item:opacity-100 group-hover/item:drop-shadow-[0_0_20px_rgba(255,255,255,0.8)] pointer-events-none"
+                className="h-20 sm:h-24 md:h-32 w-auto object-contain opacity-30 transition-all duration-700 group-hover/item:opacity-100 group-hover/item:drop-shadow-[0_0_20px_rgba(255,255,255,0.8)] pointer-events-none"
                 draggable="false"
               />
             </div>
