@@ -7,7 +7,8 @@ export default function ClientMarquee() {
     { name: "Brand One", src: "/clients/logo1.png" },
     { name: "Brand Two", src: "/clients/logo2.png" },
     { name: "Brand Three", src: "/clients/logo3.png" },
-    { name: "Brand Four", src: "/clients/logo4.png" }
+    { name: "Brand Four", src: "/clients/logo4.png" },
+    { name: "Brand Five", src: "/clients/logo5.png" } // Added 5th logo
   ];
   
   const duplicatedClients = [...clients, ...clients, ...clients, ...clients, ...clients, ...clients];
@@ -17,7 +18,8 @@ export default function ClientMarquee() {
   
   const x = useMotionValue(0);
   
-  const baseVelocity = -0.85; 
+  // Decreased speed slightly (closer to 0 is slower)
+  const baseVelocity = -0.65; 
   const velocityFactor = useRef(baseVelocity);
 
   useAnimationFrame(() => {
@@ -72,7 +74,8 @@ export default function ClientMarquee() {
               <img 
                 src={client.src} 
                 alt={client.name} 
-                className="h-20 sm:h-24 md:h-32 w-auto object-contain opacity-30 transition-all duration-700 group-hover/item:opacity-100 group-hover/item:drop-shadow-[0_0_20px_rgba(255,255,255,0.8)] pointer-events-none"
+                // Increased opacity from opacity-30 to opacity-50
+                className="h-20 sm:h-24 md:h-32 w-auto object-contain opacity-50 transition-all duration-700 group-hover/item:opacity-100 group-hover/item:drop-shadow-[0_0_20px_rgba(255,255,255,0.8)] pointer-events-none"
                 draggable="false"
               />
             </div>
