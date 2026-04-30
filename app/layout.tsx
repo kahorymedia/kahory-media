@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import SmoothScroll from "@/components/SmoothScroll";
 import BackToTop from "@/components/BackToTop"; 
 import SplashCursor from "@/components/SplashCursor";
@@ -92,6 +93,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <FloatingDock />
           {children}
         </SmoothScroll>
+        <SpeedInsights />
       </body>
     </html>
   );
