@@ -7,7 +7,7 @@ export default function Work() {
     <section id="work" className="w-full bg-black flex justify-center overflow-hidden">
       <div className="w-full max-w-[1200px]">
         
-        <div className="mb-8 md:mb-20 px-6 md:px-0">
+        <div className="mb-6 md:mb-20 px-6 md:px-0">
           <span className="text-[10px] uppercase tracking-[0.5em] text-[#E5D3B3] font-bold block mb-2 md:mb-4">
             Selected Work
           </span>
@@ -17,22 +17,27 @@ export default function Work() {
           </h2>
         </div>
 
-        {/* FIX: Horizontal Snap Slider for Mobile, Standard Grid for PC */}
+        {/* NEW: Explicit mobile swipe indicator */}
+        <div className="w-full md:hidden px-6 mb-4 flex items-center gap-2 opacity-60">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E5D3B3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span className="text-[#E5D3B3] text-[9px] uppercase tracking-widest font-bold">Swipe to watch</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E5D3B3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+
         <div 
-          className="flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 px-6 md:px-0 pb-8 md:pb-0"
+          // FIX: Added overflow-y-hidden and touch-pan-x to kill the vertical scroll trap
+          className="flex md:grid overflow-x-auto overflow-y-hidden touch-pan-x snap-x snap-mandatory md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 px-6 md:px-0 pb-8 md:pb-0"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          <style dangerouslySetInnerHTML={{__html: `
-            ::-webkit-scrollbar { display: none; }
-          `}} />
+          <style dangerouslySetInnerHTML={{__html: `::-webkit-scrollbar { display: none; }`}} />
 
           {siteData.work.reels.map((project, i) => (
             <motion.a
               key={project.id} href={project.instaLink} target="_blank" rel="noopener noreferrer"
               initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false, amount: 0.2 }}
               transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              // FIX: min-w-[75vw] forces cards to act like swipeable slides on mobile
-              className="min-w-[75vw] sm:min-w-[45vw] md:min-w-0 snap-center shrink-0 group relative block aspect-[9/16] rounded-[1.5rem] md:rounded-2xl overflow-hidden bg-zinc-900 border border-white/10"
+              // FIX: Scaled mobile width WAY down from 75vw to 55vw. Since aspect ratio is 9:16, a narrower width automatically makes it shorter!
+              className="min-w-[55vw] sm:min-w-[40vw] md:min-w-0 snap-center shrink-0 group relative block aspect-[9/16] rounded-[1.5rem] md:rounded-2xl overflow-hidden bg-zinc-900 border border-white/10"
             >
               <video 
                 src={project.videoSrc} autoPlay loop muted playsInline 
@@ -42,7 +47,8 @@ export default function Work() {
                 <span className="text-[8px] md:text-[10px] uppercase tracking-[0.4em] text-[#E5D3B3] font-bold mb-1 md:mb-2 translate-y-0 md:translate-y-4 md:group-hover:translate-y-0 transition-transform duration-500">
                   {project.client}
                 </span>
-                <h3 className="text-lg md:text-2xl font-bold text-white translate-y-0 md:translate-y-4 md:group-hover:translate-y-0 transition-transform duration-500 delay-75">
+                {/* Scaled text to fit the new narrower videos */}
+                <h3 className="text-[16px] md:text-2xl font-bold text-white translate-y-0 md:translate-y-4 md:group-hover:translate-y-0 transition-transform duration-500 delay-75">
                   {project.title}
                 </h3>
                 
@@ -54,7 +60,7 @@ export default function Work() {
           ))}
         </div>
 
-        <div className="mt-8 md:mt-20 flex justify-center">
+        <div className="mt-4 md:mt-20 flex justify-center">
           <a href={siteData.work.driveLink} target="_blank" rel="noopener noreferrer" className="group relative inline-block">
             <div className="px-8 py-4 md:px-12 md:py-5 border border-white/20 text-white rounded-full font-black uppercase tracking-[0.4em] text-[9px] md:text-[10px] overflow-hidden relative">
               <span className="relative z-10 group-hover:text-black transition-colors duration-500">View Full Portfolio</span>
