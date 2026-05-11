@@ -9,7 +9,6 @@ export default function FloatingCTA() {
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // NEW: Added the 'message' field
   const [formData, setFormData] = useState({
     objective: "",
     budget: "",
@@ -71,8 +70,10 @@ export default function FloatingCTA() {
 
   return (
     <>
-      <div className="fixed bottom-[110px] md:bottom-[120px] left-1/2 -translate-x-1/2 z-[400] pointer-events-auto">
-        <div onClick={() => setIsOpen(true)} className="group cursor-pointer">
+      {/* FIX: Lowered position to bottom-8 (mobile) and bottom-10 (desktop) to fill the gap left by the dock */}
+      <div className="fixed bottom-8 md:bottom-10 left-1/2 -translate-x-1/2 z-[400] pointer-events-auto">
+        {/* FIX: Added scale-[0.85] on mobile to shrink the button proportionally, keeping normal scale on md and up */}
+        <div onClick={() => setIsOpen(true)} className="group cursor-pointer transform scale-[0.85] md:scale-100 origin-bottom transition-transform">
           <GlassSurface width={260} height={64} borderRadius={32} blur={8} opacity={0.9} distortionScale={-220}>
             <div className="flex items-center gap-4 relative z-20">
               <div className="w-2.5 h-2.5 bg-[#E61919] rounded-full animate-pulse shadow-[0_0_12px_#E61919]" />
@@ -90,7 +91,6 @@ export default function FloatingCTA() {
             initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
             animate={{ opacity: 1, backdropFilter: "blur(20px)" }}
             exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
-            // Trigger confirmation when clicking the blurred background
             onClick={attemptClose}
             className="fixed inset-0 z-[9999] bg-black/80 flex items-center justify-center p-4 md:p-6 pointer-events-auto"
           >
@@ -98,7 +98,6 @@ export default function FloatingCTA() {
               initial={{ scale: 0.95, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 20 }}
-              // Prevent clicks inside the modal from closing it
               onClick={(e) => e.stopPropagation()}
               className="w-full max-w-2xl bg-[#050505] border border-white/10 rounded-3xl overflow-hidden relative shadow-[0_0_50px_rgba(0,0,0,0.8)] flex flex-col max-h-[90vh]"
             >
@@ -132,7 +131,6 @@ export default function FloatingCTA() {
                   {step < 4 ? `Step 0${step} of 03` : "Transmission Sent"}
                 </span>
                 
-                {/* FIX: Massively increased padding (p-6) with negative margins to expand hitbox without shifting visual placement */}
                 <button onClick={attemptClose} className="p-6 -mr-6 -mt-6 text-white/40 hover:text-white transition-colors" aria-label="Close modal">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
@@ -184,7 +182,6 @@ export default function FloatingCTA() {
                         <p className="text-white/40 text-sm">To align our strategies, what is your anticipated monthly budget?</p>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {/* Indian Market Pricing */}
                         {["Under ₹50k", "₹50k - ₹1 Lakh", "₹1 Lakh - ₹2.5 Lakhs", "₹2.5 Lakhs+"].map((tier) => (
                           <button
                             key={tier}
@@ -219,7 +216,6 @@ export default function FloatingCTA() {
                           <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/40">Brand / Social Link</label>
                           <input required type="text" value={formData.brandLink} onChange={(e) => setFormData({...formData, brandLink: e.target.value})} className="w-full bg-transparent border-b border-white/20 text-white pb-3 focus:outline-none focus:border-[#E5D3B3] transition-colors" placeholder="instagram.com/yourbrand" />
                         </div>
-                        {/* Custom Query Textarea */}
                         <div className="flex flex-col gap-2">
                           <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/40">Message / Query</label>
                           <textarea required value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} rows={3} className="w-full bg-transparent border-b border-white/20 text-white pb-3 focus:outline-none focus:border-[#E5D3B3] transition-colors resize-none" placeholder="Tell us about your current challenges..." />
