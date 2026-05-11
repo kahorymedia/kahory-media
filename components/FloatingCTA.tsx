@@ -9,6 +9,9 @@ export default function FloatingCTA() {
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // NEW: Added platform state to track the dropdown selection
+  const [platform, setPlatform] = useState("");
+
   const [formData, setFormData] = useState({
     objective: "",
     budget: "",
@@ -37,6 +40,7 @@ export default function FloatingCTA() {
     setShowExitConfirm(false);
     setTimeout(() => {
       setStep(1); 
+      setPlatform(""); // Reset platform on close
       setFormData({ objective: "", budget: "", name: "", email: "", brandLink: "", message: "" }); 
     }, 500); 
   };
@@ -70,9 +74,7 @@ export default function FloatingCTA() {
 
   return (
     <>
-      {/* FIX: Lowered position to bottom-8 (mobile) and bottom-10 (desktop) to fill the gap left by the dock */}
       <div className="fixed bottom-8 md:bottom-10 left-1/2 -translate-x-1/2 z-[400] pointer-events-auto">
-        {/* FIX: Added scale-[0.85] on mobile to shrink the button proportionally, keeping normal scale on md and up */}
         <div onClick={() => setIsOpen(true)} className="group cursor-pointer transform scale-[0.85] md:scale-100 origin-bottom transition-transform">
           <GlassSurface width={260} height={64} borderRadius={32} blur={8} opacity={0.9} distortionScale={-220}>
             <div className="flex items-center gap-4 relative z-20">
@@ -205,20 +207,66 @@ export default function FloatingCTA() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div className="flex flex-col gap-2">
                             <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/40">Your Name</label>
-                            <input required type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full bg-transparent border-b border-white/20 text-white pb-3 focus:outline-none focus:border-[#E5D3B3] transition-colors" placeholder="John Doe" />
+                            {/* Removed generic placeholders */}
+                            <input required type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full bg-transparent border-b border-white/20 text-white pb-3 focus:outline-none focus:border-[#E5D3B3] transition-colors" />
                           </div>
                           <div className="flex flex-col gap-2">
                             <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/40">Email Address</label>
-                            <input required type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="w-full bg-transparent border-b border-white/20 text-white pb-3 focus:outline-none focus:border-[#E5D3B3] transition-colors" placeholder="john@brand.com" />
+                            <input required type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="w-full bg-transparent border-b border-white/20 text-white pb-3 focus:outline-none focus:border-[#E5D3B3] transition-colors" />
                           </div>
                         </div>
-                        <div className="flex flex-col gap-2">
-                          <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/40">Brand / Social Link</label>
-                          <input required type="text" value={formData.brandLink} onChange={(e) => setFormData({...formData, brandLink: e.target.value})} className="w-full bg-transparent border-b border-white/20 text-white pb-3 focus:outline-none focus:border-[#E5D3B3] transition-colors" placeholder="instagram.com/yourbrand" />
+                        
+                        {/* THE NEW DYNAMIC SOCIAL DROPDOWN */}
+                        <div className="flex flex-col gap-2 w-full">
+                          <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/40">Platform & Link</label>
+                          <div className="flex flex-col sm:flex-row gap-4 w-full">
+                            
+                            {/* Dropdown Box */}
+                            <div className="relative w-full sm:w-[35%]">
+                              <select 
+                                required 
+                                value={platform} 
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  setPlatform(val);
+                                  if (val === "Instagram") setFormData({...formData, brandLink: "instagram.com/"});
+                                  else if (val === "LinkedIn") setFormData({...formData, brandLink: "linkedin.com/in/"});
+                                  else if (val === "Facebook") setFormData({...formData, brandLink: "facebook.com/"});
+                                  else if (val === "Website") setFormData({...formData, brandLink: ""});
+                                }} 
+                                className="w-full bg-transparent border-b border-white/20 text-white pb-3 focus:outline-none focus:border-[#E5D3B3] transition-colors cursor-pointer appearance-none pr-8"
+                              >
+                                <option value="" disabled className="bg-[#050505] text-white/50">Select Platform</option>
+                                <option value="Instagram" className="bg-[#050505] text-white">Instagram</option>
+                                <option value="LinkedIn" className="bg-[#050505] text-white">LinkedIn</option>
+                                <option value="Facebook" className="bg-[#050505] text-white">Facebook</option>
+                                <option value="Website" className="bg-[#050505] text-white">Website</option>
+                              </select>
+                              {/* Custom Dropdown Arrow */}
+                              <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none opacity-50 pb-3">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6"/></svg>
+                              </div>
+                            </div>
+                            
+                            {/* Text Input */}
+                            <div className="w-full sm:w-[65%]">
+                              <input 
+                                required 
+                                type="text" 
+                                value={formData.brandLink} 
+                                onChange={(e) => setFormData({...formData, brandLink: e.target.value})} 
+                                disabled={platform === ""}
+                                className="w-full bg-transparent border-b border-white/20 text-white pb-3 focus:outline-none focus:border-[#E5D3B3] transition-colors disabled:opacity-30 disabled:cursor-not-allowed" 
+                                placeholder={platform === "" ? "Please select a platform first" : ""} 
+                              />
+                            </div>
+
+                          </div>
                         </div>
+
                         <div className="flex flex-col gap-2">
                           <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/40">Message / Query</label>
-                          <textarea required value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} rows={3} className="w-full bg-transparent border-b border-white/20 text-white pb-3 focus:outline-none focus:border-[#E5D3B3] transition-colors resize-none" placeholder="Tell us about your current challenges..." />
+                          <textarea required value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} rows={3} className="w-full bg-transparent border-b border-white/20 text-white pb-3 focus:outline-none focus:border-[#E5D3B3] transition-colors resize-none" />
                         </div>
                       </form>
                     </motion.div>
