@@ -6,6 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import SmoothScroll from "@/components/SmoothScroll";
 import BackToTop from "@/components/BackToTop"; 
 import SplashCursor from "@/components/SplashCursor";
+import FloatingCTA from "@/components/FloatingCTA";
 import "./globals.css";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -82,8 +83,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </motion.div>
             )}
           </AnimatePresence>
+          
           <SplashCursor /> 
           <BackToTop /> 
+          <FloatingCTA />
           {children}
         </SmoothScroll>
         <SpeedInsights />

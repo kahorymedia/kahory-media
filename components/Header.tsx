@@ -3,7 +3,6 @@ import Link from "next/link";
 import { motion, useSpring, useMotionValue, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 
-// --- THE STANDARD GOOEY NAV BUTTON (Center Links) ---
 function GooeyButton({ text, href, isScroll = false, onClick }: { text: string; href: string; isScroll?: boolean; onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void; }) {
   const [particles, setParticles] = useState<any[]>([]);
 
@@ -42,11 +41,9 @@ function GooeyButton({ text, href, isScroll = false, onClick }: { text: string; 
   );
 }
 
-// --- THE MAGNETIC CTA BUTTON (Top Right) ---
 function MagneticCTAButton({ text, href }: { text: string; href: string; }) {
   const ref = useRef<HTMLDivElement>(null);
   const [particles, setParticles] = useState<any[]>([]);
-
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const springX = useSpring(x, { stiffness: 150, damping: 15, mass: 0.1 });
@@ -56,15 +53,8 @@ function MagneticCTAButton({ text, href }: { text: string; href: string; }) {
     if (!ref.current) return;
     const { clientX, clientY } = e;
     const { height, width, left, top } = ref.current.getBoundingClientRect();
-    const middleX = clientX - (left + width / 2);
-    const middleY = clientY - (top + height / 2);
-    x.set(middleX * 0.3); 
-    y.set(middleY * 0.3);
-  };
-
-  const reset = () => {
-    x.set(0);
-    y.set(0);
+    x.set((clientX - (left + width / 2)) * 0.3); 
+    y.set((clientY - (top + height / 2)) * 0.3);
   };
 
   const handleClick = () => {
@@ -78,23 +68,12 @@ function MagneticCTAButton({ text, href }: { text: string; href: string; }) {
   };
 
   return (
-    <motion.div
-      ref={ref}
-      onMouseMove={handleMouse}
-      onMouseLeave={reset}
-      style={{ x: springX, y: springY }}
-      className="relative flex items-center justify-center pointer-events-auto p-8 -m-8"
-    >
+    <motion.div ref={ref} onMouseMove={handleMouse} onMouseLeave={() => { x.set(0); y.set(0); }} style={{ x: springX, y: springY }} className="relative flex items-center justify-center pointer-events-auto p-8 -m-8">
       <div className="relative group pointer-events-none">
-        <Link 
-          href={href} 
-          onClick={handleClick} 
-          className="pointer-events-auto relative flex items-center justify-center px-8 py-3.5 rounded-full bg-transparent text-xs md:text-sm uppercase tracking-[0.2em] font-bold text-white z-20 transition-all duration-300"
-        >
+        <Link href={href} onClick={handleClick} className="pointer-events-auto relative flex items-center justify-center px-8 py-3.5 rounded-full bg-transparent text-xs md:text-sm uppercase tracking-[0.2em] font-bold text-white z-20 transition-all duration-300">
           <div className="absolute inset-0 rounded-full border border-[#E61919] opacity-0 group-hover:opacity-100 group-hover:shadow-[0_0_15px_rgba(230,25,25,0.6)] transition-all duration-300" />
           <span className="relative z-30">{text}</span>
         </Link>
-
         <div className="absolute inset-0 z-10 pointer-events-none" style={{ filter: 'url(#gooey-nav)' }}>
           {particles.length > 0 && <motion.div initial={{ opacity: 1, scale: 0.8 }} animate={{ opacity: 0, scale: 1.2 }} transition={{ duration: 0.5 }} className="absolute inset-0 bg-[#E61919] rounded-full" />}
           {particles.map((p) => <motion.div key={p.id} initial={{ x: "-50%", y: "-50%", scale: 1, opacity: 1 }} animate={{ x: `calc(-50% + ${p.x}px)`, y: `calc(-50% + ${p.y}px)`, scale: 0, opacity: 0 }} transition={{ duration: p.duration, ease: "easeOut" }} className="absolute top-1/2 left-1/2 bg-[#E61919] rounded-full" style={{ width: p.size, height: p.size }} />)}
@@ -107,11 +86,6 @@ function MagneticCTAButton({ text, href }: { text: string; href: string; }) {
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  useEffect(() => {
-    if (isMenuOpen) document.body.style.overflow = "hidden";
-    else document.body.style.overflow = "unset";
-  }, [isMenuOpen]);
-
   const navLinks = [
     { name: "About", href: "about" },
     { name: "Expertise", href: "results" }, 
@@ -122,16 +96,9 @@ export default function Header() {
     e.preventDefault();
     setIsMenuOpen(false); 
     const element = document.getElementById(id);
-    
     if (element) {
-      const headerOffset = 120; 
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.scrollY - headerOffset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth"
-      });
+      const headerOffset = 100; 
+      window.scrollTo({ top: element.getBoundingClientRect().top + window.scrollY - headerOffset, behavior: "smooth" });
     } else {
       window.location.href = `/#${id}`;
     }
@@ -157,7 +124,6 @@ export default function Header() {
         <div className="absolute top-0 left-0 w-full h-32 md:h-48 lg:h-64 bg-black/80 md:bg-black/70 backdrop-blur-md [mask-image:linear-gradient(to_bottom,black_60%,transparent_100%)] -z-10 pointer-events-none" />
         
         <div className="w-full max-w-[1200px] flex justify-between items-center relative pointer-events-none h-16 md:h-20 lg:h-24">
-          
           <Link href="/" className="block z-[200] flex items-center h-full pointer-events-auto">
             <img src="/kahory-full-logo.png" alt="Logo" className="h-full w-auto object-contain" />
           </Link>
@@ -172,7 +138,6 @@ export default function Header() {
             <div className="hidden md:block">
               <MagneticCTAButton text="Get in touch" href="/contact" />
             </div>
-            
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 relative z-[200]"
@@ -182,55 +147,62 @@ export default function Header() {
               <motion.span animate={isMenuOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }} className="w-6 h-[2px] bg-white block transition-all" />
             </button>
           </div>
-
         </div>
       </motion.header>
 
-      {/* FULLSCREEN MOBILE MENU OVERLAY */}
+      {/* NEW: Bulletproof Dynamic Island Menu */}
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
-            animate={{ opacity: 1, backdropFilter: "blur(20px)" }}
-            exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
-            className="fixed inset-0 z-[140] bg-black/95 flex flex-col items-center justify-center md:hidden pointer-events-auto"
-          >
-            {/* NEW: Explicit Close Button */}
-            <button 
+          <div className="fixed inset-0 z-[9999] md:hidden pointer-events-auto flex justify-center">
+            
+            {/* The Invisible Click-Off Background Layer */}
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setIsMenuOpen(false)}
-              className="absolute top-10 right-6 p-2 text-white/50 hover:text-white transition-colors"
-            >
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
+              className="absolute inset-0 bg-black/60 backdrop-blur-[2px]"
+            />
 
-            <nav className="flex flex-col items-center gap-8">
-              {navLinks.map((item, i) => (
-                <motion.a
-                  key={item.name}
-                  href={`#${item.href}`}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  onClick={(e) => handleScroll(e, item.href)}
-                  className="text-3xl font-bold uppercase tracking-[0.2em] text-white/70 hover:text-white"
-                >
-                  {item.name}
-                </motion.a>
-              ))}
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mt-8">
-                <Link 
-                  href="/contact" 
-                  onClick={() => setIsMenuOpen(false)}
-                  className="px-10 py-4 rounded-full border border-[#E61919] text-sm uppercase tracking-[0.2em] font-bold text-white bg-[#E61919]/10 shadow-[0_0_20px_rgba(230,25,25,0.4)]"
-                >
-                  Get in touch
-                </Link>
-              </motion.div>
-            </nav>
-          </motion.div>
+            {/* The Floating Dropdown Card */}
+            <motion.div 
+              initial={{ opacity: 0, y: -20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              className="absolute top-24 w-[90vw] max-w-[340px] bg-[#0a0a0a]/95 backdrop-blur-3xl border border-white/15 rounded-[2rem] p-6 shadow-2xl flex flex-col items-start"
+            >
+              <span className="text-[10px] uppercase tracking-[0.3em] text-[#E5D3B3] font-bold mb-6 block opacity-80">
+                Menu
+              </span>
+
+              <nav className="flex flex-col w-full gap-2">
+                {navLinks.map((item, i) => (
+                  <motion.a
+                    key={item.name}
+                    href={`#${item.href}`}
+                    initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 + 0.1 }}
+                    onClick={(e) => handleScroll(e, item.href)}
+                    className="flex items-center justify-between group py-3 border-b border-white/5"
+                  >
+                    <span className="text-xl font-bold uppercase tracking-widest text-white/80 group-hover:text-white transition-colors">
+                      {item.name}
+                    </span>
+                    <span className="text-white/20">→</span>
+                  </motion.a>
+                ))}
+                
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mt-6 w-full">
+                  <Link 
+                    href="/contact" 
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex w-full items-center justify-center py-4 rounded-2xl border border-[#E61919] text-xs uppercase tracking-[0.2em] font-bold text-white bg-[#E61919]/10 shadow-[0_0_20px_rgba(230,25,25,0.2)] active:scale-95 transition-transform"
+                  >
+                    Start a Project
+                  </Link>
+                </motion.div>
+              </nav>
+            </motion.div>
+
+          </div>
         )}
       </AnimatePresence>
     </>
