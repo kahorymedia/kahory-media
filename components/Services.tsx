@@ -39,7 +39,6 @@ export default function Services() {
         <style dangerouslySetInnerHTML={{__html: `::-webkit-scrollbar { display: none; }`}} />
         
         {servicesData.map((service, idx) => (
-          {/* FIX: Forced explicit rigid widths so mobile browsers don't crush the content */}
           <div key={idx} className="w-[85vw] sm:w-[60vw] max-w-[340px] md:w-auto md:max-w-none snap-center shrink-0 flex">
             <ServiceCard index={idx} title={service.title} description={service.description} />
           </div>
@@ -62,7 +61,6 @@ function ServiceCard({ title, description, index }: { title: string; description
   return (
     <div
       onMouseMove={handleMouseMove}
-      {/* FIX: h-auto allows the box to stretch perfectly around the text without clipping */}
       className="group relative flex flex-col w-full h-auto min-h-[300px] rounded-[1.5rem] md:rounded-2xl bg-black border border-white/5 overflow-hidden"
     >
       <motion.div
@@ -71,7 +69,6 @@ function ServiceCard({ title, description, index }: { title: string; description
       />
       <div className="absolute inset-[1.5px] rounded-[22.5px] md:rounded-[15px] bg-[#0a0a0a] z-10 transition-colors duration-500 group-hover:bg-[#050505]" />
 
-      {/* FIX: Re-architected the inner layout to prevent text spill */}
       <div className="relative z-20 p-6 md:p-8 flex flex-col h-full justify-between gap-6">
         <div className="flex flex-col gap-4">
           <span className="text-[#E5D3B3] text-[10px] md:text-xs font-mono block opacity-70">
