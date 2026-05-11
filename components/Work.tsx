@@ -4,38 +4,45 @@ import { motion } from "framer-motion";
 
 export default function Work() {
   return (
-    // FIX: Removed hardcoded paddings.
-    <section id="work" className="w-full bg-black flex justify-center">
+    <section id="work" className="w-full bg-black flex justify-center overflow-hidden">
       <div className="w-full max-w-[1200px]">
         
-        <div className="mb-12 md:mb-20">
-          <span className="text-[10px] uppercase tracking-[0.5em] text-[#E5D3B3] font-bold block mb-4">
+        <div className="mb-8 md:mb-20 px-6 md:px-0">
+          <span className="text-[10px] uppercase tracking-[0.5em] text-[#E5D3B3] font-bold block mb-2 md:mb-4">
             Selected Work
           </span>
-          {/* FIX: Implemented fluid clamp() typography! */}
           <h2 className="text-[clamp(2.5rem,8vw,5.5rem)] font-bold tracking-tighter text-white leading-[1.1] md:leading-none">
             High-Converting <br className="hidden sm:block" />
             <span className="text-white/40 italic font-serif font-light">Narratives.</span>
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        {/* FIX: Horizontal Snap Slider for Mobile, Standard Grid for PC */}
+        <div 
+          className="flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 px-6 md:px-0 pb-8 md:pb-0"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
+          <style dangerouslySetInnerHTML={{__html: `
+            ::-webkit-scrollbar { display: none; }
+          `}} />
+
           {siteData.work.reels.map((project, i) => (
             <motion.a
               key={project.id} href={project.instaLink} target="_blank" rel="noopener noreferrer"
               initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false, amount: 0.2 }}
               transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="group relative block aspect-[9/16] rounded-2xl overflow-hidden bg-zinc-900 border border-white/10"
+              // FIX: min-w-[75vw] forces cards to act like swipeable slides on mobile
+              className="min-w-[75vw] sm:min-w-[45vw] md:min-w-0 snap-center shrink-0 group relative block aspect-[9/16] rounded-[1.5rem] md:rounded-2xl overflow-hidden bg-zinc-900 border border-white/10"
             >
               <video 
                 src={project.videoSrc} autoPlay loop muted playsInline 
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 md:p-8 pointer-events-none">
-                <span className="text-[10px] uppercase tracking-[0.4em] text-[#E5D3B3] font-bold mb-2 translate-y-0 md:translate-y-4 md:group-hover:translate-y-0 transition-transform duration-500">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-5 md:p-8 pointer-events-none">
+                <span className="text-[8px] md:text-[10px] uppercase tracking-[0.4em] text-[#E5D3B3] font-bold mb-1 md:mb-2 translate-y-0 md:translate-y-4 md:group-hover:translate-y-0 transition-transform duration-500">
                   {project.client}
                 </span>
-                <h3 className="text-xl md:text-2xl font-bold text-white translate-y-0 md:translate-y-4 md:group-hover:translate-y-0 transition-transform duration-500 delay-75">
+                <h3 className="text-lg md:text-2xl font-bold text-white translate-y-0 md:translate-y-4 md:group-hover:translate-y-0 transition-transform duration-500 delay-75">
                   {project.title}
                 </h3>
                 
@@ -47,7 +54,7 @@ export default function Work() {
           ))}
         </div>
 
-        <div className="mt-16 md:mt-20 flex justify-center">
+        <div className="mt-8 md:mt-20 flex justify-center">
           <a href={siteData.work.driveLink} target="_blank" rel="noopener noreferrer" className="group relative inline-block">
             <div className="px-8 py-4 md:px-12 md:py-5 border border-white/20 text-white rounded-full font-black uppercase tracking-[0.4em] text-[9px] md:text-[10px] overflow-hidden relative">
               <span className="relative z-10 group-hover:text-black transition-colors duration-500">View Full Portfolio</span>

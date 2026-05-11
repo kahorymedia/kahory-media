@@ -11,8 +11,6 @@ export default function ClientMarquee() {
     { name: "Brand Five", src: "/clients/logo5.png" } 
   ];
   
-  // OPTIMIZATION: Reduced from 6 to 4 sets. This reduces DOM nodes by 33% 
-  // while still easily covering ultra-wide 4K monitors.
   const duplicatedClients = [...clients, ...clients, ...clients, ...clients];
   
   const containerRef = useRef<HTMLDivElement>(null);
@@ -33,7 +31,6 @@ export default function ClientMarquee() {
     currentX += moveBy;
 
     const containerWidth = containerRef.current.scrollWidth;
-    // Math adjustment since we reduced the array size
     if (currentX <= -(containerWidth / 2)) {
       currentX = 0;
     }
@@ -43,16 +40,17 @@ export default function ClientMarquee() {
 
   return (
     <section 
-      className="w-full bg-black overflow-hidden flex flex-col items-center relative border-y border-white/5"
+      // FIX: Added !py-10 to override the global section padding on mobile
+      className="w-full bg-black overflow-hidden flex flex-col items-center relative border-y border-white/5 !py-10 md:!py-16"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       
-      <p className="text-[10px] md:text-xs uppercase tracking-[0.4em] text-white/40 mb-12 font-bold text-center z-20 pointer-events-none">
+      {/* FIX: Reduced bottom margin on mobile */}
+      <p className="text-[10px] md:text-xs uppercase tracking-[0.4em] text-white/40 mb-6 md:mb-12 font-bold text-center z-20 pointer-events-none">
         Trusted by ambitious brands
       </p>
 
-      {/* Fade Masks */}
       <div className="absolute left-0 top-0 bottom-0 w-24 md:w-48 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
       <div className="absolute right-0 top-0 bottom-0 w-24 md:w-48 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
 
@@ -60,22 +58,20 @@ export default function ClientMarquee() {
         <motion.div 
           ref={containerRef}
           style={{ x }}
-          // OPTIMIZATION: Added will-change-transform to force GPU hardware acceleration
-          className="flex whitespace-nowrap gap-16 md:gap-32 w-max items-center py-6 pointer-events-auto will-change-transform"
+          className="flex whitespace-nowrap gap-16 md:gap-32 w-max items-center py-2 md:py-6 pointer-events-auto will-change-transform"
         >
           {duplicatedClients.map((client, index) => (
             <div 
               key={index} 
-              // OPTIMIZATION: Added will-change-transform for the hover scale
-              className="group/item flex items-center justify-center min-w-[120px] md:min-w-[200px] transition-transform duration-700 hover:scale-[1.3] px-4 cursor-default will-change-transform"
+              className="group/item flex items-center justify-center min-w-[100px] md:min-w-[200px] transition-transform duration-700 hover:scale-[1.3] px-4 cursor-default will-change-transform"
             >
               <img 
                 src={client.src} 
                 alt={client.name} 
                 draggable="false"
-                // OPTIMIZATION: Added decoding="async" so image rendering doesn't block the main JS thread
                 decoding="async"
-                className="h-20 sm:h-24 md:h-32 w-auto object-contain opacity-50 transition-all duration-700 group-hover/item:opacity-100 group-hover/item:drop-shadow-[0_0_20px_rgba(255,255,255,0.8)] pointer-events-none"
+                // FIX: Reduced mobile height (h-12) so it doesn't take up the whole screen
+                className="h-12 sm:h-16 md:h-24 w-auto object-contain opacity-50 transition-all duration-700 group-hover/item:opacity-100 group-hover/item:drop-shadow-[0_0_20px_rgba(255,255,255,0.8)] pointer-events-none"
               />
             </div>
           ))}

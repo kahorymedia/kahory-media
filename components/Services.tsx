@@ -13,11 +13,9 @@ const servicesData = [
 
 export default function Services() {
   return (
-    // FIX: Removed hardcoded paddings. The app/globals.css unified section scaling now controls this!
-    <section id="results" className="w-full bg-black flex flex-col items-center relative z-10">
+    <section id="results" className="w-full bg-black flex flex-col items-center relative z-10 overflow-hidden">
       
-      <div className="w-full max-w-[1200px] mb-12 md:mb-20 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-        {/* FIX: Implemented fluid clamp() typography! */}
+      <div className="w-full max-w-[1200px] mb-8 md:mb-20 flex flex-col md:flex-row justify-between items-start md:items-end gap-2 md:gap-6 px-6 md:px-0">
         <h2 className="text-[clamp(2.5rem,6vw,4.5rem)] font-bold tracking-tighter text-white uppercase leading-none">
           Our <br className="hidden md:block" />
           <span className="text-[#E5D3B3] italic font-serif font-light lowercase">Expertise.</span>
@@ -27,9 +25,20 @@ export default function Services() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 w-full max-w-[1200px]">
+      {/* FIX: Horizontal Snap Slider for Mobile, Standard Grid for PC */}
+      <div 
+        className="flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 w-full max-w-[1200px] px-6 md:px-0 pb-8 md:pb-0"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }} // Hides scrollbar on Firefox/IE
+      >
+        <style dangerouslySetInnerHTML={{__html: `
+          ::-webkit-scrollbar { display: none; } /* Hides scrollbar on Chrome/Safari */
+        `}} />
+        
         {servicesData.map((service, idx) => (
-          <ServiceCard key={idx} index={idx} title={service.title} description={service.description} />
+          /* FIX: min-w-[85vw] forces the cards to act like swipeable slides on mobile */
+          <div key={idx} className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center shrink-0 flex">
+            <ServiceCard index={idx} title={service.title} description={service.description} />
+          </div>
         ))}
       </div>
     </section>
@@ -49,7 +58,7 @@ function ServiceCard({ title, description, index }: { title: string; description
   return (
     <div
       onMouseMove={handleMouseMove}
-      className="group relative flex flex-col w-full min-h-[260px] md:min-h-[320px] rounded-2xl bg-black border border-white/5 overflow-hidden"
+      className="group relative flex flex-col w-full min-h-[220px] md:min-h-[320px] rounded-[1.5rem] md:rounded-2xl bg-black border border-white/5 overflow-hidden"
     >
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100 hidden md:block"
@@ -65,7 +74,7 @@ function ServiceCard({ title, description, index }: { title: string; description
         }}
       />
 
-      <div className="absolute inset-[1.5px] rounded-[15px] bg-[#0a0a0a] z-10 transition-colors duration-500 group-hover:bg-[#050505]" />
+      <div className="absolute inset-[1.5px] rounded-[22.5px] md:rounded-[15px] bg-[#0a0a0a] z-10 transition-colors duration-500 group-hover:bg-[#050505]" />
 
       <motion.div
         className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100 z-10 hidden md:block"
@@ -80,21 +89,21 @@ function ServiceCard({ title, description, index }: { title: string; description
         }}
       />
 
-      <div className="relative z-20 p-6 md:p-8 flex flex-col h-full justify-between">
+      <div className="relative z-20 p-6 md:p-8 flex flex-col h-full justify-between w-full">
         <div>
-          <span className="text-[#E5D3B3] text-xs font-mono mb-6 block opacity-70">
+          <span className="text-[#E5D3B3] text-[10px] md:text-xs font-mono mb-4 md:mb-6 block opacity-70">
             0{index + 1}
           </span>
-          <h3 className="text-xl md:text-2xl font-bold text-white mb-4 tracking-tight leading-tight">
+          <h3 className="text-xl md:text-2xl font-bold text-white mb-2 md:mb-4 tracking-tight leading-tight">
             {title}
           </h3>
-          <p className="text-white/40 text-xs md:text-sm leading-relaxed">
+          <p className="text-white/40 text-xs md:text-sm leading-relaxed pr-4 md:pr-0">
             {description}
           </p>
         </div>
 
-        <div className="mt-8 flex justify-end">
-          <svg className="w-5 h-5 md:w-6 md:h-6 text-white/20 transform transition-all duration-500 group-hover:text-[#E5D3B3] group-hover:translate-x-2 group-hover:-translate-y-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="mt-6 md:mt-8 flex justify-end">
+          <svg className="w-5 h-5 md:w-6 md:h-6 text-white/20 transform transition-all duration-500 md:group-hover:text-[#E5D3B3] md:group-hover:translate-x-2 md:group-hover:-translate-y-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
           </svg>
         </div>

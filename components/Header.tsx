@@ -107,7 +107,6 @@ function MagneticCTAButton({ text, href }: { text: string; href: string; }) {
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (isMenuOpen) document.body.style.overflow = "hidden";
     else document.body.style.overflow = "unset";
@@ -121,7 +120,7 @@ export default function Header() {
 
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
-    setIsMenuOpen(false); // Close menu on click
+    setIsMenuOpen(false); 
     const element = document.getElementById(id);
     
     if (element) {
@@ -153,33 +152,27 @@ export default function Header() {
       <motion.header 
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        // FIX: Scaled down the padding on laptops (md:py-8) but kept it cinematic on big screens (lg:py-12)
         className="fixed top-0 left-0 w-full z-[100] px-6 py-6 md:py-8 lg:py-12 flex justify-center pointer-events-none"
       >
-        {/* FIX: Scaled down the blackout gradient background height to match the new header sizing */}
         <div className="absolute top-0 left-0 w-full h-32 md:h-48 lg:h-64 bg-black/80 md:bg-black/70 backdrop-blur-md [mask-image:linear-gradient(to_bottom,black_60%,transparent_100%)] -z-10 pointer-events-none" />
         
-        {/* FIX: Optimized the height of the inner container */}
         <div className="w-full max-w-[1200px] flex justify-between items-center relative pointer-events-none h-16 md:h-20 lg:h-24">
           
           <Link href="/" className="block z-[200] flex items-center h-full pointer-events-auto">
             <img src="/kahory-full-logo.png" alt="Logo" className="h-full w-auto object-contain" />
           </Link>
 
-          {/* DESKTOP NAV */}
           <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-4 lg:gap-6 z-[150] pointer-events-none">
             {navLinks.map((item) => (
               <GooeyButton key={item.name} text={item.name} href={item.href} isScroll={true} onClick={(e) => handleScroll(e, item.href)} />
             ))}
           </nav>
 
-          {/* RIGHT CTA / MOBILE MENU TOGGLE */}
           <div className="z-[200] flex items-center h-full pointer-events-auto">
             <div className="hidden md:block">
               <MagneticCTAButton text="Get in touch" href="/contact" />
             </div>
             
-            {/* Mobile Hamburger Icon */}
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 relative z-[200]"
@@ -202,6 +195,17 @@ export default function Header() {
             exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
             className="fixed inset-0 z-[140] bg-black/95 flex flex-col items-center justify-center md:hidden pointer-events-auto"
           >
+            {/* NEW: Explicit Close Button */}
+            <button 
+              onClick={() => setIsMenuOpen(false)}
+              className="absolute top-10 right-6 p-2 text-white/50 hover:text-white transition-colors"
+            >
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+
             <nav className="flex flex-col items-center gap-8">
               {navLinks.map((item, i) => (
                 <motion.a
