@@ -25,7 +25,6 @@ function RollingNumber({ value }: { value: string }) {
   }, [isInView, numericValue, count]);
 
   return (
-    // FIX: Scaled text down for mobile side-by-side fit
     <motion.div ref={ref} className="flex items-baseline text-2xl sm:text-4xl lg:text-6xl font-bold tracking-tighter leading-none text-white drop-shadow-lg">
       <motion.span>{displayValue}</motion.span>
       <span className="text-[#E5D3B3]">{suffix}</span>
@@ -36,12 +35,15 @@ function RollingNumber({ value }: { value: string }) {
 // --- MAIN COMPONENT: BENTO GRID ---
 export default function BentoAbout() {
   const container = useRef(null);
+  // FIX: Created a specific ref just for the text, so the timing is perfectly locked to the text position
+  const textRef = useRef(null); 
   const words = siteData.about.description.split(" ");
 
   const { scrollYProgress } = useScroll({
-    target: container,
-    // FIX: Changed offset so the text completely reveals much faster on mobile
-    offset: ["start 85%", "start 25%"]
+    // FIX: Targeting the text itself rather than the massive outer container
+    target: textRef,
+    // FIX: Starts lighting up when the text enters the bottom 85% of the screen, finishes when it reaches the middle (50%)
+    offset: ["start 85%", "end 50%"]
   });
 
   const WAVE_BARS = 32;
@@ -54,10 +56,9 @@ export default function BentoAbout() {
           {siteData.about.title}
         </span>
 
-        {/* FIX: Forced a 2-column grid on mobile (grid-cols-2) instead of 1 so boxes sit side-by-side */}
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-6 auto-rows-fr">
           
-          {/* BOX 1: THE STORY (Full width on mobile, 3 cols on PC) */}
+          {/* BOX 1: THE STORY */}
           <motion.div 
             whileHover={{ y: -4 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
@@ -66,8 +67,8 @@ export default function BentoAbout() {
             <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-[#E61919] rounded-full blur-[100px] opacity-10 group-hover:opacity-30 transition-opacity duration-700 pointer-events-none will-change-transform transform-gpu" />
 
             <div className="relative z-10 flex flex-col justify-center h-full">
-              {/* FIX: Scaled font size down securely for mobile */}
-              <p className="text-2xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-bold tracking-tighter leading-[1.15] flex flex-wrap gap-x-1.5 md:gap-x-3 gap-y-1 md:gap-y-2">
+              {/* FIX: Attached the ref here so Framer Motion tracks this exact element */}
+              <p ref={textRef} className="text-2xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-bold tracking-tighter leading-[1.15] flex flex-wrap gap-x-1.5 md:gap-x-3 gap-y-1 md:gap-y-2">
                 {words.map((word, i) => {
                   const start = i / words.length;
                   const end = start + (1 / words.length);
@@ -84,7 +85,7 @@ export default function BentoAbout() {
             </div>
           </motion.div>
 
-          {/* BOX 2: THE NUMBERS (Half width on mobile) */}
+          {/* BOX 2: THE NUMBERS */}
           <motion.div 
             whileHover={{ y: -4 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
@@ -93,7 +94,6 @@ export default function BentoAbout() {
             <div className="absolute top-0 right-0 w-64 h-64 bg-[#E5D3B3] rounded-full blur-[80px] opacity-0 group-hover:opacity-10 transition-opacity duration-700 pointer-events-none will-change-transform transform-gpu" />
 
             <div className="relative z-10 h-full flex flex-col justify-center gap-8">
-              {/* FIX: Vertical stack on mobile to fit the half-width box, grid on PC */}
               <div className="flex flex-col gap-4 md:grid md:grid-cols-2 md:gap-8 w-full h-full justify-center">
                 {siteData.stats.map((stat, i) => (
                   <div key={i} className="flex flex-col gap-0.5 md:gap-2 opacity-70 group-hover:opacity-100 transition-opacity duration-500">
@@ -107,7 +107,7 @@ export default function BentoAbout() {
             </div>
           </motion.div>
 
-          {/* BOX 3: THE PHILOSOPHY (Half width on mobile) */}
+          {/* BOX 3: THE PHILOSOPHY */}
           <motion.div 
             whileHover={{ y: -4 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
@@ -143,12 +143,10 @@ export default function BentoAbout() {
             <div className="absolute inset-x-0 bottom-0 h-[80%] bg-gradient-to-t from-black/90 via-black/50 to-transparent z-0 pointer-events-none transition-opacity duration-500" />
 
             <div className="relative z-10 transition-all duration-500 transform group-hover:-translate-y-1">
-              {/* FIX: Scaled text down slightly for half-width mobile view */}
               <h3 className="text-sm md:text-2xl font-bold text-white/60 group-hover:text-white tracking-tighter mb-1 md:mb-2 transition-colors duration-500 drop-shadow-md">
                 Attention is cheap. <br/>
                 <span className="text-[#E61919]/70 group-hover:text-[#E61919] transition-colors duration-500">Retention is priceless.</span>
               </h3>
-              {/* FIX: Hid paragraph on phones to keep the bento box clean, visible on PC */}
               <p className="hidden md:block text-white/40 group-hover:text-white/80 text-xs md:text-sm leading-relaxed max-w-[280px] transition-colors duration-500 drop-shadow-md">
                 We build cinematic pipelines designed to turn passive scrollers into absolute loyalists for your brand.
               </p>

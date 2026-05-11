@@ -8,8 +8,8 @@ export default function Hero() {
   const [mounted, setMounted] = useState(false);
   const { scrollY } = useScroll();
 
-  // Explicit, separate parallax tracks that don't rely on state
-  const yParallaxDesktop = useTransform(scrollY, [0, 1000], [0, -300]);
+  // Explicit, separate parallax tracks
+  const yParallaxDesktop = useTransform(scrollY, [0, 1000], [0, -200]); // Reduced slightly to help close the gap
   const yParallaxMobile = useTransform(scrollY, [0, 1000], [0, -40]);
   
   const dotOpacity = useTransform(scrollY, [0, 500], [1, 0]);
@@ -18,7 +18,8 @@ export default function Hero() {
   if (!mounted) return <div className="min-h-screen bg-black" />;
 
   return (
-    <section className="relative min-h-[90vh] md:min-h-screen w-full flex justify-center items-center overflow-hidden bg-black px-6 md:px-12 pt-32 md:pt-40 pb-12 md:pb-20">
+    // FIX: Reduced height to 85vh and removed massive bottom padding (pb-0 on md) to kill the giant gap
+    <section className="relative min-h-[90vh] md:min-h-[85vh] w-full flex justify-center items-center overflow-hidden bg-black px-6 md:px-12 pt-32 md:pt-40 pb-12 md:pb-0">
       
       <motion.div style={{ opacity: dotOpacity }} className="absolute inset-0 z-0">
         <DotField />
@@ -35,7 +36,6 @@ export default function Hero() {
               whileInView={{ x: 0, opacity: 1 }}
               viewport={{ once: false }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              // FIX: Scaled text down to 11vw to stop header collision
               className="text-[11vw] sm:text-[9vw] md:text-[clamp(3.5rem,8vw,6rem)] font-bold tracking-tighter leading-[0.9] uppercase text-white"
             >
               Stop<br />
@@ -63,34 +63,31 @@ export default function Hero() {
           </motion.p>
         </div>
 
+        {/* FIX: Wrapped motion divs inside standard standard divs. This stops Tailwind and Framer Motion from crashing the PC image! */}
+        
         {/* 3D ICON - MOBILE ONLY */}
-        <motion.div 
-          style={{ y: yParallaxMobile }} 
-          // FIX: Explicitly displayed only on mobile. Pulled up slightly with -mt-4.
-          className="flex md:hidden flex-1 justify-center w-full relative z-10 -mt-4"
-        >
-          <img 
-            src="/kahory media icon png 3-d.png" 
-            alt="Kahory Icon" 
-            // FIX: Shrunk to 55% so it's less intrusive on small screens
-            className="w-full max-w-[55%] h-auto drop-shadow-[0_0_100px_rgba(74,14,27,0.4)] select-none pointer-events-none"
-            draggable="false"
-          />
-        </motion.div>
+        <div className="flex md:hidden flex-1 justify-center w-full relative z-10 -mt-4">
+          <motion.div style={{ y: yParallaxMobile }} className="flex justify-center w-full">
+            <img 
+              src="/kahory media icon png 3-d.png" 
+              alt="Kahory Icon" 
+              className="w-full max-w-[55%] h-auto drop-shadow-[0_0_100px_rgba(74,14,27,0.4)] select-none pointer-events-none"
+              draggable="false"
+            />
+          </motion.div>
+        </div>
 
         {/* 3D ICON - DESKTOP ONLY */}
-        <motion.div 
-          style={{ y: yParallaxDesktop }} 
-          // FIX: Explicitly displayed only on Desktop. Uses original massive parallax.
-          className="hidden md:flex flex-1 justify-end w-full relative z-10"
-        >
-          <img 
-            src="/kahory media icon png 3-d.png" 
-            alt="Kahory Icon" 
-            className="w-full max-w-[80%] lg:max-w-[800px] h-auto drop-shadow-[0_0_150px_rgba(74,14,27,0.4)] select-none pointer-events-none"
-            draggable="false"
-          />
-        </motion.div>
+        <div className="hidden md:flex flex-1 justify-end w-full relative z-10">
+          <motion.div style={{ y: yParallaxDesktop }} className="flex justify-end w-full">
+            <img 
+              src="/kahory media icon png 3-d.png" 
+              alt="Kahory Icon" 
+              className="w-full max-w-[80%] lg:max-w-[800px] h-auto drop-shadow-[0_0_150px_rgba(74,14,27,0.4)] select-none pointer-events-none"
+              draggable="false"
+            />
+          </motion.div>
+        </div>
 
         {/* SPINNING SEAL */}
         <motion.div 
