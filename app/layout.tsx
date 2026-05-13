@@ -10,6 +10,54 @@ import FloatingCTA from "@/components/FloatingCTA";
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css";
 
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  metadataBase: new URL('https://kahorymedia.in'),
+  title: {
+    default: 'Kahory Media | High-Converting Content Agency',
+    template: '%s | Kahory Media'
+  },
+  description: 'Stop posting. Start converting. We shoot, shape, and scale your brand’s story through high-end short-form video production and elite media strategy.',
+  keywords: [
+    'Content Production Agency', 
+    'Short-Form Video Agency', 
+    'Instagram Reels Strategist', 
+    'YouTube Shorts Editor', 
+    'Media Production Company',
+    'Creative Agency',
+    'Brand Growth'
+  ],
+  authors: [{ name: 'Kahory Media' }],
+  creator: 'Kahory Media',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://kahorymedia.in',
+    title: 'Kahory Media | High-Converting Content Agency',
+    description: 'We shoot, shape, and scale your brand’s story through high-end short-form video production and elite media strategy.',
+    siteName: 'Kahory Media',
+    // The image URL will automatically resolve to your opengraph-image file we add in Step 2
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Kahory Media | High-Converting Content Agency',
+    description: 'Stop posting. Start converting. High-end short-form video production and elite media strategy.',
+    creator: '@kahorymedia', // Change this to your actual Twitter handle if you have one
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   

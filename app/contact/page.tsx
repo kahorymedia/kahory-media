@@ -5,6 +5,13 @@ import Header from "@/components/Header";
 import Affirmation from "@/components/Affirmation";
 import Footer from "@/components/Footer";
 
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Contact Us',
+  description: 'Ready to scale your brand? Get in touch with Kahory Media to start your project.',
+}
+
 export default function ContactPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
