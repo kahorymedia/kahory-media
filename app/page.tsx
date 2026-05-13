@@ -1,7 +1,6 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import BentoAbout from "@/components/BentoAbout";
-import WorkShowcase from "@/components/WorkShowcase";
 import Services from "@/components/Services";
 import ClientMarquee from "@/components/ClientMarquee";
 import Work from "@/components/Work";
@@ -15,7 +14,6 @@ export default function Home() {
       <Header />
       <Hero />
       <BentoAbout />
-      <WorkShowcase />
       <Services />
       <ClientMarquee />
       <Work />
