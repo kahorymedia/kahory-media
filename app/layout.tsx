@@ -7,6 +7,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 import BackToTop from "@/components/BackToTop"; 
 import SplashCursor from "@/components/SplashCursor";
 import FloatingCTA from "@/components/FloatingCTA";
+import { Analytics } from "@vercel/analytics/next"
 import "./globals.css";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -89,6 +90,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <FloatingCTA />
           {children}
         </SmoothScroll>
+        <Analytics/>
         <SpeedInsights />
       </body>
     </html>
