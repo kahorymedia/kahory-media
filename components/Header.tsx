@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, useSpring, useMotionValue, AnimatePresence } from "framer-motion";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 
 function GooeyButton({ text, href, isScroll = false, onClick }: { text: string; href: string; isScroll?: boolean; onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void; }) {
   const [particles, setParticles] = useState<any[]>([]);
@@ -10,7 +11,7 @@ function GooeyButton({ text, href, isScroll = false, onClick }: { text: string; 
     if (onClick) onClick(e);
     const newParticles = Array.from({ length: 12 }).map((_, i) => {
       const angle = (Math.PI * 2 * i) / 12 + (Math.random() * 0.5);
-      const dist = 50 + Math.random() * 40; 
+      const dist = 50 + Math.random() * 40;
       return { id: Math.random(), x: Math.cos(angle) * dist, y: Math.sin(angle) * dist, size: 10 + Math.random() * 10, duration: 0.4 + Math.random() * 0.3 };
     });
     setParticles(newParticles);
@@ -53,14 +54,14 @@ function MagneticCTAButton({ text, href }: { text: string; href: string; }) {
     if (!ref.current) return;
     const { clientX, clientY } = e;
     const { height, width, left, top } = ref.current.getBoundingClientRect();
-    x.set((clientX - (left + width / 2)) * 0.3); 
+    x.set((clientX - (left + width / 2)) * 0.3);
     y.set((clientY - (top + height / 2)) * 0.3);
   };
 
   const handleClick = () => {
     const newParticles = Array.from({ length: 12 }).map((_, i) => {
       const angle = (Math.PI * 2 * i) / 12 + (Math.random() * 0.5);
-      const dist = 50 + Math.random() * 40; 
+      const dist = 50 + Math.random() * 40;
       return { id: Math.random(), x: Math.cos(angle) * dist, y: Math.sin(angle) * dist, size: 10 + Math.random() * 10, duration: 0.4 + Math.random() * 0.3 };
     });
     setParticles(newParticles);
@@ -88,16 +89,16 @@ export default function Header() {
 
   const navLinks = [
     { name: "About", href: "about" },
-    { name: "Expertise", href: "results" }, 
+    { name: "Expertise", href: "results" },
     { name: "Watch", href: "work" }
   ];
 
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
-    setIsMenuOpen(false); 
+    setIsMenuOpen(false);
     const element = document.getElementById(id);
     if (element) {
-      const headerOffset = 100; 
+      const headerOffset = 100;
       window.scrollTo({ top: element.getBoundingClientRect().top + window.scrollY - headerOffset, behavior: "smooth" });
     } else {
       window.location.href = `/#${id}`;
@@ -116,16 +117,25 @@ export default function Header() {
         </defs>
       </svg>
 
-      <motion.header 
+      <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         className="fixed top-0 left-0 w-full z-[100] px-6 py-6 md:py-8 lg:py-12 flex justify-center pointer-events-none"
       >
         <div className="absolute top-0 left-0 w-full h-32 md:h-48 lg:h-64 bg-black/80 md:bg-black/70 backdrop-blur-md [mask-image:linear-gradient(to_bottom,black_60%,transparent_100%)] -z-10 pointer-events-none" />
-        
+
         <div className="w-full max-w-[1200px] flex justify-between items-center relative pointer-events-none h-16 md:h-20 lg:h-24">
+
+          {/* ✅ CHANGE 1: <img> replaced with <Image>, alt fixed to "Kahory Media", priority added */}
           <Link href="/" className="block z-[200] flex items-center h-full pointer-events-auto">
-            <img src="/kahory-full-logo.png" alt="Logo" className="h-full w-auto object-contain" />
+            <Image
+              src="/kahory-full-logo.png"
+              alt="Kahory Media"
+              width={160}
+              height={64}
+              priority
+              className="h-full w-auto object-contain"
+            />
           </Link>
 
           <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-4 lg:gap-6 z-[150] pointer-events-none">
@@ -138,7 +148,7 @@ export default function Header() {
             <div className="hidden md:block">
               <MagneticCTAButton text="Get in touch" href="/contact" />
             </div>
-            <button 
+            <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 relative z-[200]"
             >
@@ -150,20 +160,15 @@ export default function Header() {
         </div>
       </motion.header>
 
-      {/* NEW: Bulletproof Dynamic Island Menu */}
       <AnimatePresence>
         {isMenuOpen && (
           <div className="fixed inset-0 z-[9999] md:hidden pointer-events-auto flex justify-center">
-            
-            {/* The Invisible Click-Off Background Layer */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setIsMenuOpen(false)}
               className="absolute inset-0 bg-black/60 backdrop-blur-[2px]"
             />
-
-            {/* The Floating Dropdown Card */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: -20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
@@ -173,7 +178,6 @@ export default function Header() {
               <span className="text-[10px] uppercase tracking-[0.3em] text-[#E5D3B3] font-bold mb-6 block opacity-80">
                 Menu
               </span>
-
               <nav className="flex flex-col w-full gap-2">
                 {navLinks.map((item, i) => (
                   <motion.a
@@ -189,10 +193,9 @@ export default function Header() {
                     <span className="text-white/20">→</span>
                   </motion.a>
                 ))}
-                
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mt-6 w-full">
-                  <Link 
-                    href="/contact" 
+                  <Link
+                    href="/contact"
                     onClick={() => setIsMenuOpen(false)}
                     className="flex w-full items-center justify-center py-4 rounded-2xl border border-[#E61919] text-xs uppercase tracking-[0.2em] font-bold text-white bg-[#E61919]/10 shadow-[0_0_20px_rgba(230,25,25,0.2)] active:scale-95 transition-transform"
                   >
@@ -201,7 +204,6 @@ export default function Header() {
                 </motion.div>
               </nav>
             </motion.div>
-
           </div>
         )}
       </AnimatePresence>
