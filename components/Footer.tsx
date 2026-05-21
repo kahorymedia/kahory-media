@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="w-full pt-20 md:pt-32 px-6 md:px-12 bg-black border-t border-white/5 mt-auto flex justify-center relative overflow-hidden">
       
       {/* Subtle Background Glow for Identity */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-[#E61919] blur-[150px] opacity-[0.03] pointer-events-none" />
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-[#E61919] blur-[150px] opacity-[0.1] pointer-events-none" />
 
       <div className="w-full max-w-[1200px] flex flex-col z-10">
         

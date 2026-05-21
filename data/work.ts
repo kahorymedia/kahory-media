@@ -1,6 +1,4 @@
-// data/work.ts
-
-export const categories = ["All", "Fitness", "F&B", "Tech", "Real Estate"];
+export const categories = ["All", "Podcasts", "Clothing Brand", "Tech", "Real Estate", "Personal Brands"];
 
 export const workData = [
   {
@@ -8,7 +6,7 @@ export const workData = [
     slug: "urban-run-campaign",
     title: "Urban Run Series",
     client: "Velocity Actives",
-    category: "Fitness",
+    category: "Clothing Brand", // Updated to match new filters
     coverImage: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=800",
     metrics: ["5.2M Views", "18% CTR"],
   },
@@ -17,7 +15,7 @@ export const workData = [
     slug: "midnight-brew",
     title: "Midnight Brew Launch",
     client: "Roast & Co.",
-    category: "F&B",
+    category: "Podcasts", // Updated to match new filters
     coverImage: "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&q=80&w=800",
     metrics: ["2.1M Impressions", "Sold Out"],
   },
@@ -39,4 +37,13 @@ export const workData = [
     coverImage: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=800",
     metrics: ["3.4M Views", "8.5k Shares"],
   },
+  {
+    id: "5",
+    slug: "founder-stories",
+    title: "Founder Stories",
+    client: "Alex Hormozi Style",
+    category: "Personal Brands", // New data point
+    coverImage: "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80&w=800",
+    metrics: ["10M+ Views", "100k Followers"],
+  }
 ];

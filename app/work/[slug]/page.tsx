@@ -9,17 +9,18 @@ export async function generateStaticParams() {
   }));
 }
 
-// ✅ FIX: In Next.js 15, params is a Promise that we must 'await'
 export default async function CaseStudyPage({ params }: { params: Promise<{ slug: string }> }) {
-  // Wait for the URL parameters to load
   const resolvedParams = await params;
   const slug = resolvedParams.slug;
-
-  // Find the exact project from your data hub
   const project = workData.find((p) => p.slug === slug);
 
-  if (!project) {
-    notFound(); // Triggers 404 ONLY if the project actually doesn't exist
+  if (!project) notFound();
+
+  // ✅ NEW: Find related projects (Prefer same category, then fallback to others)
+  let relatedProjects = workData.filter((p) => p.category === project.category && p.slug !== project.slug).slice(0, 2);
+  if (relatedProjects.length < 2) {
+    const filler = workData.filter((p) => p.slug !== project.slug && !relatedProjects.includes(p)).slice(0, 2 - relatedProjects.length);
+    relatedProjects = [...relatedProjects, ...filler];
   }
 
   return (
@@ -36,21 +37,14 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
       </header>
 
       {/* MASSIVE CINEMATIC HEADER */}
-      <section className="relative w-full h-[60vh] md:h-[80vh] flex items-end justify-center px-6 md:px-12 pb-16 md:pb-24">
-        {/* Full-bleed Cover Image */}
+      <section className="relative w-full h-[60vh] md:h-[70vh] flex items-end justify-center px-6 md:px-12 pb-16 md:pb-24">
         <div className="absolute inset-0 z-0">
-          <img 
-            src={project.coverImage} 
-            alt={project.title}
-            className="w-full h-full object-cover opacity-60"
-          />
+          <img src={project.coverImage} alt={project.title} className="w-full h-full object-cover opacity-60" />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/10" />
         </div>
-
-        {/* Header Content */}
         <div className="relative z-10 w-full max-w-[1200px] flex flex-col">
           <div className="flex items-center gap-4 mb-4">
-            <span className="px-4 py-1.5 bg-black/40 backdrop-blur-md rounded-full text-[10px] text-white uppercase tracking-widest border border-white/20">
+            <span className="px-4 py-1.5 bg-white text-black rounded-full text-[10px] uppercase tracking-widest font-black">
               {project.category}
             </span>
             <span className="text-[#E5D3B3] font-mono text-sm">
@@ -63,53 +57,71 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
         </div>
       </section>
 
-      {/* THE RESULTS GRID */}
-      <section className="w-full px-6 md:px-12 max-w-[1200px] mx-auto py-16 md:py-24 border-b border-white/5">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+      {/* ✅ NEW: GRID LAYOUT FOR MAIN CONTENT & SIDEBAR */}
+      <section className="w-full px-6 md:px-12 max-w-[1200px] mx-auto py-16 md:py-24 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+        
+        {/* LEFT: Main Content Area (Spans 8 columns) */}
+        <div className="lg:col-span-8 flex flex-col gap-16 md:gap-24">
           
-          <div className="md:col-span-1">
-            <span className="text-[10px] uppercase tracking-[0.4em] text-[#E61919] font-bold block mb-4">
-              The Objective
+          {/* Objective & Metrics */}
+          <div className="flex flex-col gap-12">
+            <div>
+              <span className="text-[10px] uppercase tracking-[0.4em] text-[#E61919] font-bold block mb-4">The Objective</span>
+              <p className="text-white/60 font-light leading-relaxed text-sm md:text-lg">
+                We partnered with {project.client} to build a high-converting short-form pipeline. The goal was simple: capture attention, prove authority in the {project.category.toLowerCase()} space, and drive massive engagement.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-4 md:gap-8">
+              {project.metrics.map((metric, i) => (
+                <div key={i} className="flex flex-col gap-2 p-6 rounded-3xl bg-white/[0.02] border border-white/5">
+                  <span className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-bold">Result 0{i + 1}</span>
+                  <span className="text-2xl md:text-4xl font-bold tracking-tighter text-white">{metric}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Video Placeholder */}
+          <div className="w-full aspect-[9/16] md:aspect-video rounded-3xl overflow-hidden bg-white/5 border border-white/10 flex items-center justify-center relative group cursor-pointer">
+            <img src={project.coverImage} className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-700" />
+            <div className="relative z-10 w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 text-white group-hover:bg-[#E61919] group-hover:border-[#E61919] transition-all duration-300">
+              <svg className="w-6 h-6 md:w-8 md:h-8 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+            </div>
+          </div>
+
+        </div>
+
+        {/* RIGHT: Sticky Sidebar (Spans 4 columns) */}
+        <aside className="lg:col-span-4 hidden lg:flex flex-col gap-8">
+          <div className="sticky top-32 flex flex-col gap-6">
+            <span className="text-[10px] uppercase tracking-[0.4em] text-[#E5D3B3] font-bold block border-b border-white/10 pb-4">
+              Related Case Studies
             </span>
-            <p className="text-white/60 font-light leading-relaxed text-sm md:text-base">
-              We partnered with {project.client} to build a high-converting short-form pipeline. The goal was simple: capture attention, prove authority in the {project.category.toLowerCase()} space, and drive massive engagement.
-            </p>
-          </div>
-
-          <div className="md:col-span-2 grid grid-cols-2 gap-6 md:gap-12">
-            {project.metrics.map((metric, i) => (
-              <div key={i} className="flex flex-col gap-2 p-6 rounded-3xl bg-white/[0.02] border border-white/5">
-                <span className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-bold">
-                  Result 0{i + 1}
-                </span>
-                <span className="text-3xl md:text-5xl font-bold tracking-tighter text-white">
-                  {metric}
-                </span>
-              </div>
+            
+            {relatedProjects.map((relProject) => (
+              <Link href={`/work/${relProject.slug}`} key={relProject.id} className="group flex flex-col gap-3">
+                <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden relative bg-white/5">
+                  <img src={relProject.coverImage} alt={relProject.title} className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" />
+                </div>
+                <div>
+                  <span className="text-[10px] uppercase tracking-widest text-white/40 block mb-1">{relProject.category}</span>
+                  <h4 className="text-lg font-bold text-white group-hover:text-[#E61919] transition-colors">{relProject.title}</h4>
+                </div>
+              </Link>
             ))}
-          </div>
 
-        </div>
+            <Link href="/contact" className="mt-8 w-full py-4 border border-white/20 text-white text-center rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors">
+              Start a Project
+            </Link>
+          </div>
+        </aside>
+
       </section>
 
-      {/* VIDEO PLACEHOLDER */}
-      <section className="w-full px-6 md:px-12 max-w-[1200px] mx-auto py-16 md:py-32">
-        <div className="w-full aspect-video rounded-3xl overflow-hidden bg-white/5 border border-white/10 flex items-center justify-center relative group cursor-pointer">
-          <img src={project.coverImage} className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-700" />
-          <div className="relative z-10 w-20 h-20 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 text-white group-hover:bg-[#E61919] group-hover:border-[#E61919] transition-all duration-300">
-            <svg className="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </div>
-        </div>
-      </section>
-
-      {/* NEXT PROJECT CTA */}
-      <section className="w-full py-24 bg-white/[0.02] flex flex-col items-center justify-center text-center px-6">
-        <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tighter mb-8">
-          Want results like this?
-        </h2>
-        <Link href="/contact" className="px-8 py-4 bg-white text-black font-bold uppercase tracking-widest text-xs md:text-sm rounded-full hover:bg-[#E5D3B3] transition-colors duration-300">
+      {/* MOBILE ONLY: Next Project CTA (Hidden on desktop since it's in sidebar) */}
+      <section className="lg:hidden w-full py-24 bg-white/[0.02] flex flex-col items-center justify-center text-center px-6 border-t border-white/5">
+        <h2 className="text-3xl font-bold text-white tracking-tighter mb-8">Want results like this?</h2>
+        <Link href="/contact" className="px-8 py-4 bg-white text-black font-bold uppercase tracking-widest text-xs rounded-full hover:bg-[#E5D3B3] transition-colors duration-300">
           Start Your Pipeline
         </Link>
       </section>
