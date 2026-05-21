@@ -3,8 +3,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    // FIX: Changed pb-28 to pb-40 on mobile. This adds 160px of empty space at the very bottom so the user can scroll the text completely above the CTA button.
-    <footer className="w-full pt-20 md:pt-32 pb-40 md:pb-12 px-6 md:px-12 bg-black border-t border-white/5 mt-auto flex justify-center relative overflow-hidden">
+    <footer className="w-full pt-20 md:pt-32 px-6 md:px-12 bg-black border-t border-white/5 mt-auto flex justify-center relative overflow-hidden">
       
       {/* Subtle Background Glow for Identity */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-[#E61919] blur-[150px] opacity-[0.03] pointer-events-none" />
@@ -43,7 +42,6 @@ export default function Footer() {
         </div>
 
         {/* === TIER 2: UTILITY LINKS & LEGAL === */}
-        {/* FIX: Set to items-center and text-center on mobile to create a perfect stack */}
         <div className="w-full flex flex-col lg:flex-row justify-between items-center gap-8 lg:gap-4 pt-8 border-t border-white/10 text-[9px] md:text-[10px] uppercase tracking-[0.3em] font-bold text-center lg:text-left">
 
           {/* LEFT: Identity & Founders */}
@@ -85,6 +83,10 @@ export default function Footer() {
           </div>
 
         </div>
+
+        {/* ✅ BULLETPROOF FIX: The CTA Spacer. This ensures a massive block of empty space at the very bottom so the CTA never touches your text. */}
+        <div className="h-32 md:h-12 w-full pointer-events-none" />
+
       </div>
     </footer>
   );
