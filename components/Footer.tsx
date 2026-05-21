@@ -3,8 +3,8 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    // Maintained pb-28 on mobile so the floating CTA doesn't cover anything
-    <footer className="w-full pt-20 md:pt-32 pb-28 md:pb-12 px-6 md:px-12 bg-black border-t border-white/5 mt-auto flex justify-center relative overflow-hidden">
+    // FIX: Changed pb-28 to pb-40 on mobile. This adds 160px of empty space at the very bottom so the user can scroll the text completely above the CTA button.
+    <footer className="w-full pt-20 md:pt-32 pb-40 md:pb-12 px-6 md:px-12 bg-black border-t border-white/5 mt-auto flex justify-center relative overflow-hidden">
       
       {/* Subtle Background Glow for Identity */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-[#E61919] blur-[150px] opacity-[0.03] pointer-events-none" />
@@ -12,9 +12,9 @@ export default function Footer() {
       <div className="w-full max-w-[1200px] flex flex-col z-10">
         
         {/* === TIER 1: BRAND IDENTITY & MAIN CTA === */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10 mb-16 md:mb-24">
+        <div className="flex flex-col md:flex-row justify-between items-center md:items-end gap-10 mb-16 md:mb-24 text-center md:text-left">
           
-          <div className="flex flex-col max-w-md">
+          <div className="flex flex-col max-w-md items-center md:items-start">
             <span className="text-[#E61919] text-[10px] md:text-xs font-bold tracking-[0.4em] uppercase mb-4 block drop-shadow-sm">
               Kahory Media
             </span>
@@ -24,8 +24,8 @@ export default function Footer() {
             </h2>
           </div>
 
-          <div className="flex flex-col md:items-end gap-4 md:gap-6">
-            <p className="text-white/40 text-sm md:text-base font-light max-w-[250px] md:max-w-xs md:text-right">
+          <div className="flex flex-col items-center md:items-end gap-4 md:gap-6">
+            <p className="text-white/40 text-sm md:text-base font-light max-w-[250px] md:max-w-xs text-center md:text-right">
               Ready to build a cinematic pipeline for your brand?
             </p>
             <Link href="/contact" className="group flex items-center gap-4 text-white hover:text-[#E5D3B3] transition-colors duration-500">
@@ -43,13 +43,14 @@ export default function Footer() {
         </div>
 
         {/* === TIER 2: UTILITY LINKS & LEGAL === */}
-        <div className="w-full flex flex-col lg:flex-row justify-between items-start lg:items-center gap-10 lg:gap-4 pt-8 border-t border-white/10 text-[9px] md:text-[10px] uppercase tracking-[0.3em] font-bold">
+        {/* FIX: Set to items-center and text-center on mobile to create a perfect stack */}
+        <div className="w-full flex flex-col lg:flex-row justify-between items-center gap-8 lg:gap-4 pt-8 border-t border-white/10 text-[9px] md:text-[10px] uppercase tracking-[0.3em] font-bold text-center lg:text-left">
 
           {/* LEFT: Identity & Founders */}
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start sm:items-center text-white/40 w-full lg:w-1/3">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center text-white/40 w-full lg:w-1/3 lg:justify-start">
             <span>© 2026 Kahory</span>
             <div className="hidden sm:block w-[1px] h-3 bg-white/20" />
-            <div className="flex gap-3">
+            <div className="flex justify-center gap-3">
               <a href="https://www.linkedin.com/in/aabhas911" target="_blank" rel="noopener noreferrer" className="hover:text-[#E5D3B3] transition-colors">
                 Aabhas Gupta
               </a>
@@ -60,8 +61,8 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* CENTER: Navigation (Added 'Work' here) */}
-          <div className="flex flex-wrap gap-8 w-full lg:w-1/3 lg:justify-center">
+          {/* CENTER: Navigation */}
+          <div className="flex justify-center flex-wrap gap-6 md:gap-8 w-full lg:w-1/3">
             <Link href="/services/short-form" className="text-white/70 hover:text-[#E61919] transition-colors">
               Short-Form
             </Link>
@@ -74,7 +75,7 @@ export default function Footer() {
           </div>
 
           {/* RIGHT: Socials */}
-          <div className="flex gap-8 w-full lg:w-1/3 lg:justify-end">
+          <div className="flex justify-center gap-8 w-full lg:w-1/3 lg:justify-end">
             <a href="https://www.instagram.com/kahorymedia?igsh=ZWc2bXA1eTk4MW4w" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-[#E5D3B3] transition-colors">
               Instagram
             </a>
