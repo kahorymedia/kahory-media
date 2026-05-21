@@ -21,7 +21,6 @@ export default function WorkArchivePage() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // ✅ NEW FILTER LOGIC: Now checks the array of categories
   const filteredWork = activeFilter === "All" 
     ? workData 
     : workData.filter((item) => item.categories.includes(activeFilter));
@@ -42,7 +41,8 @@ export default function WorkArchivePage() {
         </div>
       </header>
       
-      <div className="w-full px-6 md:px-12 max-w-[1200px] mx-auto z-10 pt-28 md:pt-32 flex flex-col gap-6 md:gap-8 mb-4">
+      {/* ✅ FIX: Changed to 'relative z-50' so the dropdown ALWAYS stays above the image grid */}
+      <div className="relative z-50 w-full px-6 md:px-12 max-w-[1200px] mx-auto pt-28 md:pt-32 flex flex-col gap-6 md:gap-8 mb-4">
         
         {/* HEADER */}
         <div>
@@ -62,7 +62,7 @@ export default function WorkArchivePage() {
           </motion.h1>
         </div>
 
-        {/* ✅ THE NEW DROPDOWN FILTER UI */}
+        {/* THE NEW DROPDOWN FILTER UI */}
         <div className="relative w-full border-b border-white/10 pb-6 flex items-center justify-between" ref={dropdownRef}>
           <div className="flex items-center gap-3 text-sm md:text-base">
             <span className="text-white/40 font-light">Showing:</span>
@@ -83,7 +83,8 @@ export default function WorkArchivePage() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                 transition={{ duration: 0.2 }}
-                className="absolute top-12 left-0 md:left-auto md:right-0 z-50 w-full sm:w-64 bg-[#0a0a0a] border border-white/10 rounded-2xl shadow-2xl overflow-hidden p-2 flex flex-col gap-1"
+                // ✅ Dropdown inherits the high z-index of its parent now
+                className="absolute top-12 left-0 md:left-auto md:right-0 z-[60] w-full sm:w-64 bg-[#0a0a0a] border border-white/10 rounded-2xl shadow-2xl overflow-hidden p-2 flex flex-col gap-1"
               >
                 {categories.map((cat) => (
                   <button
@@ -103,7 +104,8 @@ export default function WorkArchivePage() {
       </div>
 
       {/* THE GRID (STRICT 4:5 RATIO) */}
-      <section className="w-full px-6 md:px-12 max-w-[1200px] mx-auto z-10 mb-32 md:mb-48 min-h-[50vh]">
+      {/* ✅ FIX: Forced this to relative z-10 so it stays beneath the dropdown wrapper */}
+      <section className="relative z-10 w-full px-6 md:px-12 max-w-[1200px] mx-auto mb-32 md:mb-48 min-h-[50vh]">
         <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           <AnimatePresence mode="popLayout">
             {filteredWork.map((project) => (
@@ -119,7 +121,6 @@ export default function WorkArchivePage() {
                   <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-between z-10">
                     <div className="flex justify-between items-start">
                       <div className="flex flex-wrap gap-2">
-                        {/* Display up to 2 category tags on the card */}
                         {project.categories.slice(0, 2).map((cat, i) => (
                           <span key={i} className="px-3 py-1 bg-black/40 backdrop-blur-md rounded-full text-[9px] text-white/80 uppercase tracking-widest border border-white/10">
                             {cat}
@@ -150,7 +151,7 @@ export default function WorkArchivePage() {
       </section>
 
       {/* EXTENDED ARCHIVE CTA */}
-      <section className="w-full px-6 md:px-12 max-w-[1200px] mx-auto z-10 py-16 md:py-24 border-t border-white/10 flex flex-col items-center justify-center text-center">
+      <section className="relative z-10 w-full px-6 md:px-12 max-w-[1200px] mx-auto py-16 md:py-24 border-t border-white/10 flex flex-col items-center justify-center text-center">
         <span className="text-[10px] md:text-xs uppercase tracking-[0.5em] text-[#E61919] font-bold block mb-4">The Vault</span>
         <h2 className="text-2xl md:text-4xl font-bold text-white tracking-tighter mb-4">Need to see more?</h2>
         <p className="text-white/50 max-w-md text-sm md:text-base font-light mb-8">Browse our complete, uncompressed content archive. Hundreds of edits, raw engagement data, and zero curation.</p>

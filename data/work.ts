@@ -46,8 +46,8 @@ export const workData = [
   {
     id: "4",
     slug: "project-four-slug",
-    title: "Campaign Name 4",
-    client: "Event Company D",
+    title: "DJ Maddify X Baardos",
+    client: "DJ Maddify and Baardos",
     categories: ["Live Events", "Music Videos"],
     coverImage: "/selectedwork/covers/cover4.jpg",
     metrics: ["10M+ Reach", "Trending"],
@@ -55,7 +55,7 @@ export const workData = [
   {
     id: "5",
     slug: "project-five-slug",
-    title: "Campaign Name 5",
+    title: "Kohram tour campaign",
     client: "Yash Singhwal",
     categories: ["Live Events", "Automobile"],
     coverImage: "/selectedwork/covers/cover5.jpg",
