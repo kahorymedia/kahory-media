@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Footer from "@/components/Footer";
@@ -7,10 +7,24 @@ import { workData, categories } from "@/data/work";
 
 export default function WorkArchivePage() {
   const [activeFilter, setActiveFilter] = useState("All");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Close dropdown if clicked outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // ✅ NEW FILTER LOGIC: Now checks the array of categories
   const filteredWork = activeFilter === "All" 
     ? workData 
-    : workData.filter((item) => item.category === activeFilter);
+    : workData.filter((item) => item.categories.includes(activeFilter));
 
   return (
     <main className="flex flex-col min-h-screen bg-black overflow-hidden relative">
@@ -28,26 +42,19 @@ export default function WorkArchivePage() {
         </div>
       </header>
       
-      <div className="w-full px-6 md:px-12 max-w-[1200px] mx-auto z-10 pt-28 md:pt-32 flex flex-col gap-6 md:gap-8 mb-6">
+      <div className="w-full px-6 md:px-12 max-w-[1200px] mx-auto z-10 pt-28 md:pt-32 flex flex-col gap-6 md:gap-8 mb-4">
         
         {/* HEADER */}
         <div>
           <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }}
             className="flex items-center gap-3 mb-2"
           >
             <div className="w-2 h-2 rounded-full bg-[#E5D3B3] animate-pulse" />
-            <span className="text-[10px] md:text-xs uppercase tracking-[0.5em] text-[#E5D3B3] font-bold">
-              Case Studies
-            </span>
+            <span className="text-[10px] md:text-xs uppercase tracking-[0.5em] text-[#E5D3B3] font-bold">Case Studies</span>
           </motion.div>
-          
           <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="text-4xl sm:text-5xl md:text-[clamp(3.5rem,6vw,5.5rem)] font-bold tracking-tighter leading-[0.9] text-white uppercase"
           >
             Selected <br/>
@@ -55,76 +62,84 @@ export default function WorkArchivePage() {
           </motion.h1>
         </div>
 
-        {/* ✅ NEW: PREMIUM PILL FILTER BAR */}
-        <div className="relative w-full border-b border-white/10 pb-6">
-          {/* Scrollable container for mobile */}
-          <div className="flex overflow-x-auto gap-2 pb-2 -mb-2" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-            <style dangerouslySetInnerHTML={{__html: `::-webkit-scrollbar { display: none; }`}} />
+        {/* ✅ THE NEW DROPDOWN FILTER UI */}
+        <div className="relative w-full border-b border-white/10 pb-6 flex items-center justify-between" ref={dropdownRef}>
+          <div className="flex items-center gap-3 text-sm md:text-base">
+            <span className="text-white/40 font-light">Showing:</span>
             
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setActiveFilter(category)}
-                className={`relative px-5 py-2.5 rounded-full text-[10px] md:text-xs uppercase tracking-widest font-bold whitespace-nowrap transition-colors duration-300 ${
-                  activeFilter === category ? "text-black" : "text-white/50 hover:text-white"
-                }`}
-              >
-                {/* Floating animated background pill */}
-                {activeFilter === category && (
-                  <motion.div
-                    layoutId="activeFilterBg"
-                    className="absolute inset-0 bg-white rounded-full z-0"
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  />
-                )}
-                <span className="relative z-10">{category}</span>
-              </button>
-            ))}
+            <button 
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="flex items-center gap-2 text-white font-bold tracking-tight hover:text-[#E5D3B3] transition-colors"
+            >
+              {activeFilter} Projects
+              <svg className={`w-4 h-4 transform transition-transform duration-300 ${isDropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+            </button>
           </div>
+
+          <AnimatePresence>
+            {isDropdownOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+                className="absolute top-12 left-0 md:left-auto md:right-0 z-50 w-full sm:w-64 bg-[#0a0a0a] border border-white/10 rounded-2xl shadow-2xl overflow-hidden p-2 flex flex-col gap-1"
+              >
+                {categories.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => { setActiveFilter(cat); setIsDropdownOpen(false); }}
+                    className={`text-left px-4 py-3 rounded-xl text-xs uppercase tracking-widest font-bold transition-colors ${
+                      activeFilter === cat ? "bg-white text-black" : "text-white/60 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
-      {/* THE GRID */}
+      {/* THE GRID (STRICT 4:5 RATIO) */}
       <section className="w-full px-6 md:px-12 max-w-[1200px] mx-auto z-10 mb-32 md:mb-48 min-h-[50vh]">
-        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           <AnimatePresence mode="popLayout">
             {filteredWork.map((project) => (
               <motion.div
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                 key={project.id}
               >
                 <Link href={`/work/${project.slug}`} className="group block relative w-full aspect-[4/5] rounded-[1.5rem] overflow-hidden bg-white/5 border border-white/5 hover:border-white/20 transition-colors duration-500 cursor-pointer">
+                  
                   <img src={project.coverImage} alt={project.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-60 group-hover:opacity-100" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent opacity-90" />
 
                   <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-between z-10">
                     <div className="flex justify-between items-start">
-                      <span className="px-3 py-1 bg-black/40 backdrop-blur-md rounded-full text-[9px] text-white/80 uppercase tracking-widest border border-white/10">
-                        {project.category}
-                      </span>
+                      <div className="flex flex-wrap gap-2">
+                        {/* Display up to 2 category tags on the card */}
+                        {project.categories.slice(0, 2).map((cat, i) => (
+                          <span key={i} className="px-3 py-1 bg-black/40 backdrop-blur-md rounded-full text-[9px] text-white/80 uppercase tracking-widest border border-white/10">
+                            {cat}
+                          </span>
+                        ))}
+                      </div>
+                      
                       <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                        <svg className="w-3 h-3 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
+                        <svg className="w-3 h-3 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                       </div>
                     </div>
 
                     <div>
                       <div className="flex flex-wrap gap-2 mb-3">
                         {project.metrics.map((metric, i) => (
-                          <span key={i} className="text-[10px] md:text-xs font-mono text-[#E5D3B3] font-bold">
-                            {metric}
-                          </span>
+                          <span key={i} className="text-[10px] md:text-xs font-mono text-[#E5D3B3] font-bold">{metric}</span>
                         ))}
                       </div>
                       <span className="block text-white/50 text-xs mb-1">{project.client}</span>
-                      <h3 className="text-xl md:text-2xl font-bold text-white tracking-tighter">
-                        {project.title}
-                      </h3>
+                      <h3 className="text-xl md:text-2xl font-bold text-white tracking-tighter">{project.title}</h3>
                     </div>
                   </div>
                 </Link>
@@ -134,27 +149,14 @@ export default function WorkArchivePage() {
         </motion.div>
       </section>
 
-      {/* EXTENDED ARCHIVE CTA (GOOGLE DRIVE) */}
+      {/* EXTENDED ARCHIVE CTA */}
       <section className="w-full px-6 md:px-12 max-w-[1200px] mx-auto z-10 py-16 md:py-24 border-t border-white/10 flex flex-col items-center justify-center text-center">
-        <span className="text-[10px] md:text-xs uppercase tracking-[0.5em] text-[#E61919] font-bold block mb-4">
-          The Vault
-        </span>
-        <h2 className="text-2xl md:text-4xl font-bold text-white tracking-tighter mb-4">
-          Need to see more?
-        </h2>
-        <p className="text-white/50 max-w-md text-sm md:text-base font-light mb-8">
-          Browse our complete, uncompressed content archive. Hundreds of edits, raw engagement data, and zero curation.
-        </p>
-        <a 
-          href="https://drive.google.com/drive/folders/1kiN3uBkhJswbgq8BlFfSAYQlYfiqWEZb" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="group flex items-center gap-3 px-8 py-4 bg-white/5 border border-white/10 text-white font-bold uppercase tracking-widest text-xs rounded-full hover:bg-white/10 hover:border-white/30 transition-all duration-300"
-        >
+        <span className="text-[10px] md:text-xs uppercase tracking-[0.5em] text-[#E61919] font-bold block mb-4">The Vault</span>
+        <h2 className="text-2xl md:text-4xl font-bold text-white tracking-tighter mb-4">Need to see more?</h2>
+        <p className="text-white/50 max-w-md text-sm md:text-base font-light mb-8">Browse our complete, uncompressed content archive. Hundreds of edits, raw engagement data, and zero curation.</p>
+        <a href="https://drive.google.com/drive/folders/1kiN3uBkhJswbgq8BlFfSAYQlYfiqWEZb" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 px-8 py-4 bg-white/5 border border-white/10 text-white font-bold uppercase tracking-widest text-xs rounded-full hover:bg-white/10 hover:border-white/30 transition-all duration-300">
           Access Google Drive
-          <svg className="w-4 h-4 text-[#E5D3B3] group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-          </svg>
+          <svg className="w-4 h-4 text-[#E5D3B3] group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
         </a>
       </section>
 

@@ -1,49 +1,74 @@
-export const categories = ["All", "Podcasts", "Clothing Brand", "Tech", "Real Estate", "Personal Brands"];
+// data/work.ts
 
+export const categories = [
+  "All", 
+  "F&B", 
+  "Luxury Goods", 
+  "Medical Creators", 
+  "Automobile", 
+  "Live Events", 
+  "Social Work", 
+  "Music Videos", 
+  "Real Estate", 
+  "Lifestyle"
+];
+
+// I've created 6 template slots. You can copy/paste these to build all 18 of your projects!
 export const workData = [
   {
     id: "1",
-    slug: "urban-run-campaign",
-    title: "Urban Run Series",
-    client: "Velocity Actives",
-    category: "Clothing Brand", // Updated to match new filters
-    coverImage: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=800",
-    metrics: ["5.2M Views", "18% CTR"],
+    slug: "project-one-slug",
+    title: "Red City Boiler Room",
+    client: "Nik'J, Maddify and Ombra House",
+    // ✅ NEW: You can now add multiple categories here!
+    categories: ["Live Events"], 
+    coverImage: "/cover 1.jpg", 
+    metrics: ["22.6k Views", "SOLD-OUT"],
   },
   {
     id: "2",
-    slug: "midnight-brew",
-    title: "Midnight Brew Launch",
-    client: "Roast & Co.",
-    category: "Podcasts", // Updated to match new filters
-    coverImage: "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&q=80&w=800",
-    metrics: ["2.1M Impressions", "Sold Out"],
+    slug: "project-two-slug",
+    title: "Range Rover Sport delivery",
+    client: "Yash Singhwal",
+    categories: ["Luxury Goods", "Automobile"],
+    coverImage: "/cover 2.jpg",
+    metrics: ["1.3M Views", "12.1k shares"],
   },
   {
     id: "3",
-    slug: "the-summit-estates",
-    title: "The Summit Estates",
-    client: "Aura Properties",
-    category: "Real Estate",
-    coverImage: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=800",
-    metrics: ["$12M in Leads", "Viral on TikTok"],
+    slug: "project-three-slug",
+    title: "Campaign Name 3",
+    client: "Ambika Arora- Influencer",
+    categories: ["Lifestyle"],
+    coverImage: "/cover 3.jpg",
+    metrics: ["cinematic video", "38k+ followers"],
   },
   {
     id: "4",
-    slug: "cypher-audio",
-    title: "Cypher Audio Drops",
-    client: "Cypher Tech",
-    category: "Tech",
-    coverImage: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=800",
-    metrics: ["3.4M Views", "8.5k Shares"],
+    slug: "project-four-slug",
+    title: "Campaign Name 4",
+    client: "Event Company D",
+    categories: ["Live Events", "Music Videos"],
+    coverImage: "/cover 4.jpg",
+    metrics: ["10M+ Reach", "Trending"],
   },
   {
     id: "5",
-    slug: "founder-stories",
-    title: "Founder Stories",
-    client: "Alex Hormozi Style",
-    category: "Personal Brands", // New data point
-    coverImage: "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80&w=800",
-    metrics: ["10M+ Views", "100k Followers"],
-  }
+    slug: "project-five-slug",
+    title: "Campaign Name 5",
+    client: "Yash Singhwal",
+    categories: ["Live Events", "Automobile"],
+    coverImage: "/cover 5.jpg",
+    metrics: ["102k views", "Viral Format", "Massive Engagement"],
+  },
+  {
+    id: "6",
+    slug: "project-six-slug",
+    title: "Soleverse- Pilot’s Watch Chronograph 41 Edition “Mercedes-AMG PETRONAS Formula One™ Team” watch",
+    client: "Soleverse",
+    categories: ["Luxury Goods", "Lifestyle"],
+    coverImage: "/cover 6.jpg",
+    metrics: ["yet to be determined"],
+  },
+  // ... Keep copying and pasting this block to add projects 7 through 18!
 ];
