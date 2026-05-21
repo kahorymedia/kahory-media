@@ -19,7 +19,7 @@ export const workData = [
     id: "1",
     slug: "project-one-slug",
     title: "Red City Boiler Room",
-    client: "Nik'J, Maddify and Ombra House",
+    client: "Nik'J, Maddify & Ombra House",
     // ✅ NEW: You can now add multiple categories here!
     categories: ["Live Events"], 
     coverImage: "/selectedwork/covers/cover1.jpg", 
@@ -37,7 +37,7 @@ export const workData = [
   {
     id: "3",
     slug: "project-three-slug",
-    title: "Cinematic lifestyle dreamy video",
+    title: "Cinematic dream-scape video",
     client: "Ambika Arora- Influencer",
     categories: ["Lifestyle"],
     coverImage: "/selectedwork/covers/cover3.jpg",
@@ -46,11 +46,11 @@ export const workData = [
   {
     id: "4",
     slug: "project-four-slug",
-    title: "DJ Maddify X Baardos",
+    title: "DJ Maddify X Baardos Aftermovie",
     client: "DJ Maddify and Baardos",
     categories: ["Live Events", "Music Videos"],
     coverImage: "/selectedwork/covers/cover4.jpg",
-    metrics: ["10M+ Reach", "Trending"],
+    metrics: ["140k+ Reach", "Trending"],
   },
   {
     id: "5",
@@ -59,12 +59,12 @@ export const workData = [
     client: "Yash Singhwal",
     categories: ["Live Events", "Automobile"],
     coverImage: "/selectedwork/covers/cover5.jpg",
-    metrics: ["102k views", "Viral Format", "Massive Engagement"],
+    metrics: ["102k+ views", "Viral Format", "Massive Engagement"],
   },
   {
     id: "6",
     slug: "project-six-slug",
-    title: "Soleverse- Pilot’s Watch Chronograph 41 Edition “Mercedes-AMG PETRONAS Formula One™ Team” watch",
+    title: "Soleverse- IWC “Mercedes-AMG PETRONAS Formula One™ Team” watch",
     client: "Soleverse",
     categories: ["Luxury Goods", "Lifestyle"],
     coverImage: "/selectedwork/covers/cover6.jpg",

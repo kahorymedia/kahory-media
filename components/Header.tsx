@@ -87,10 +87,12 @@ function MagneticCTAButton({ text, href }: { text: string; href: string; }) {
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // ✅ UPGRADED: Added a 4th option and an `isPage` flag to differentiate between scrolling and routing
   const navLinks = [
-    { name: "About", href: "about" },
-    { name: "Expertise", href: "results" },
-    { name: "Watch", href: "work" }
+    { name: "About", href: "about", isPage: false },
+    { name: "Expertise", href: "results", isPage: false },
+    { name: "Watch", href: "work", isPage: false },
+    { name: "Archive", href: "/work", isPage: true } 
   ];
 
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
@@ -126,7 +128,6 @@ export default function Header() {
 
         <div className="w-full max-w-[1200px] flex justify-between items-center relative pointer-events-none h-16 md:h-20 lg:h-24">
 
-          {/* ✅ CHANGE 1: <img> replaced with <Image>, alt fixed to "Kahory Media", priority added */}
           <Link href="/" className="block z-[200] flex items-center h-full pointer-events-auto">
             <Image
               src="/kahory-full-logo.png"
@@ -138,9 +139,16 @@ export default function Header() {
             />
           </Link>
 
-          <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-4 lg:gap-6 z-[150] pointer-events-none">
+          <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-2 lg:gap-4 z-[150] pointer-events-none">
             {navLinks.map((item) => (
-              <GooeyButton key={item.name} text={item.name} href={item.href} isScroll={true} onClick={(e) => handleScroll(e, item.href)} />
+              <GooeyButton 
+                key={item.name} 
+                text={item.name} 
+                href={item.href} 
+                // ✅ Passes true if it's a homepage section, false if it's a separate page route
+                isScroll={!item.isPage} 
+                onClick={item.isPage ? undefined : (e) => handleScroll(e, item.href)} 
+              />
             ))}
           </nav>
 
@@ -180,18 +188,36 @@ export default function Header() {
               </span>
               <nav className="flex flex-col w-full gap-2">
                 {navLinks.map((item, i) => (
-                  <motion.a
+                  <motion.div
                     key={item.name}
-                    href={`#${item.href}`}
                     initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 + 0.1 }}
-                    onClick={(e) => handleScroll(e, item.href)}
-                    className="flex items-center justify-between group py-3 border-b border-white/5"
+                    className="w-full border-b border-white/5"
                   >
-                    <span className="text-xl font-bold uppercase tracking-widest text-white/80 group-hover:text-white transition-colors">
-                      {item.name}
-                    </span>
-                    <span className="text-white/20">→</span>
-                  </motion.a>
+                    {/* ✅ Handles routing specifically for Mobile Menu */}
+                    {item.isPage ? (
+                      <Link
+                        href={item.href}
+                        onClick={() => setIsMenuOpen(false)}
+                        className="flex items-center justify-between group py-3 w-full"
+                      >
+                        <span className="text-xl font-bold uppercase tracking-widest text-white/80 group-hover:text-white transition-colors">
+                          {item.name}
+                        </span>
+                        <span className="text-white/20">→</span>
+                      </Link>
+                    ) : (
+                      <a
+                        href={`#${item.href}`}
+                        onClick={(e) => handleScroll(e, item.href)}
+                        className="flex items-center justify-between group py-3 w-full"
+                      >
+                        <span className="text-xl font-bold uppercase tracking-widest text-white/80 group-hover:text-white transition-colors">
+                          {item.name}
+                        </span>
+                        <span className="text-white/20">→</span>
+                      </a>
+                    )}
+                  </motion.div>
                 ))}
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mt-6 w-full">
                   <Link

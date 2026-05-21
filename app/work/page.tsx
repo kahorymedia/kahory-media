@@ -64,7 +64,7 @@ export default function WorkArchivePage() {
             >
               <div className="flex items-center justify-between border-b border-white/10 pb-6 mb-4 px-4">
                 <span className="text-white/40 uppercase tracking-[0.4em] text-[10px] font-bold">
-                  Select Industry
+                  Select Niche
                 </span>
                 <button 
                   onClick={() => setIsPaletteOpen(false)}
