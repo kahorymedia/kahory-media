@@ -61,7 +61,7 @@ export const workData = [
   },
   {
     id: "5",
-    slug: "Yash Singhwal Kohram Campaign",
+    slug: "Yash-Singhwal-Kohram-Campaign",
     title: "Kohram tour campaign",
     client: "Yash Singhwal",
     categories: ["Live Events", "Automobile"],
