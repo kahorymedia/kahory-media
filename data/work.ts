@@ -17,7 +17,7 @@ export const categories = [
 export const workData = [
   {
     id: "1",
-    slug: "project-one-slug",
+    slug: "Red-City-Boiler-Room",
     title: "Red City Boiler Room",
     client: "Nik'J, Maddify & Ombra House",
     categories: ["Live Events"], 
@@ -28,7 +28,7 @@ export const workData = [
   },
   {
     id: "2",
-    slug: "project-two-slug",
+    slug: "Range-Rover-Sport-delivery",
     title: "Range Rover Sport delivery",
     client: "Yash Singhwal",
     categories: ["Luxury Goods", "Automobile"],
@@ -39,7 +39,7 @@ export const workData = [
   },
   {
     id: "3",
-    slug: "project-three-slug",
+    slug: "Ambika-Arora-Cinematic-Video",
     title: "Cinematic dream-scape video",
     client: "Ambika Arora- Influencer",
     categories: ["Lifestyle"],
@@ -50,7 +50,7 @@ export const workData = [
   },
   {
     id: "4",
-    slug: "project-four-slug",
+    slug: "DJ-Maddify-Baardos-Aftermovie",
     title: "DJ Maddify X Baardos Aftermovie",
     client: "DJ Maddify and Baardos",
     categories: ["Live Events", "Music Videos"],
@@ -61,7 +61,7 @@ export const workData = [
   },
   {
     id: "5",
-    slug: "project-five-slug",
+    slug: "Yash Singhwal Kohram Campaign",
     title: "Kohram tour campaign",
     client: "Yash Singhwal",
     categories: ["Live Events", "Automobile"],
@@ -72,7 +72,7 @@ export const workData = [
   },
   {
     id: "6",
-    slug: "project-six-slug",
+    slug: "soleverse-IWC",
     title: "Soleverse- IWC “Mercedes-AMG PETRONAS Formula One™ Team” watch",
     client: "Soleverse",
     categories: ["Luxury Goods", "Lifestyle"],
@@ -83,7 +83,7 @@ export const workData = [
   },
   {
     id: "7",
-    slug: "project-seven-slug",
+    slug: "muffin-stays",
     title: "Airbnb property Shoot",
     client: "Muffin Stays",
     categories: ["Real Estate", "Lifestyle"],
@@ -91,6 +91,17 @@ export const workData = [
     metrics: ["High Quality", "Interior Design"],
     projectType: "photography",
     gallery: ["/selectedwork/gallery/1.jpg", "/selectedwork/gallery/2.jpg", "/selectedwork/gallery/3.jpg", "/selectedwork/gallery/4.jpg", "/selectedwork/gallery/5.jpg"]
+  },
+  {
+    id: "8",
+    slug: "RHA-drive-Shoot",
+    title: "NGO Campaign Shoot",
+    client: "Robinhood Army NGO",
+    categories: ["Social Work", "Lifestyle"],
+    coverImage: "/selectedwork/covers/cover19.jpg",
+    metrics: ["Powerful", "Impactful"],
+    projectType: "photography",
+    gallery: ["/selectedwork/gallery/6.jpg", "/selectedwork/gallery/7.jpg", "/selectedwork/gallery/8.jpg", "/selectedwork/gallery/9.jpg", "/selectedwork/gallery/10.jpg"]
   },
   // ... Keep copying and pasting this block to add projects 7 through 18!
 ];
