@@ -22,7 +22,7 @@ export const workData = [
     client: "Nik'J, Maddify and Ombra House",
     // ✅ NEW: You can now add multiple categories here!
     categories: ["Live Events"], 
-    coverImage: "/cover 1.jpg", 
+    coverImage: "/selectedwork/covers/cover1.jpg", 
     metrics: ["22.6k Views", "SOLD-OUT"],
   },
   {
@@ -31,7 +31,7 @@ export const workData = [
     title: "Range Rover Sport delivery",
     client: "Yash Singhwal",
     categories: ["Luxury Goods", "Automobile"],
-    coverImage: "/cover 2.jpg",
+    coverImage: "/selectedwork/covers/cover2.jpg",
     metrics: ["1.3M Views", "12.1k shares"],
   },
   {
@@ -40,7 +40,7 @@ export const workData = [
     title: "Campaign Name 3",
     client: "Ambika Arora- Influencer",
     categories: ["Lifestyle"],
-    coverImage: "/cover 3.jpg",
+    coverImage: "/selectedwork/covers/cover3.jpg",
     metrics: ["cinematic video", "38k+ followers"],
   },
   {
@@ -49,7 +49,7 @@ export const workData = [
     title: "Campaign Name 4",
     client: "Event Company D",
     categories: ["Live Events", "Music Videos"],
-    coverImage: "/cover 4.jpg",
+    coverImage: "/selectedwork/covers/cover4.jpg",
     metrics: ["10M+ Reach", "Trending"],
   },
   {
@@ -58,7 +58,7 @@ export const workData = [
     title: "Campaign Name 5",
     client: "Yash Singhwal",
     categories: ["Live Events", "Automobile"],
-    coverImage: "/cover 5.jpg",
+    coverImage: "/selectedwork/covers/cover5.jpg",
     metrics: ["102k views", "Viral Format", "Massive Engagement"],
   },
   {
@@ -67,7 +67,7 @@ export const workData = [
     title: "Soleverse- Pilot’s Watch Chronograph 41 Edition “Mercedes-AMG PETRONAS Formula One™ Team” watch",
     client: "Soleverse",
     categories: ["Luxury Goods", "Lifestyle"],
-    coverImage: "/cover 6.jpg",
+    coverImage: "/selectedwork/covers/cover6.jpg",
     metrics: ["yet to be determined"],
   },
   // ... Keep copying and pasting this block to add projects 7 through 18!
