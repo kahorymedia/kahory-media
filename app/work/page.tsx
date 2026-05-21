@@ -140,6 +140,30 @@ export default function WorkArchivePage() {
         </motion.div>
       </section>
 
+{/* EXTENDED ARCHIVE CTA (GOOGLE DRIVE) */}
+      <section className="w-full px-6 md:px-12 max-w-[1200px] mx-auto z-10 py-16 md:py-24 border-t border-white/10 flex flex-col items-center justify-center text-center">
+        <span className="text-[10px] md:text-xs uppercase tracking-[0.5em] text-[#E61919] font-bold block mb-4">
+          The Vault
+        </span>
+        <h2 className="text-2xl md:text-4xl font-bold text-white tracking-tighter mb-4">
+          Need to see more?
+        </h2>
+        <p className="text-white/50 max-w-md text-sm md:text-base font-light mb-8">
+          Browse our complete, uncompressed content archive. Hundreds of edits, raw engagement data, and zero curation.
+        </p>
+        <a 
+          href="https://drive.google.com/drive/folders/1kiN3uBkhJswbgq8BlFfSAYQlYfiqWEZb" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="group flex items-center gap-3 px-8 py-4 bg-white/5 border border-white/10 text-white font-bold uppercase tracking-widest text-xs rounded-full hover:bg-white/10 hover:border-white/30 transition-all duration-300"
+        >
+          Access Google Drive
+          <svg className="w-4 h-4 text-[#E5D3B3] group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+        </a>
+      </section>
+
       <Footer />
     </main>
   );
