@@ -16,13 +16,13 @@ export default function WorkArchivePage() {
   return (
     <main className="flex flex-col min-h-screen bg-black overflow-hidden relative">
       
-      {/* HEADER SECTION */}
-      <section className="w-full px-6 md:px-12 max-w-[1200px] mx-auto z-10 pt-32 md:pt-48 mb-16 md:mb-24">
+      {/* HEADER SECTION - Reduced Padding & Margins */}
+      <section className="w-full px-6 md:px-12 max-w-[1200px] mx-auto z-10 pt-28 md:pt-36 mb-6 md:mb-10">
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="flex items-center gap-3 mb-6"
+          className="flex items-center gap-3 mb-4"
         >
           <div className="w-2 h-2 rounded-full bg-[#E5D3B3] animate-pulse" />
           <span className="text-[10px] md:text-xs uppercase tracking-[0.5em] text-[#E5D3B3] font-bold">
@@ -34,21 +34,21 @@ export default function WorkArchivePage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="text-5xl sm:text-6xl md:text-[clamp(4rem,8vw,7rem)] font-bold tracking-tighter leading-[0.9] text-white uppercase"
+          className="text-4xl sm:text-5xl md:text-[clamp(3.5rem,6vw,5.5rem)] font-bold tracking-tighter leading-[0.9] text-white uppercase"
         >
           Selected <br/>
           <span className="text-[#E61919]/90 italic font-serif lowercase font-light">Works.</span>
         </motion.h1>
       </section>
 
-      {/* FILTER BAR */}
-      <section className="w-full px-6 md:px-12 max-w-[1200px] mx-auto z-10 mb-12">
-        <div className="flex flex-wrap gap-4 md:gap-8 border-b border-white/10 pb-6">
+      {/* FILTER BAR - Reduced Margins */}
+      <section className="w-full px-6 md:px-12 max-w-[1200px] mx-auto z-10 mb-8 md:mb-12">
+        <div className="flex flex-wrap gap-4 md:gap-8 border-b border-white/10 pb-4 md:pb-6">
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => setActiveFilter(category)}
-              className={`text-xs md:text-sm uppercase tracking-widest font-bold transition-all duration-300 ${
+              className={`text-[10px] md:text-xs uppercase tracking-widest font-bold transition-all duration-300 ${
                 activeFilter === category 
                   ? "text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]" 
                   : "text-white/30 hover:text-white/70"
@@ -60,11 +60,11 @@ export default function WorkArchivePage() {
         </div>
       </section>
 
-      {/* THE GRID */}
+      {/* THE GRID - Changed to 3 Columns, Adjusted padding & text sizing */}
       <section className="w-full px-6 md:px-12 max-w-[1200px] mx-auto z-10 mb-32 md:mb-48 min-h-[50vh]">
         <motion.div 
           layout
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
         >
           <AnimatePresence mode="popLayout">
             {filteredWork.map((project) => (
@@ -76,8 +76,7 @@ export default function WorkArchivePage() {
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                 key={project.id}
               >
-                {/* Notice the href points to /work/[slug] - We will build this next! */}
-                <Link href={`/work/${project.slug}`} className="group block relative w-full aspect-[4/5] md:aspect-[4/3] rounded-3xl overflow-hidden bg-white/5 border border-white/5 hover:border-white/20 transition-colors duration-500 cursor-pointer">
+                <Link href={`/work/${project.slug}`} className="group block relative w-full aspect-[4/5] rounded-[1.5rem] overflow-hidden bg-white/5 border border-white/5 hover:border-white/20 transition-colors duration-500 cursor-pointer">
                   
                   {/* Cover Image */}
                   <img 
@@ -86,32 +85,32 @@ export default function WorkArchivePage() {
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-60 group-hover:opacity-100"
                   />
                   
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent opacity-90" />
 
-                  {/* Card Content */}
-                  <div className="absolute inset-0 p-6 md:p-10 flex flex-col justify-between z-10">
+                  {/* Card Content - Scaled down for 3 columns */}
+                  <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-between z-10">
                     <div className="flex justify-between items-start">
-                      <span className="px-3 py-1 bg-black/40 backdrop-blur-md rounded-full text-[10px] text-white/80 uppercase tracking-widest border border-white/10">
+                      <span className="px-3 py-1 bg-black/40 backdrop-blur-md rounded-full text-[9px] text-white/80 uppercase tracking-widest border border-white/10">
                         {project.category}
                       </span>
                       
-                      <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                        <svg className="w-4 h-4 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                        <svg className="w-3 h-3 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                         </svg>
                       </div>
                     </div>
 
                     <div>
-                      <div className="flex gap-4 mb-4">
+                      <div className="flex flex-wrap gap-2 mb-3">
                         {project.metrics.map((metric, i) => (
-                          <span key={i} className="text-xs font-mono text-[#E5D3B3] font-bold">
+                          <span key={i} className="text-[10px] md:text-xs font-mono text-[#E5D3B3] font-bold">
                             {metric}
                           </span>
                         ))}
                       </div>
-                      <span className="block text-white/50 text-sm mb-1">{project.client}</span>
-                      <h3 className="text-2xl md:text-4xl font-bold text-white tracking-tighter">
+                      <span className="block text-white/50 text-xs mb-1">{project.client}</span>
+                      <h3 className="text-xl md:text-2xl font-bold text-white tracking-tighter">
                         {project.title}
                       </h3>
                     </div>

@@ -3,19 +3,23 @@ import Link from "next/link";
 import Footer from "@/components/Footer";
 import { notFound } from "next/navigation";
 
-// Generate static pages for all projects to make them load instantly
-export function generateStaticParams() {
+export async function generateStaticParams() {
   return workData.map((project) => ({
     slug: project.slug,
   }));
 }
 
-export default function CaseStudyPage({ params }: { params: { slug: string } }) {
+// ✅ FIX: In Next.js 15, params is a Promise that we must 'await'
+export default async function CaseStudyPage({ params }: { params: Promise<{ slug: string }> }) {
+  // Wait for the URL parameters to load
+  const resolvedParams = await params;
+  const slug = resolvedParams.slug;
+
   // Find the exact project from your data hub
-  const project = workData.find((p) => p.slug === params.slug);
+  const project = workData.find((p) => p.slug === slug);
 
   if (!project) {
-    notFound(); // Redirects to your 404 if someone types a wrong link
+    notFound(); // Triggers 404 ONLY if the project actually doesn't exist
   }
 
   return (

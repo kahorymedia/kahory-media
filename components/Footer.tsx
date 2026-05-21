@@ -41,51 +41,50 @@ export default function Footer() {
 
         </div>
 
-        {/* === TIER 2: UTILITY LINKS & LEGAL === */}
-        <div className="w-full flex flex-col lg:flex-row justify-between items-center gap-8 lg:gap-4 pt-8 border-t border-white/10 text-[9px] md:text-[10px] uppercase tracking-[0.3em] font-bold text-center lg:text-left">
+        {/* === TIER 2: UTILITY LINKS & LEGAL (SPLIT LAYOUT) === */}
+        {/* We use justify-between to push the two blocks to the extreme edges, leaving the center empty. We also added pb-32 to give the CTA breathing room on the bottom edge. */}
+        <div className="w-full flex justify-between items-end pt-8 pb-32 md:pb-12 border-t border-white/10 text-[9px] md:text-[10px] uppercase tracking-[0.3em] font-bold">
 
-          {/* LEFT: Identity & Founders */}
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center text-white/40 w-full lg:w-1/3 lg:justify-start">
-            <span>© 2026 Kahory</span>
-            <div className="hidden sm:block w-[1px] h-3 bg-white/20" />
-            <div className="flex justify-center gap-3">
+          {/* LEFT COLUMN: Navigation & Copyright */}
+          <div className="flex flex-col gap-6 md:gap-8 items-start text-left">
+            <div className="flex flex-col md:flex-row gap-4 md:gap-8">
+              <Link href="/services/short-form" className="text-white/70 hover:text-[#E61919] transition-colors">
+                Short-Form
+              </Link>
+              <Link href="/work" className="text-white/70 hover:text-[#E61919] transition-colors">
+                Work
+              </Link>
+              <Link href="/contact" className="text-white/70 hover:text-[#E61919] transition-colors">
+                Contact
+              </Link>
+            </div>
+            <div className="text-white/40">
+              <span>© 2026 Kahory</span>
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN: Socials & Founders */}
+          <div className="flex flex-col gap-6 md:gap-8 items-end text-right">
+            <div className="flex flex-col md:flex-row gap-4 md:gap-8">
+              <a href="https://www.instagram.com/kahorymedia?igsh=ZWc2bXA1eTk4MW4w" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-[#E5D3B3] transition-colors">
+                Instagram
+              </a>
+              <a href="#" className="text-white/70 hover:text-[#E5D3B3] transition-colors">
+                LinkedIn
+              </a>
+            </div>
+            <div className="flex flex-col md:flex-row gap-2 md:gap-4 text-white/40">
               <a href="https://www.linkedin.com/in/aabhas911" target="_blank" rel="noopener noreferrer" className="hover:text-[#E5D3B3] transition-colors">
                 Aabhas Gupta
               </a>
-              <span className="text-white/20">•</span>
+              <span className="hidden md:block text-white/20">•</span>
               <a href="https://www.linkedin.com/in/tanishsharma1007" target="_blank" rel="noopener noreferrer" className="hover:text-[#E5D3B3] transition-colors">
                 Tanish Sharma
               </a>
             </div>
           </div>
 
-          {/* CENTER: Navigation */}
-          <div className="flex justify-center flex-wrap gap-6 md:gap-8 w-full lg:w-1/3">
-            <Link href="/services/short-form" className="text-white/70 hover:text-[#E61919] transition-colors">
-              Short-Form
-            </Link>
-            <Link href="/work" className="text-white/70 hover:text-[#E61919] transition-colors">
-              Work
-            </Link>
-            <Link href="/contact" className="text-white/70 hover:text-[#E61919] transition-colors">
-              Contact
-            </Link>
-          </div>
-
-          {/* RIGHT: Socials */}
-          <div className="flex justify-center gap-8 w-full lg:w-1/3 lg:justify-end">
-            <a href="https://www.instagram.com/kahorymedia?igsh=ZWc2bXA1eTk4MW4w" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-[#E5D3B3] transition-colors">
-              Instagram
-            </a>
-            <a href="#" className="text-white/70 hover:text-[#E5D3B3] transition-colors">
-              LinkedIn
-            </a>
-          </div>
-
         </div>
-
-        {/* ✅ BULLETPROOF FIX: The CTA Spacer. This ensures a massive block of empty space at the very bottom so the CTA never touches your text. */}
-        <div className="h-32 md:h-12 w-full pointer-events-none" />
 
       </div>
     </footer>
