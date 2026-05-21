@@ -2,12 +2,14 @@
 import { siteData } from "@/data/content";
 import { motion, useScroll, useTransform, useMotionValue, useSpring, useInView } from "framer-motion";
 import { useEffect, useRef } from "react";
-import Link from "next/link"; // ✅ ADDED LINK IMPORT
+import Link from "next/link";
 
 // --- SUB-COMPONENT: ROLLING NUMBER ---
 function RollingNumber({ value }: { value: string }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, amount: 0.5 });
+  
+  // ✅ FIX: Changed 'once' to true so numbers only animate once per page load
+  const isInView = useInView(ref, { once: true, amount: 0.5 });
   
   const numericValue = parseInt(value.replace(/\D/g, ""));
   const suffix = value.replace(/[0-9]/g, "");
@@ -50,7 +52,6 @@ export default function BentoAbout() {
     <section id="about" ref={container} className="w-full py-20 md:py-32 px-6 md:px-12 bg-black flex justify-center min-h-screen items-center">
       <div className="w-full max-w-[1200px] flex flex-col gap-6">
         
-        {/* ✅ SEO FIX: Converted span to h2 for semantic structure */}
         <h2 className="text-[10px] md:text-xs uppercase tracking-[0.5em] text-[#E5D3B3] font-bold block mb-2 md:mb-8 text-center md:text-left">
           {siteData.about.title}
         </h2>
@@ -145,13 +146,14 @@ export default function BentoAbout() {
                 Attention is cheap. <br/>
                 <span className="text-[#E61919]/70 group-hover:text-[#E61919] transition-colors duration-500">Retention is priceless.</span>
               </h3>
-              {/* ✅ SEO FIX: Subtle Keyword Injection into the paragraph copy */}
-              <p className="hidden md:block text-white/40 group-hover:text-white/80 text-xs md:text-sm leading-relaxed max-w-[280px] transition-colors duration-500 drop-shadow-md">
-                We build cinematic short-form video pipelines and media strategies designed to turn passive scrollers into absolute loyalists for your brand.
+              
+              {/* ✅ FIX: Made paragraph responsive across all devices and updated copy to be quantifiable */}
+              <p className="block text-white/50 group-hover:text-white/90 text-xs md:text-sm leading-relaxed max-w-[320px] transition-colors duration-500 drop-shadow-md">
+                We replace generic posting with conversion tracking architecture. Our systems are engineered specifically to lock in viewer watch-time metrics and pivot raw visibility directly into inbound brand revenue.
               </p>
 
-              {/* ✅ NEW: Link to Service Page (Hidden until hover) */}
-              <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 hidden md:flex">
+              {/* ✅ FIX: Removed hover masking requirements and mobile hidden rules so button is always active */}
+              <div className="mt-4 flex">
                 <Link href="/services/short-form" className="inline-flex items-center gap-2 text-[10px] md:text-xs text-[#E5D3B3] hover:text-white transition-colors font-bold uppercase tracking-widest border-b border-transparent hover:border-white pb-0.5">
                   Explore Short-Form Production
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
