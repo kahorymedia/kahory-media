@@ -99,7 +99,7 @@ export const workData = [
     client: "Robinhood Army NGO",
     categories: ["Social Work", "Lifestyle"],
     coverImage: "/selectedwork/covers/cover19.jpg",
-    metrics: ["Powerful", "Impactful"],
+    metrics: ["Powerful", "Impactful", "Viral"],
     projectType: "photography",
     gallery: ["/selectedwork/gallery/6.jpg", "/selectedwork/gallery/7.jpg", "/selectedwork/gallery/8.jpg", "/selectedwork/gallery/9.jpg", "/selectedwork/gallery/10.jpg"]
   },
