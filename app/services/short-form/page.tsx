@@ -73,7 +73,7 @@ export default function ShortFormServicePage() {
           transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           className="text-white/60 max-w-xl text-base md:text-lg font-light leading-relaxed"
         >
-          People aren't losing their attention span. They’re just getting pickier. We shoot and edit short-form videos that people actually want to watch—and share.
+          People aren't losing their attention span. They’re just getting pickier. We shoot and edit short-form videos that people actually want to watch, and share.
         </motion.p>
       </section>
 
