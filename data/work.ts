@@ -37,7 +37,7 @@ export const workData = [
   {
     id: "3",
     slug: "project-three-slug",
-    title: "Campaign Name 3",
+    title: "Cinematic lifestyle dreamy video",
     client: "Ambika Arora- Influencer",
     categories: ["Lifestyle"],
     coverImage: "/selectedwork/covers/cover3.jpg",

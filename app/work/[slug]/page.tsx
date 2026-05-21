@@ -16,7 +16,6 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
 
   if (!project) notFound();
 
-  // ✅ FIX: Find related projects based on shared categories in the array
   let relatedProjects = workData.filter(
     (p) => p.slug !== project.slug && p.categories.some(cat => project.categories.includes(cat))
   ).slice(0, 2);
@@ -43,7 +42,6 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
         </div>
         <div className="relative z-10 w-full max-w-[1200px] flex flex-col">
           <div className="flex items-center gap-4 mb-4">
-            {/* Show Primary Category */}
             <span className="px-4 py-1.5 bg-white text-black rounded-full text-[10px] uppercase tracking-widest font-black">
               {project.categories[0]}
             </span>
@@ -92,14 +90,18 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
               Related Case Studies
             </span>
             
+            {/* ✅ FIX: Text is now inside the image, protected by a smooth bottom gradient */}
             {relatedProjects.map((relProject) => (
-              <Link href={`/work/${relProject.slug}`} key={relProject.id} className="group flex flex-col gap-3">
-                <div className="w-full aspect-[4/5] md:aspect-[4/3] rounded-2xl overflow-hidden relative bg-white/5">
-                  <img src={relProject.coverImage} alt={relProject.title} className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" />
-                </div>
-                <div>
-                  <span className="text-[10px] uppercase tracking-widest text-white/40 block mb-1">{relProject.categories[0]}</span>
-                  <h4 className="text-lg font-bold text-white group-hover:text-[#E61919] transition-colors">{relProject.title}</h4>
+              <Link href={`/work/${relProject.slug}`} key={relProject.id} className="group block relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-white/5 border border-white/5 hover:border-white/20 transition-colors duration-500">
+                
+                <img src={relProject.coverImage} alt={relProject.title} className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
+                
+                {/* Smooth Gradient: Fades to transparent 70% up the image */}
+                <div className="absolute inset-x-0 bottom-0 h-[70%] bg-gradient-to-t from-black via-black/60 to-transparent opacity-90 transition-opacity duration-500" />
+
+                <div className="absolute inset-x-0 bottom-0 p-5 flex flex-col z-10">
+                  <span className="text-[9px] uppercase tracking-widest text-white/70 block mb-1">{relProject.categories[0]}</span>
+                  <h4 className="text-lg font-bold text-white leading-tight group-hover:text-[#E61919] transition-colors">{relProject.title}</h4>
                 </div>
               </Link>
             ))}
