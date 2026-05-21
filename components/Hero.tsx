@@ -9,7 +9,7 @@ export default function Hero() {
   const { scrollY } = useScroll();
 
   // Explicit, separate parallax tracks
-  const yParallaxDesktop = useTransform(scrollY, [0, 1000], [0, -200]); // Reduced slightly to help close the gap
+  const yParallaxDesktop = useTransform(scrollY, [0, 1000], [0, -200]);
   const yParallaxMobile = useTransform(scrollY, [0, 1000], [0, -40]);
   
   const dotOpacity = useTransform(scrollY, [0, 500], [1, 0]);
@@ -18,7 +18,6 @@ export default function Hero() {
   if (!mounted) return <div className="min-h-screen bg-black" />;
 
   return (
-    // FIX: Reduced height to 85vh and removed massive bottom padding (pb-0 on md) to kill the giant gap
     <section className="relative min-h-[90vh] md:min-h-[85vh] w-full flex justify-center items-center overflow-hidden bg-black px-6 md:px-12 pt-32 md:pt-40 pb-12 md:pb-0">
       
       <motion.div style={{ opacity: dotOpacity }} className="absolute inset-0 z-0">
@@ -30,28 +29,31 @@ export default function Hero() {
         
         {/* TEXT CONTENT */}
         <div className="flex flex-col space-y-6 md:space-y-8 pointer-events-auto w-full z-20 mt-4 md:mt-0">
-          <div className="flex flex-col">
-            <motion.h1 
+          
+          {/* ✅ SEO FIX: One single parent H1 tag wrapping the animated spans */}
+          <h1 className="flex flex-col">
+            <motion.span 
               initial={{ x: -50, opacity: 0 }}
               whileInView={{ x: 0, opacity: 1 }}
               viewport={{ once: false }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[11vw] sm:text-[9vw] md:text-[clamp(3.5rem,8vw,6rem)] font-bold tracking-tighter leading-[0.9] uppercase text-white"
+              className="block text-[11vw] sm:text-[9vw] md:text-[clamp(3.5rem,8vw,6rem)] font-bold tracking-tighter leading-[0.9] uppercase text-white"
             >
               Stop<br />
               <span className="italic font-serif font-light lowercase tracking-tighter text-[#E5D3B3]">posting.</span>
-            </motion.h1>
-            <motion.h1 
+            </motion.span>
+            
+            <motion.span 
               initial={{ x: -50, opacity: 0 }}
               whileInView={{ x: 0, opacity: 1 }}
               viewport={{ once: false }}
               transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[11vw] sm:text-[9vw] md:text-[clamp(3.5rem,8vw,6rem)] font-bold tracking-tighter leading-[0.9] uppercase text-white mt-1 md:mt-2"
+              className="block text-[11vw] sm:text-[9vw] md:text-[clamp(3.5rem,8vw,6rem)] font-bold tracking-tighter leading-[0.9] uppercase text-white mt-1 md:mt-2"
             >
               Start<br />
               <span>Converting.</span>
-            </motion.h1>
-          </div>
+            </motion.span>
+          </h1>
 
           <motion.p 
             initial={{ opacity: 0, y: 10 }}
@@ -63,14 +65,13 @@ export default function Hero() {
           </motion.p>
         </div>
 
-        {/* FIX: Wrapped motion divs inside standard standard divs. This stops Tailwind and Framer Motion from crashing the PC image! */}
-        
         {/* 3D ICON - MOBILE ONLY */}
         <div className="flex md:hidden flex-1 justify-center w-full relative z-10 -mt-4">
           <motion.div style={{ y: yParallaxMobile }} className="flex justify-center w-full">
             <img 
               src="/kahory media icon png 3-d.png" 
-              alt="Kahory Icon" 
+              // ✅ SEO FIX: Keyword rich alt tag
+              alt="Kahory Media - High-End Content Production Agency 3D Logo" 
               className="w-full max-w-[55%] h-auto drop-shadow-[0_0_100px_rgba(74,14,27,0.4)] select-none pointer-events-none"
               draggable="false"
             />
@@ -82,7 +83,8 @@ export default function Hero() {
           <motion.div style={{ y: yParallaxDesktop }} className="flex justify-end w-full">
             <img 
               src="/kahory media icon png 3-d.png" 
-              alt="Kahory Icon" 
+              // ✅ SEO FIX: Keyword rich alt tag
+              alt="Kahory Media - High-End Content Production Agency 3D Logo" 
               className="w-full max-w-[80%] lg:max-w-[800px] h-auto drop-shadow-[0_0_150px_rgba(74,14,27,0.4)] select-none pointer-events-none"
               draggable="false"
             />
