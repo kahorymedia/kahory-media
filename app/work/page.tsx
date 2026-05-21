@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Footer from "@/components/Footer";
@@ -7,19 +7,33 @@ import { workData, categories } from "@/data/work";
 
 export default function WorkArchivePage() {
   const [activeFilter, setActiveFilter] = useState("All");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isPaletteOpen, setIsPaletteOpen] = useState(false);
 
-  // Close dropdown if clicked outside
+  // ✅ THE MAGIC: Listen for Cmd+K or Ctrl+K to open the palette!
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setIsPaletteOpen((prev) => !prev);
       }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+      if (e.key === "Escape") {
+        setIsPaletteOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
+
+  // Lock body scroll when palette is open
+  useEffect(() => {
+    if (isPaletteOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => { document.body.style.overflow = "unset"; };
+  }, [isPaletteOpen]);
 
   const filteredWork = activeFilter === "All" 
     ? workData 
@@ -28,8 +42,69 @@ export default function WorkArchivePage() {
   return (
     <main className="flex flex-col min-h-screen bg-black overflow-hidden relative">
 
+      {/* --- COMMAND PALETTE OVERLAY --- */}
+      <AnimatePresence>
+        {isPaletteOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center p-6 overflow-y-auto"
+            onClick={() => setIsPaletteOpen(false)} // Close if clicked outside
+          >
+            {/* The Palette Box */}
+            <motion.div
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 20 }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              className="w-full max-w-2xl flex flex-col gap-2"
+              onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the box
+            >
+              <div className="flex items-center justify-between border-b border-white/10 pb-6 mb-4 px-4">
+                <span className="text-white/40 uppercase tracking-[0.4em] text-[10px] font-bold">
+                  Select Industry
+                </span>
+                <button 
+                  onClick={() => setIsPaletteOpen(false)}
+                  className="text-white/40 hover:text-white text-xs uppercase tracking-widest transition-colors"
+                >
+                  [ Esc ]
+                </button>
+              </div>
+
+              {/* Massive Cinematic Category List */}
+              <div className="flex flex-col">
+                {categories.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => {
+                      setActiveFilter(cat);
+                      setIsPaletteOpen(false);
+                    }}
+                    className={`group w-full text-left px-4 py-3 md:py-4 flex items-center justify-between transition-colors duration-300 ${
+                      activeFilter === cat 
+                        ? "text-white" 
+                        : "text-white/30 hover:text-white"
+                    }`}
+                  >
+                    <span className="text-3xl md:text-5xl font-bold tracking-tighter transition-transform duration-500 group-hover:translate-x-4">
+                      {cat}
+                    </span>
+                    {activeFilter === cat && (
+                      <motion.div layoutId="activeDot" className="w-3 h-3 rounded-full bg-[#E61919]" />
+                    )}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* TOP NAVIGATION */}
-      <header className="absolute top-0 left-0 w-full p-6 md:px-12 md:py-8 z-50 flex items-center justify-between pointer-events-auto">
+      <header className="absolute top-0 left-0 w-full p-6 md:px-12 md:py-8 z-40 flex items-center justify-between pointer-events-auto">
         <Link href="/" className="group flex items-center gap-3 text-white/50 hover:text-white transition-colors duration-300">
           <svg className="w-5 h-5 transform transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -41,73 +116,43 @@ export default function WorkArchivePage() {
         </div>
       </header>
       
-      {/* THE MAD LIBS HEADER & FILTER */}
-      <div className="relative z-50 w-full px-6 md:px-12 max-w-[1200px] mx-auto pt-32 md:pt-40 flex flex-col gap-6 md:gap-8 mb-12">
+      {/* HEADER & TRIGGER BUTTON */}
+      <div className="relative z-30 w-full px-6 md:px-12 max-w-[1200px] mx-auto pt-32 md:pt-40 flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
         
         <div>
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} 
-            className="flex items-center gap-3 mb-6"
-          >
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} className="flex items-center gap-3 mb-4">
             <div className="w-2 h-2 rounded-full bg-[#E5D3B3] animate-pulse" />
             <span className="text-[10px] md:text-xs uppercase tracking-[0.5em] text-[#E5D3B3] font-bold">Case Studies</span>
           </motion.div>
-
-          {/* ✅ THE MAD LIBS SENTENCE 
-            This replaces the old title and filter bar entirely.
-          */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="relative"
-            ref={dropdownRef}
-          >
-            <h1 className="text-4xl sm:text-5xl md:text-[clamp(3.5rem,5.5vw,5rem)] font-bold tracking-tighter leading-[1.2] text-white">
-              Show me our best work in <br className="hidden sm:block md:hidden" />
-              
-              <button 
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="relative inline-flex items-center text-[#E61919] group transition-colors hover:text-white"
-              >
-                <span className="border-b-[4px] md:border-b-[6px] border-[#E61919]/40 group-hover:border-white transition-colors pb-1 md:pb-2">
-                  {activeFilter}
-                </span>
-                <svg className={`ml-2 md:ml-4 w-8 h-8 md:w-12 md:h-12 transform transition-transform duration-500 ${isDropdownOpen ? "rotate-180 text-white" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" /></svg>
-              </button>
-              <span className="text-white">.</span>
-            </h1>
-
-            {/* The Inline Dropdown Menu */}
-            <AnimatePresence>
-              {isDropdownOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: 15, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 15, scale: 0.95 }}
-                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                  className="absolute left-0 mt-6 z-[60] w-full sm:w-72 bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden p-3 flex flex-col gap-1 max-h-[300px] overflow-y-auto"
-                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                >
-                  <style dangerouslySetInnerHTML={{__html: `::-webkit-scrollbar { display: none; }`}} />
-                  
-                  {categories.map((cat) => (
-                    <button
-                      key={cat}
-                      onClick={() => { setActiveFilter(cat); setIsDropdownOpen(false); }}
-                      className={`text-left px-5 py-4 rounded-2xl text-sm md:text-base tracking-tight font-bold transition-all duration-300 ${
-                        activeFilter === cat 
-                          ? "bg-[#E61919] text-white" 
-                          : "text-white/50 hover:text-white hover:bg-white/10 hover:translate-x-1"
-                      }`}
-                    >
-                      {cat}
-                    </button>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
-
+          
+          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }} className="text-4xl sm:text-5xl md:text-[clamp(3.5rem,6vw,5.5rem)] font-bold tracking-tighter leading-[0.9] text-white uppercase">
+            Selected <br/>
+            <span className="text-[#E61919]/90 italic font-serif lowercase font-light">Works.</span>
+          </motion.h1>
         </div>
+
+        {/* ✅ THE COMMAND PALETTE TRIGGER BUTTON */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+          <button 
+            onClick={() => setIsPaletteOpen(true)}
+            className="group flex items-center justify-between gap-6 px-6 py-4 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all duration-300 w-full md:w-auto"
+          >
+            <div className="flex flex-col items-start">
+              <span className="text-[9px] uppercase tracking-widest text-white/40 mb-1">Current Filter</span>
+              <span className="text-sm font-bold text-white tracking-wide">{activeFilter}</span>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <span className="hidden sm:flex items-center justify-center px-2 py-1 rounded bg-black/50 border border-white/10 text-[10px] font-mono text-white/60">
+                ⌘K
+              </span>
+              <div className="w-8 h-8 rounded-full bg-black/50 flex items-center justify-center group-hover:bg-[#E61919] transition-colors">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
+              </div>
+            </div>
+          </button>
+        </motion.div>
+
       </div>
 
       {/* THE GRID */}
