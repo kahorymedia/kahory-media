@@ -33,10 +33,14 @@ export default function Services() {
       </div>
 
       <div 
-        className="flex md:grid overflow-x-auto overflow-y-hidden touch-pan-x snap-x snap-mandatory md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 w-full max-w-[1200px] px-6 md:px-0 pb-8 md:pb-0"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        // ✅ FIX: Added a scoped class 'services-scroll' for the scrollbar CSS
+        className="services-scroll flex md:grid overflow-x-auto overflow-y-hidden touch-pan-x snap-x snap-mandatory md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 w-full max-w-[1200px] px-6 md:px-0 pb-8 md:pb-0"
       >
-        <style dangerouslySetInnerHTML={{__html: `::-webkit-scrollbar { display: none; }`}} />
+        {/* ✅ FIX: Scoped the hidden scrollbar strictly to this container */}
+        <style dangerouslySetInnerHTML={{__html: `
+          .services-scroll::-webkit-scrollbar { display: none; }
+          .services-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+        `}} />
         
         {servicesData.map((service, idx) => (
           <div key={idx} className="w-[85vw] sm:w-[60vw] max-w-[340px] md:w-auto md:max-w-none snap-center shrink-0 flex">
@@ -61,32 +65,26 @@ function ServiceCard({ title, description, index }: { title: string; description
   return (
     <div
       onMouseMove={handleMouseMove}
-      className="group relative flex flex-col w-full h-auto min-h-[300px] rounded-[1.5rem] md:rounded-2xl bg-black border border-white/5 overflow-hidden"
+      // ✅ FIX: Removed heavy hover color shifts. It stays completely static except for the subtle light effect.
+      className="group relative flex flex-col w-full h-auto min-h-[250px] md:min-h-[300px] rounded-[1.5rem] md:rounded-2xl bg-[#0a0a0a] border border-white/5 overflow-hidden cursor-default"
     >
+      {/* Subtler Spotlight Effect */}
       <motion.div
-        className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100 hidden md:block"
-        style={{ background: useMotionTemplate`radial-gradient(450px circle at ${mouseX}px ${mouseY}px, rgba(229, 211, 179, 0.8), rgba(153, 0, 0, 0.6) 30%, transparent 80%)` }}
+        className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition-opacity duration-700 group-hover:opacity-100 hidden md:block"
+        style={{ background: useMotionTemplate`radial-gradient(400px circle at ${mouseX}px ${mouseY}px, rgba(229, 211, 179, 0.15), rgba(153, 0, 0, 0.05) 40%, transparent 80%)` }}
       />
-      <div className="absolute inset-[1.5px] rounded-[22.5px] md:rounded-[15px] bg-[#0a0a0a] z-10 transition-colors duration-500 group-hover:bg-[#050505]" />
 
-      <div className="relative z-20 p-6 md:p-8 flex flex-col h-full justify-between gap-6">
-        <div className="flex flex-col gap-4">
-          <span className="text-[#E5D3B3] text-[10px] md:text-xs font-mono block opacity-70">
-            0{index + 1}
-          </span>
-          <h3 className="text-[20px] md:text-2xl font-bold text-white tracking-tight leading-tight whitespace-normal break-words">
-            {title}
-          </h3>
-          <p className="text-white/50 text-[13px] md:text-sm leading-relaxed whitespace-normal">
-            {description}
-          </p>
-        </div>
-
-        <div className="flex justify-end mt-auto">
-          <svg className="w-5 h-5 md:w-6 md:h-6 text-white/20 transform transition-all duration-500 md:group-hover:text-[#E5D3B3] md:group-hover:translate-x-2 md:group-hover:-translate-y-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-          </svg>
-        </div>
+      <div className="relative z-20 p-6 md:p-8 flex flex-col h-full gap-4 md:gap-6">
+        <span className="text-[#E5D3B3] text-[10px] md:text-xs font-mono block opacity-70">
+          0{index + 1}
+        </span>
+        <h3 className="text-[20px] md:text-2xl font-bold text-white tracking-tight leading-tight whitespace-normal break-words">
+          {title}
+        </h3>
+        <p className="text-white/50 text-[13px] md:text-sm leading-relaxed whitespace-normal mt-auto">
+          {description}
+        </p>
+        {/* ✅ FIX: Removed the fake clickable arrow completely */}
       </div>
     </div>
   );
