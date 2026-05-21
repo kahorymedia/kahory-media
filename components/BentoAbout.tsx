@@ -2,6 +2,7 @@
 import { siteData } from "@/data/content";
 import { motion, useScroll, useTransform, useMotionValue, useSpring, useInView } from "framer-motion";
 import { useEffect, useRef } from "react";
+import Link from "next/link"; // ✅ ADDED LINK IMPORT
 
 // --- SUB-COMPONENT: ROLLING NUMBER ---
 function RollingNumber({ value }: { value: string }) {
@@ -148,6 +149,17 @@ export default function BentoAbout() {
               <p className="hidden md:block text-white/40 group-hover:text-white/80 text-xs md:text-sm leading-relaxed max-w-[280px] transition-colors duration-500 drop-shadow-md">
                 We build cinematic short-form video pipelines and media strategies designed to turn passive scrollers into absolute loyalists for your brand.
               </p>
+
+              {/* ✅ NEW: Link to Service Page (Hidden until hover) */}
+              <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 hidden md:flex">
+                <Link href="/services/short-form" className="inline-flex items-center gap-2 text-[10px] md:text-xs text-[#E5D3B3] hover:text-white transition-colors font-bold uppercase tracking-widest border-b border-transparent hover:border-white pb-0.5">
+                  Explore Short-Form Production
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </Link>
+              </div>
+
             </div>
           </motion.div>
 
