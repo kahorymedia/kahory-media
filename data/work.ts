@@ -24,7 +24,7 @@ export const workData = [
     coverImage: "/selectedwork/covers/cover1.jpg", 
     metrics: ["22.6k Views", "SOLD-OUT"],
     projectType: "video",
-    videoLink: "https://www.instagram.com/reel/example1"
+    videoLink: "https://www.instagram.com/reel/DJZNExATQNS/?igsh=ODQ4NHhnZDI1a3Fs"
   },
   {
     id: "2",
@@ -35,7 +35,7 @@ export const workData = [
     coverImage: "/selectedwork/covers/cover2.jpg",
     metrics: ["1.3M Views", "12.1k shares"],
     projectType: "video",
-    videoLink: "https://www.youtube.com/watch?v=example2"
+    videoLink: "https://www.instagram.com/reel/DOGAnYUk33X/?igsh=MWltY3RiemVqYnBxeg=="
   },
   {
     id: "3",
@@ -46,7 +46,7 @@ export const workData = [
     coverImage: "/selectedwork/covers/cover3.jpg",
     metrics: ["cinematic video", "38k+ followers"],
     projectType: "video",
-    videoLink: "https://www.instagram.com/reel/example3"
+    videoLink: "https://www.instagram.com/reel/DU0_3fYj2Z6/?igsh=MWV4enFybWhqb3BlcQ=="
   },
   {
     id: "4",
@@ -57,7 +57,7 @@ export const workData = [
     coverImage: "/selectedwork/covers/cover4.jpg",
     metrics: ["140k+ Reach", "Trending"],
     projectType: "video",
-    videoLink: "https://www.instagram.com/reel/example4"
+    videoLink: "https://www.instagram.com/reel/DH0UK3gzPxs/?igsh=cDM0djliaWJhb2Jt"
   },
   {
     id: "5",
@@ -68,7 +68,7 @@ export const workData = [
     coverImage: "/selectedwork/covers/cover5.jpg",
     metrics: ["102k+ views", "Viral Format", "Massive Engagement"],
     projectType: "video",
-    videoLink: "https://www.instagram.com/reel/example5"
+    videoLink: "https://www.instagram.com/reel/DVbFHHdk5nK/?igsh=MnU3enRyOHlsZnQx"
   },
   {
     id: "6",
