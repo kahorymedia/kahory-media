@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion, useSpring, useMotionValue, AnimatePresence } from "framer-motion";
 import { useState, useRef } from "react";
 
-function GooeyButton({ text, href, isScroll = false, onClick }: { text: string; href: string; isScroll?: boolean; onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void; }) {
+function GooeyButton({ text, href, isPage = false, onClick }: { text: string; href: string; isPage?: boolean; onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void; }) {
   const [particles, setParticles] = useState<any[]>([]);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -29,10 +29,10 @@ function GooeyButton({ text, href, isScroll = false, onClick }: { text: string; 
 
   return (
     <div className="relative group pointer-events-none">
-      {isScroll ? (
-        <a href={`#${href}`} onClick={handleClick} className={buttonClasses}>{buttonContent}</a>
-      ) : (
+      {isPage ? (
         <Link href={href} onClick={handleClick} className={buttonClasses}>{buttonContent}</Link>
+      ) : (
+        <a href={`#${href}`} onClick={handleClick} className={buttonClasses}>{buttonContent}</a>
       )}
       <div className="absolute inset-0 z-10 pointer-events-none" style={{ filter: 'url(#gooey-nav)' }}>
         {particles.length > 0 && <motion.div initial={{ opacity: 1, scale: 0.8 }} animate={{ opacity: 0, scale: 1.2 }} transition={{ duration: 0.5 }} className="absolute inset-0 bg-[#E61919] rounded-full" />}
@@ -87,7 +87,7 @@ function MagneticCTAButton({ text, href }: { text: string; href: string; }) {
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // ✅ UPGRADED: Added a 4th option and an `isPage` flag to differentiate between scrolling and routing
+  // ✅ UPGRADED: Added Archive with isPage: true
   const navLinks = [
     { name: "About", href: "about", isPage: false },
     { name: "Expertise", href: "results", isPage: false },
@@ -127,16 +127,8 @@ export default function Header() {
         <div className="absolute top-0 left-0 w-full h-32 md:h-48 lg:h-64 bg-black/80 md:bg-black/70 backdrop-blur-md [mask-image:linear-gradient(to_bottom,black_60%,transparent_100%)] -z-10 pointer-events-none" />
 
         <div className="w-full max-w-[1200px] flex justify-between items-center relative pointer-events-none h-16 md:h-20 lg:h-24">
-
           <Link href="/" className="block z-[200] flex items-center h-full pointer-events-auto">
-            <Image
-              src="/kahory-full-logo.png"
-              alt="Kahory Media"
-              width={160}
-              height={64}
-              priority
-              className="h-full w-auto object-contain"
-            />
+            <Image src="/kahory-full-logo.png" alt="Kahory Media" width={160} height={64} priority className="h-full w-auto object-contain" />
           </Link>
 
           <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-2 lg:gap-4 z-[150] pointer-events-none">
@@ -145,8 +137,7 @@ export default function Header() {
                 key={item.name} 
                 text={item.name} 
                 href={item.href} 
-                // ✅ Passes true if it's a homepage section, false if it's a separate page route
-                isScroll={!item.isPage} 
+                isPage={item.isPage} 
                 onClick={item.isPage ? undefined : (e) => handleScroll(e, item.href)} 
               />
             ))}
@@ -168,14 +159,11 @@ export default function Header() {
         </div>
       </motion.header>
 
+      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isMenuOpen && (
           <div className="fixed inset-0 z-[9999] md:hidden pointer-events-auto flex justify-center">
-            <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              onClick={() => setIsMenuOpen(false)}
-              className="absolute inset-0 bg-black/60 backdrop-blur-[2px]"
-            />
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsMenuOpen(false)} className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
             <motion.div
               initial={{ opacity: 0, y: -20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -183,48 +171,25 @@ export default function Header() {
               transition={{ type: "spring", stiffness: 400, damping: 30 }}
               className="absolute top-24 w-[90vw] max-w-[340px] bg-[#0a0a0a]/95 backdrop-blur-3xl border border-white/15 rounded-[2rem] p-6 shadow-2xl flex flex-col items-start"
             >
-              <span className="text-[10px] uppercase tracking-[0.3em] text-[#E5D3B3] font-bold mb-6 block opacity-80">
-                Menu
-              </span>
+              <span className="text-[10px] uppercase tracking-[0.3em] text-[#E5D3B3] font-bold mb-6 block opacity-80">Menu</span>
               <nav className="flex flex-col w-full gap-2">
                 {navLinks.map((item, i) => (
-                  <motion.div
-                    key={item.name}
-                    initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 + 0.1 }}
-                    className="w-full border-b border-white/5"
-                  >
-                    {/* ✅ Handles routing specifically for Mobile Menu */}
+                  <motion.div key={item.name} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 + 0.1 }} className="w-full border-b border-white/5">
                     {item.isPage ? (
-                      <Link
-                        href={item.href}
-                        onClick={() => setIsMenuOpen(false)}
-                        className="flex items-center justify-between group py-3 w-full"
-                      >
-                        <span className="text-xl font-bold uppercase tracking-widest text-white/80 group-hover:text-white transition-colors">
-                          {item.name}
-                        </span>
+                      <Link href={item.href} onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between group py-3 w-full">
+                        <span className="text-xl font-bold uppercase tracking-widest text-white/80 group-hover:text-white transition-colors">{item.name}</span>
                         <span className="text-white/20">→</span>
                       </Link>
                     ) : (
-                      <a
-                        href={`#${item.href}`}
-                        onClick={(e) => handleScroll(e, item.href)}
-                        className="flex items-center justify-between group py-3 w-full"
-                      >
-                        <span className="text-xl font-bold uppercase tracking-widest text-white/80 group-hover:text-white transition-colors">
-                          {item.name}
-                        </span>
+                      <a href={`#${item.href}`} onClick={(e) => handleScroll(e, item.href)} className="flex items-center justify-between group py-3 w-full">
+                        <span className="text-xl font-bold uppercase tracking-widest text-white/80 group-hover:text-white transition-colors">{item.name}</span>
                         <span className="text-white/20">→</span>
                       </a>
                     )}
                   </motion.div>
                 ))}
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mt-6 w-full">
-                  <Link
-                    href="/contact"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="flex w-full items-center justify-center py-4 rounded-2xl border border-[#E61919] text-xs uppercase tracking-[0.2em] font-bold text-white bg-[#E61919]/10 shadow-[0_0_20px_rgba(230,25,25,0.2)] active:scale-95 transition-transform"
-                  >
+                  <Link href="/contact" onClick={() => setIsMenuOpen(false)} className="flex w-full items-center justify-center py-4 rounded-2xl border border-[#E61919] text-xs uppercase tracking-[0.2em] font-bold text-white bg-[#E61919]/10 shadow-[0_0_20px_rgba(230,25,25,0.2)] active:scale-95 transition-transform">
                     Start a Project
                   </Link>
                 </motion.div>
