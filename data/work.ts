@@ -98,10 +98,10 @@ export const workData = [
     title: "NGO Campaign Shoot",
     client: "Robinhood Army NGO",
     categories: ["Social Work", "Lifestyle"],
-    coverImage: "/selectedwork/covers/cover19.jpg",
+    coverImage: "/selectedwork/covers/cover19.JPG",
     metrics: ["Powerful", "Impactful", "Viral"],
     projectType: "photography",
-    gallery: ["/selectedwork/gallery/6.jpg", "/selectedwork/gallery/7.jpg", "/selectedwork/gallery/8.jpg", "/selectedwork/gallery/9.jpg", "/selectedwork/gallery/10.jpg"]
+    gallery: ["/selectedwork/gallery/6.JPG", "/selectedwork/gallery/7.JPG", "/selectedwork/gallery/8.JPG", "/selectedwork/gallery/9.JPG", "/selectedwork/gallery/10.JPG"]
   },
   // ... Keep copying and pasting this block to add projects 7 through 18!
 ];
