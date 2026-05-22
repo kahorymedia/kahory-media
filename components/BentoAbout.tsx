@@ -22,9 +22,9 @@ function RollingNumber({ value }: { value: string }) {
   }, [isInView, numericValue, count]);
 
   return (
-    <motion.div ref={ref} className="flex items-baseline text-2xl sm:text-4xl lg:text-6xl font-bold tracking-tighter leading-none text-white drop-shadow-lg">
+    <motion.div ref={ref} className="flex items-baseline text-xl sm:text-3xl md:text-4xl lg:text-6xl font-bold tracking-tighter leading-none text-white drop-shadow-lg">
       <motion.span>{displayValue}</motion.span>
-      <span className="text-[#E5D3B3]">{suffix}</span>
+      <span className="text-[#E5D3B3] text-sm md:text-[0.6em] ml-0.5">{suffix}</span>
     </motion.div>
   );
 }
@@ -45,32 +45,33 @@ export default function BentoAbout() {
   const WAVE_BARS = 32;
 
   return (
-    <section id="about" ref={container} className="w-full py-20 md:py-32 px-6 md:px-12 bg-black flex justify-center min-h-screen items-center">
+    <section id="about" ref={container} className="w-full py-20 md:py-32 px-4 md:px-12 bg-black flex justify-center min-h-screen items-center">
       <div className="w-full max-w-[1200px] flex flex-col gap-6">
         
         <h2 className="text-[10px] md:text-xs uppercase tracking-[0.5em] text-[#E5D3B3] font-bold block mb-2 md:mb-8 text-center md:text-left">
           {siteData.about.title}
         </h2>
 
-        {/* ✅ FIX: Changed to grid-cols-1 for mobile so boxes stack vertically. */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 auto-rows-fr">
+        {/* ✅ FIXED GRID: grid-cols-2 ensures Box 1 spans full width, Box 2 & 3 span half width */}
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-6 auto-rows-fr">
           
-          {/* BOX 1: THE PHILOSOPHY */}
+          {/* BOX 1: THE PHILOSOPHY (BIG BOX) */}
           <motion.div 
             whileHover={{ y: -4 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
-            className="col-span-1 md:col-span-2 lg:col-span-3 lg:row-span-2 relative overflow-hidden rounded-[1.5rem] md:rounded-[2rem] bg-white/[0.02] border border-white/5 p-6 md:p-12 group transition-colors duration-500 hover:border-white/15 hover:bg-white/[0.04]"
+            className="col-span-2 lg:col-span-3 lg:row-span-2 relative overflow-hidden rounded-[1.5rem] md:rounded-[2rem] bg-white/[0.02] border border-white/5 p-6 md:p-12 group transition-colors duration-500 hover:border-white/15 hover:bg-white/[0.04]"
           >
             <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-[#E61919] rounded-full blur-[100px] opacity-10 group-hover:opacity-30 transition-opacity duration-700 pointer-events-none will-change-transform transform-gpu" />
 
-            <div className="relative z-10 flex flex-col justify-center h-full gap-6">
-              {/* ✅ FIX: Increased heading size significantly */}
-              <h3 className="text-4xl md:text-6xl font-bold text-white tracking-tighter leading-none">
+            <div className="relative z-10 flex flex-col justify-center h-full gap-4 md:gap-6">
+              {/* ✅ Hierarchy Fixed: Massive Heading */}
+              <h3 className="text-4xl md:text-6xl font-bold text-white tracking-tighter leading-[1.05]">
                 {siteData.about.philosophy.headingNormal} 
                 <span className="text-[#E61919]">{siteData.about.philosophy.headingHighlight}</span>
               </h3>
               
-              <div ref={textRef} className="text-sm md:text-2xl font-medium tracking-tight leading-[1.6] flex flex-wrap gap-x-1.5 md:gap-x-2 gap-y-1 text-white/60">
+              {/* ✅ Hierarchy Fixed: Small Paragraph Text */}
+              <div ref={textRef} className="text-[11px] sm:text-sm md:text-2xl font-medium tracking-tight leading-[1.6] flex flex-wrap gap-x-1.5 md:gap-x-2 gap-y-0.5 md:gap-y-1 text-white/60">
                 {words.map((word, i) => {
                   const start = i / words.length;
                   const end = start + (1 / words.length);
@@ -87,21 +88,21 @@ export default function BentoAbout() {
             </div>
           </motion.div>
 
-          {/* BOX 2: THE NUMBERS */}
+          {/* BOX 2: THE NUMBERS (SIDE-BY-SIDE WIDGET) */}
           <motion.div 
             whileHover={{ y: -4 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
-            className="col-span-1 lg:col-span-2 relative overflow-hidden rounded-[1.5rem] md:rounded-[2rem] bg-white/[0.02] border border-white/5 p-6 md:p-8 group transition-colors duration-500 hover:border-[#E5D3B3]/30 hover:bg-white/[0.04] min-h-[220px] md:min-h-[300px]"
+            className="col-span-1 lg:col-span-2 relative overflow-hidden rounded-[1.5rem] md:rounded-[2rem] bg-white/[0.02] border border-white/5 p-4 md:p-8 group transition-colors duration-500 hover:border-[#E5D3B3]/30 hover:bg-white/[0.04] min-h-[180px] md:min-h-[300px]"
           >
             <div className="absolute top-0 right-0 w-64 h-64 bg-[#E5D3B3] rounded-full blur-[80px] opacity-0 group-hover:opacity-10 transition-opacity duration-700 pointer-events-none will-change-transform transform-gpu" />
 
             <div className="relative z-10 h-full flex flex-col justify-center gap-8">
-              {/* ✅ FIX: Ensured numbers stay in a 2x2 grid on all screen sizes */}
-              <div className="grid grid-cols-2 gap-6 md:gap-8 w-full h-full content-center">
+              {/* ✅ Perfect 2x2 Centering for Mobile */}
+              <div className="grid grid-cols-2 gap-4 md:gap-8 w-full h-full content-center">
                 {siteData.stats.map((stat, i) => (
-                  <div key={i} className="flex flex-col gap-0.5 md:gap-2 opacity-70 group-hover:opacity-100 transition-opacity duration-500">
+                  <div key={i} className="flex flex-col gap-0.5 md:gap-2 opacity-70 group-hover:opacity-100 transition-opacity duration-500 items-center text-center md:items-start md:text-left">
                     <RollingNumber value={stat.value} />
-                    <span className="text-[8px] md:text-[10px] uppercase tracking-[0.4em] text-white/40 font-black group-hover:text-white/70 transition-colors duration-500">
+                    <span className="text-[7px] md:text-[10px] uppercase tracking-[0.2em] md:tracking-[0.4em] text-white/40 font-black group-hover:text-white/70 transition-colors duration-500">
                       {stat.label}
                     </span>
                   </div>
@@ -110,13 +111,13 @@ export default function BentoAbout() {
             </div>
           </motion.div>
 
-          {/* BOX 3: THE APPROACH */}
+          {/* BOX 3: THE APPROACH (SIDE-BY-SIDE WIDGET) */}
           <motion.div 
             whileHover={{ y: -4 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
-            className="col-span-1 lg:col-span-2 relative overflow-hidden rounded-[1.5rem] md:rounded-[2rem] bg-white/[0.02] border border-white/5 p-6 md:p-8 group transition-colors duration-500 hover:border-[#E61919]/30 hover:bg-white/[0.04] min-h-[220px] md:min-h-[250px] flex flex-col justify-end"
+            className="col-span-1 lg:col-span-2 relative overflow-hidden rounded-[1.5rem] md:rounded-[2rem] bg-white/[0.02] border border-white/5 p-4 md:p-8 group transition-colors duration-500 hover:border-[#E61919]/30 hover:bg-white/[0.04] min-h-[180px] md:min-h-[250px] flex flex-col justify-center md:justify-end"
           >
-            <div className="absolute bottom-0 left-0 w-full h-[50%] md:h-[65%] flex items-end justify-between px-4 md:px-6 pb-0 opacity-40 group-hover:opacity-100 transition-opacity duration-700 z-0 pointer-events-none">
+            <div className="absolute bottom-0 left-0 w-full h-[50%] md:h-[65%] flex items-end justify-between px-3 md:px-6 pb-0 opacity-40 group-hover:opacity-100 transition-opacity duration-700 z-0 pointer-events-none">
               {[...Array(WAVE_BARS)].map((_, i) => {
                 const isCenter = i >= 11 && i <= 20;
                 const colorClass = isCenter 
@@ -142,20 +143,24 @@ export default function BentoAbout() {
               })}
             </div>
 
-            <div className="absolute inset-x-0 bottom-0 h-[80%] bg-gradient-to-t from-black/90 via-black/50 to-transparent z-0 pointer-events-none transition-opacity duration-500" />
+            <div className="absolute inset-x-0 bottom-0 h-[90%] md:h-[80%] bg-gradient-to-t from-black/95 via-black/70 to-transparent z-0 pointer-events-none transition-opacity duration-500" />
 
-            <div className="relative z-10 transition-all duration-500 transform group-hover:-translate-y-1">
-              <h3 className="text-lg md:text-2xl font-bold text-white/60 group-hover:text-white tracking-tighter mb-1 md:mb-2 transition-colors duration-500 drop-shadow-md">
-                Meaningful stories <br/>
-                <span className="text-[#E61919]/70 group-hover:text-[#E61919] transition-colors duration-500">that stay with people.</span>
+            {/* ✅ Centered Text for Mobile, Left Aligned for Desktop */}
+            <div className="relative z-10 flex flex-col justify-center items-center text-center md:items-start md:text-left h-full transition-all duration-500 transform group-hover:-translate-y-1">
+              <h3 className="text-[11px] sm:text-xs md:text-2xl font-bold text-white/60 group-hover:text-white tracking-tighter mb-1.5 md:mb-2 transition-colors duration-500 drop-shadow-md">
+                Meaningful stories <br className="hidden md:block" />
+                <span className="text-[#E61919]/70 group-hover:text-[#E61919] transition-colors duration-500 md:block"> that stay with people.</span>
               </h3>
-              <p className="block text-white/50 group-hover:text-white/90 text-[10px] md:text-sm leading-relaxed max-w-[320px] transition-colors duration-500 drop-shadow-md">
+              
+              {/* Text shrinks heavily on mobile and uses line-clamp to prevent overflowing */}
+              <p className="block text-white/50 group-hover:text-white/90 text-[7px] sm:text-[8px] md:text-sm leading-relaxed max-w-[320px] transition-colors duration-500 drop-shadow-md line-clamp-3 md:line-clamp-none">
                 {siteData.about.description}
               </p>
-              <div className="mt-4 flex">
-                <Link href="/services/short-form" className="inline-flex items-center gap-2 text-[10px] md:text-xs text-[#E5D3B3] hover:text-white transition-colors font-bold uppercase tracking-widest border-b border-transparent hover:border-white pb-0.5">
-                  Explore Short-Form Production
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              
+              <div className="mt-2 md:mt-4 flex">
+                <Link href="/services/short-form" className="inline-flex items-center gap-1 md:gap-2 text-[7px] md:text-xs text-[#E5D3B3] hover:text-white transition-colors font-bold uppercase tracking-widest border-b border-transparent hover:border-white pb-0.5">
+                  Explore <span className="hidden sm:inline">Short-Form</span>
+                  <svg className="w-2 h-2 md:w-3 md:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
                 </Link>
