@@ -2,6 +2,7 @@ import { workData } from "@/data/work";
 import Link from "next/link";
 import Footer from "@/components/Footer";
 import { notFound } from "next/navigation";
+import BentoGallery from "@/components/BentoGallery"; // ✅ WE IMPORT IT HERE
 
 export async function generateStaticParams() {
   return workData.map((project) => ({
@@ -25,7 +26,6 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
     relatedProjects = [...relatedProjects, ...filler];
   }
 
-  // ✅ BULLETPROOF CHECK: Ignores typos, spaces, or casing issues in your data file
   const isPhotography = project.projectType?.trim().toLowerCase() === "photography" && Array.isArray(project.gallery) && project.gallery.length > 0;
 
   return (
@@ -78,20 +78,9 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
             </div>
           </div>
 
-          {/* ✅ THE DYNAMIC RENDERER IS NOW BULLETPROOF */}
+          {/* ✅ DYNAMIC RENDERER: We now call our interactive BentoGallery component */}
           {isPhotography ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 md:grid-rows-2 gap-4 md:gap-6 w-full h-[60vh] md:h-[600px]">
-              {project.gallery!.slice(0, 5).map((img, i) => (
-                <div 
-                  key={i} 
-                  className={`relative rounded-3xl overflow-hidden bg-white/5 border border-white/10 group ${
-                    i === 0 ? "col-span-2 row-span-2" : "col-span-1 row-span-1"
-                  }`}
-                >
-                  <img src={img} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                </div>
-              ))}
-            </div>
+            <BentoGallery gallery={project.gallery!} />
           ) : (
             <a 
               href={project.videoLink || "#"} 
