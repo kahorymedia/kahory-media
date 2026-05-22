@@ -21,7 +21,7 @@ export default function Services() {
           <span className="text-[#E5D3B3] italic font-serif font-light lowercase">One throughline.</span>
         </h2>
         <p className="text-white/40 max-w-sm text-[10px] md:text-sm uppercase tracking-[0.2em] font-bold">
-          Regardless of what we build for you, the story always comes first.
+          Your story always comes first.
         </p>
       </div>
 
