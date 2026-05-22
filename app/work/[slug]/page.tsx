@@ -2,7 +2,7 @@ import { workData } from "@/data/work";
 import Link from "next/link";
 import Footer from "@/components/Footer";
 import { notFound } from "next/navigation";
-import BentoGallery from "@/components/BentoGallery"; // ✅ WE IMPORT IT HERE
+import BentoGallery from "@/components/BentoGallery";
 
 export async function generateStaticParams() {
   return workData.map((project) => ({
@@ -77,24 +77,63 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
               ))}
             </div>
           </div>
-
-          {/* ✅ DYNAMIC RENDERER: We now call our interactive BentoGallery component */}
+          
+          {/* ✅ DYNAMIC RENDERER: Bento Grid (Photography) OR Premium Video Player (Link) */}
           {isPhotography ? (
             <BentoGallery gallery={project.gallery!} />
           ) : (
-            <a 
-              href={project.videoLink || "#"} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="w-full aspect-[9/16] md:aspect-video rounded-3xl overflow-hidden bg-white/5 border border-white/10 flex items-center justify-center relative group cursor-pointer"
-            >
-              <img src={project.coverImage} className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-700" />
-              <div className="relative z-10 w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 text-white group-hover:bg-[#E61919] group-hover:border-[#E61919] transition-all duration-300">
-                <svg className="w-6 h-6 md:w-8 md:h-8 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-              </div>
-            </a>
+            <div className="relative w-full aspect-[4/5] md:aspect-video group cursor-pointer">
+              
+              {/* Ambient Glow Behind the Player */}
+              <div className="absolute inset-8 bg-[#E61919] blur-[100px] opacity-0 group-hover:opacity-40 transition-opacity duration-1000 z-0" />
+
+              <a 
+                href={project.videoLink || "#"} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="absolute inset-0 z-10 rounded-[2rem] overflow-hidden bg-[#0a0a0a] border border-white/10 group-hover:border-white/30 transition-colors duration-500 shadow-2xl flex flex-col justify-end"
+              >
+                {/* Base Image with cinematic slow-zoom */}
+                <img src={project.coverImage} className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-70 group-hover:scale-105 transition-all duration-1000 ease-out" />
+                
+                {/* Top Status Bar */}
+                <div className="absolute top-0 inset-x-0 p-6 md:p-8 flex justify-between items-start z-20 bg-gradient-to-b from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 translate-y-[-10px] group-hover:translate-y-0">
+                  <span className="px-4 py-1.5 backdrop-blur-xl bg-white/10 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-white shadow-lg flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#E61919] animate-pulse" />
+                    Watch Full Video
+                  </span>
+                  <span className="text-[10px] font-mono text-white/50 uppercase tracking-widest bg-black/40 px-3 py-1 rounded-full backdrop-blur-md border border-white/5 hidden sm:block">
+                    {project.videoLink?.includes('instagram') ? 'Instagram Reel' : project.videoLink?.includes('youtube') || project.videoLink?.includes('youtu.be') ? 'YouTube Player' : 'External Link'}
+                  </span>
+                </div>
+
+                {/* Magnetic/Pulsing Play Button */}
+                <div className="absolute inset-0 flex items-center justify-center z-20">
+                  <div className="relative flex items-center justify-center">
+                    {/* Radar Rings */}
+                    <div className="absolute inset-0 rounded-full border border-[#E61919] animate-ping opacity-0 group-hover:opacity-50 transition-opacity duration-300" style={{ animationDuration: '2s' }} />
+                    <div className="absolute inset-[-15px] rounded-full border border-[#E61919]/50 animate-ping opacity-0 group-hover:opacity-30 transition-opacity duration-300 delay-300" style={{ animationDuration: '2s' }} />
+                    
+                    {/* Main Button */}
+                    <div className="w-20 h-20 md:w-24 md:h-24 bg-black/60 backdrop-blur-xl border border-white/20 rounded-full flex items-center justify-center text-white group-hover:bg-[#E61919] group-hover:border-[#E61919] group-hover:scale-110 transition-all duration-500 shadow-[0_0_40px_rgba(0,0,0,0.5)] group-hover:shadow-[0_0_40px_rgba(230,25,25,0.4)]">
+                      <svg className="w-8 h-8 md:w-10 md:h-10 ml-2" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom Gradient & Text */}
+                <div className="relative z-20 p-6 md:p-8 bg-gradient-to-t from-black via-black/80 to-transparent translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+                  <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tighter mb-2 group-hover:text-[#E5D3B3] transition-colors duration-300">
+                    Launch Player
+                  </h3>
+                  <p className="text-sm text-white/50 font-light max-w-md hidden md:block">
+                    Opens in a high-quality external viewing experience.
+                  </p>
+                </div>
+              </a>
+            </div>
           )}
-        </div>
+        </div> {/* ✅ THIS CLOSING DIV WAS MISSING IN YOUR CODE! */}
 
         {/* STICKY SIDEBAR */}
         <aside className="lg:col-span-4 hidden lg:flex flex-col gap-8">
