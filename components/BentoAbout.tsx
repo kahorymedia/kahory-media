@@ -7,19 +7,13 @@ import Link from "next/link";
 // --- SUB-COMPONENT: ROLLING NUMBER ---
 function RollingNumber({ value }: { value: string }) {
   const ref = useRef(null);
-  
-  // ✅ FIX: Changed 'once' to true so numbers only animate once per page load
   const isInView = useInView(ref, { once: true, amount: 0.5 });
   
   const numericValue = parseInt(value.replace(/\D/g, ""));
   const suffix = value.replace(/[0-9]/g, "");
 
   const count = useMotionValue(0);
-  
-  const springValue = useSpring(count, {
-    stiffness: 40, damping: 20, restDelta: 0.001
-  });
-
+  const springValue = useSpring(count, { stiffness: 40, damping: 20, restDelta: 0.001 });
   const displayValue = useTransform(springValue, (latest) => Math.floor(latest));
 
   useEffect(() => {
@@ -139,29 +133,34 @@ export default function BentoAbout() {
               })}
             </div>
 
-            <div className="absolute inset-x-0 bottom-0 h-[80%] bg-gradient-to-t from-black/90 via-black/50 to-transparent z-0 pointer-events-none transition-opacity duration-500" />
+            <div className="absolute inset-x-0 bottom-0 h-[90%] bg-gradient-to-t from-black/90 via-black/50 to-transparent z-0 pointer-events-none transition-opacity duration-500" />
 
             <div className="relative z-10 transition-all duration-500 transform group-hover:-translate-y-1">
-              <h3 className="text-sm md:text-2xl font-bold text-white/60 group-hover:text-white tracking-tighter mb-1 md:mb-2 transition-colors duration-500 drop-shadow-md">
-                Attention is cheap. <br/>
-                <span className="text-[#E61919]/70 group-hover:text-[#E61919] transition-colors duration-500">Retention is priceless.</span>
+              
+              {/* Heading (Size reduced to match old paragraph size) */}
+              <h3 className="text-xs md:text-sm font-bold text-white/80 group-hover:text-white tracking-wide mb-2 md:mb-3 transition-colors duration-500 drop-shadow-md">
+                {siteData.about.philosophy.headingNormal} 
+                <span className="text-[#E61919]">{siteData.about.philosophy.headingHighlight}</span>
               </h3>
               
-              {/* ✅ FIX: Made paragraph responsive across all devices and updated copy to be quantifiable */}
-              <p className="block text-white/50 group-hover:text-white/90 text-xs md:text-sm leading-relaxed max-w-[320px] transition-colors duration-500 drop-shadow-md">
-                We replace generic posting with conversion tracking architecture. Our systems are engineered specifically to lock in viewer watch-time metrics and pivot raw visibility directly into inbound brand revenue.
-              </p>
+              {/* Paragraphs (Size smaller than heading) */}
+              <div className="flex flex-col gap-1.5 md:gap-2">
+                <p className="block text-white/50 group-hover:text-white/90 text-[10px] md:text-[11px] leading-relaxed max-w-[340px] transition-colors duration-500 drop-shadow-md">
+                  {siteData.about.philosophy.paragraph1}
+                </p>
+                <p className="block text-white/50 group-hover:text-white/90 text-[10px] md:text-[11px] leading-relaxed max-w-[340px] transition-colors duration-500 drop-shadow-md">
+                  {siteData.about.philosophy.paragraph2}
+                </p>
+              </div>
 
-              {/* ✅ FIX: Removed hover masking requirements and mobile hidden rules so button is always active */}
               <div className="mt-4 flex">
-                <Link href="/services/short-form" className="inline-flex items-center gap-2 text-[10px] md:text-xs text-[#E5D3B3] hover:text-white transition-colors font-bold uppercase tracking-widest border-b border-transparent hover:border-white pb-0.5">
+                <Link href="/services/short-form" className="inline-flex items-center gap-2 text-[9px] md:text-[10px] text-[#E5D3B3] hover:text-white transition-colors font-bold uppercase tracking-widest border-b border-transparent hover:border-white pb-0.5">
                   Explore Short-Form Production
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
                 </Link>
               </div>
-
             </div>
           </motion.div>
 

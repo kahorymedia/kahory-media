@@ -11,6 +11,14 @@ export const siteData = {
   about: {
     title: "The approach.",
     description: "Kahory Media is a content-first agency. We don't just edit videos; we build scalable storytelling systems. Focused on high-performing formats, hook-based structures, and visual excellence, we turn complex ideas into intuitive, viral-ready experiences.",
+    
+    // ✅ NEW: The Philosophy Box Data
+    philosophy: {
+      headingNormal: "Our name is our ",
+      headingHighlight: "promise.",
+      paragraph1: "Kahory is built from two words: kahani, the Hindi word for story, and story itself. It is not a coincidence. It is a conviction. We believe every brand holds a story worth telling, and most of them never get told with the weight they deserve.",
+      paragraph2: "We are not a content mill. We are a storytelling studio. We find the meaning inside your brand, shape it into a narrative that earns attention, and engineer it into short-form experiences that convert that attention into trust."
+    }
   },
   stats: [
     { value: "5M+", label: "Organic Impressions" },
@@ -22,7 +30,7 @@ export const siteData = {
     { title: "Content Strategy", desc: "Data-driven ideation and hook-based storytelling." },
     { title: "Production", desc: "High-end shooting and creative direction." },
     { title: "Editing & Post", desc: "Dynamic cuts, color, and retention-focused pacing." },
-    { title: "Social Management", desc: "End-to-end publishing and community scaling." },
+    { title: "Media Management", desc: "End-to-end publishing and community scaling." },
     { title: "Consulting", desc: "Audits and playbooks for internal teams." },
   ],
   work: {
