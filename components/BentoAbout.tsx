@@ -34,8 +34,10 @@ export default function BentoAbout() {
   const container = useRef(null);
   const textRef = useRef(null); 
   
-  const philosophyText = `${siteData.about.philosophy.paragraph1} ${siteData.about.philosophy.paragraph2}`;
-  const words = philosophyText.split(" ");
+  // ✅ Split words by paragraph to allow proper formatting
+  const words1 = siteData.about.philosophy.paragraph1.split(" ");
+  const words2 = siteData.about.philosophy.paragraph2.split(" ");
+  const totalWords = words1.length + words2.length;
 
   const { scrollYProgress } = useScroll({
     target: textRef,
@@ -52,7 +54,6 @@ export default function BentoAbout() {
           {siteData.about.title}
         </h2>
 
-        {/* ✅ FIXED GRID: grid-cols-2 ensures Box 1 spans full width, Box 2 & 3 span half width */}
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-6 auto-rows-fr">
           
           {/* BOX 1: THE PHILOSOPHY (BIG BOX) */}
@@ -64,26 +65,61 @@ export default function BentoAbout() {
             <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-[#E61919] rounded-full blur-[100px] opacity-10 group-hover:opacity-30 transition-opacity duration-700 pointer-events-none will-change-transform transform-gpu" />
 
             <div className="relative z-10 flex flex-col justify-center h-full gap-4 md:gap-6">
-              {/* ✅ Hierarchy Fixed: Massive Heading */}
               <h3 className="text-4xl md:text-6xl font-bold text-white tracking-tighter leading-[1.05]">
                 {siteData.about.philosophy.headingNormal} 
                 <span className="text-[#E61919]">{siteData.about.philosophy.headingHighlight}</span>
               </h3>
               
-              {/* ✅ Hierarchy Fixed: Small Paragraph Text */}
-              <div ref={textRef} className="text-[11px] sm:text-sm md:text-2xl font-medium tracking-tight leading-[1.6] flex flex-wrap gap-x-1.5 md:gap-x-2 gap-y-0.5 md:gap-y-1 text-white/60">
-                {words.map((word, i) => {
-                  const start = i / words.length;
-                  const end = start + (1 / words.length);
-                  const opacity = useTransform(scrollYProgress, [start, end], [0.2, 1]);
-                  const color = useTransform(scrollYProgress, [start, end], ["#555555", "#ffffff"]);
-                  
-                  return (
-                    <motion.span key={i} style={{ opacity, color }} className="drop-shadow-sm">
-                      {word}
-                    </motion.span>
-                  );
-                })}
+              {/* ✅ Parent ref tracks the scroll for both paragraphs */}
+              <div ref={textRef} className="flex flex-col gap-4 md:gap-6 text-[11px] sm:text-sm md:text-2xl font-medium tracking-tight leading-[1.6] text-white/60">
+                
+                {/* PARAGRAPH 1 */}
+                <div className="flex flex-wrap gap-x-1.5 md:gap-x-2 gap-y-0.5 md:gap-y-1">
+                  {words1.map((word, i) => {
+                    const globalIndex = i;
+                    const start = globalIndex / totalWords;
+                    const end = start + (1 / totalWords);
+                    
+                    // Specific highlight targeting
+                    const isGolden = 
+                      word.includes("Kahory") || 
+                      word.includes("kahani") || 
+                      (word.includes("story") && words1[i + 1]?.includes("itself"));
+
+                    const opacity = useTransform(scrollYProgress, [start, end], [0.2, 1]);
+                    // Highlighted words transition from a dark gold to bright gold, others from gray to white
+                    const color = useTransform(
+                      scrollYProgress, 
+                      [start, end], 
+                      [isGolden ? "#7A6A4D" : "#555555", isGolden ? "#E5D3B3" : "#ffffff"]
+                    );
+                    
+                    return (
+                      <motion.span key={`p1-${i}`} style={{ opacity, color }} className="drop-shadow-sm">
+                        {word}
+                      </motion.span>
+                    );
+                  })}
+                </div>
+
+                {/* PARAGRAPH 2 */}
+                <div className="flex flex-wrap gap-x-1.5 md:gap-x-2 gap-y-0.5 md:gap-y-1">
+                  {words2.map((word, i) => {
+                    const globalIndex = words1.length + i;
+                    const start = globalIndex / totalWords;
+                    const end = start + (1 / totalWords);
+                    
+                    const opacity = useTransform(scrollYProgress, [start, end], [0.2, 1]);
+                    const color = useTransform(scrollYProgress, [start, end], ["#555555", "#ffffff"]);
+                    
+                    return (
+                      <motion.span key={`p2-${i}`} style={{ opacity, color }} className="drop-shadow-sm">
+                        {word}
+                      </motion.span>
+                    );
+                  })}
+                </div>
+
               </div>
             </div>
           </motion.div>
@@ -97,7 +133,6 @@ export default function BentoAbout() {
             <div className="absolute top-0 right-0 w-64 h-64 bg-[#E5D3B3] rounded-full blur-[80px] opacity-0 group-hover:opacity-10 transition-opacity duration-700 pointer-events-none will-change-transform transform-gpu" />
 
             <div className="relative z-10 h-full flex flex-col justify-center gap-8">
-              {/* ✅ Perfect 2x2 Centering for Mobile */}
               <div className="grid grid-cols-2 gap-4 md:gap-8 w-full h-full content-center">
                 {siteData.stats.map((stat, i) => (
                   <div key={i} className="flex flex-col gap-0.5 md:gap-2 opacity-70 group-hover:opacity-100 transition-opacity duration-500 items-center text-center md:items-start md:text-left">
@@ -145,14 +180,12 @@ export default function BentoAbout() {
 
             <div className="absolute inset-x-0 bottom-0 h-[90%] md:h-[80%] bg-gradient-to-t from-black/95 via-black/70 to-transparent z-0 pointer-events-none transition-opacity duration-500" />
 
-            {/* ✅ Centered Text for Mobile, Left Aligned for Desktop */}
             <div className="relative z-10 flex flex-col justify-center items-center text-center md:items-start md:text-left h-full transition-all duration-500 transform group-hover:-translate-y-1">
               <h3 className="text-[11px] sm:text-xs md:text-2xl font-bold text-white/60 group-hover:text-white tracking-tighter mb-1.5 md:mb-2 transition-colors duration-500 drop-shadow-md">
                 Meaningful stories <br className="hidden md:block" />
                 <span className="text-[#E61919]/70 group-hover:text-[#E61919] transition-colors duration-500 md:block"> that stay with people.</span>
               </h3>
               
-              {/* Text shrinks heavily on mobile and uses line-clamp to prevent overflowing */}
               <p className="block text-white/50 group-hover:text-white/90 text-[7px] sm:text-[8px] md:text-sm leading-relaxed max-w-[320px] transition-colors duration-500 drop-shadow-md line-clamp-3 md:line-clamp-none">
                 {siteData.about.description}
               </p>
