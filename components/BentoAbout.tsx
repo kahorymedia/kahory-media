@@ -32,6 +32,17 @@ function RollingNumber({ value }: { value: string }) {
 // --- MAIN COMPONENT: BENTO GRID ---
 export default function BentoAbout() {
   const container = useRef(null);
+  const textRef = useRef(null); 
+  
+  // ✅ The logic for the animated scroll text in Box 1
+  const philosophyText = `${siteData.about.philosophy.paragraph1} ${siteData.about.philosophy.paragraph2}`;
+  const words = philosophyText.split(" ");
+
+  const { scrollYProgress } = useScroll({
+    target: textRef,
+    offset: ["start 85%", "end 50%"]
+  });
+
   const WAVE_BARS = 32;
 
   return (
@@ -44,7 +55,7 @@ export default function BentoAbout() {
 
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-6 auto-rows-fr">
           
-          {/* BOX 1: THE PHILOSOPHY (NOW IN BOX 1) */}
+          {/* BOX 1: THE PHILOSOPHY (WITH SCROLL ANIMATION) */}
           <motion.div 
             whileHover={{ y: -4 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
@@ -53,17 +64,24 @@ export default function BentoAbout() {
             <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-[#E61919] rounded-full blur-[100px] opacity-10 group-hover:opacity-30 transition-opacity duration-700 pointer-events-none will-change-transform transform-gpu" />
 
             <div className="relative z-10 flex flex-col justify-center h-full gap-6">
-              <h3 className="text-3xl md:text-5xl font-bold tracking-tighter text-white">
+              <h3 className="text-xl md:text-2xl font-bold text-white tracking-tighter">
                 {siteData.about.philosophy.headingNormal} 
                 <span className="text-[#E61919]">{siteData.about.philosophy.headingHighlight}</span>
               </h3>
-              <div className="flex flex-col gap-4">
-                <p className="text-white/60 text-lg md:text-xl leading-relaxed max-w-2xl">
-                  {siteData.about.philosophy.paragraph1}
-                </p>
-                <p className="text-white/60 text-lg md:text-xl leading-relaxed max-w-2xl">
-                  {siteData.about.philosophy.paragraph2}
-                </p>
+              
+              <div ref={textRef} className="text-lg md:text-2xl font-medium tracking-tight leading-[1.6] flex flex-wrap gap-x-2 gap-y-1 text-white/60">
+                {words.map((word, i) => {
+                  const start = i / words.length;
+                  const end = start + (1 / words.length);
+                  const opacity = useTransform(scrollYProgress, [start, end], [0.2, 1]);
+                  const color = useTransform(scrollYProgress, [start, end], ["#555555", "#ffffff"]);
+                  
+                  return (
+                    <motion.span key={i} style={{ opacity, color }} className="drop-shadow-sm">
+                      {word}
+                    </motion.span>
+                  );
+                })}
               </div>
             </div>
           </motion.div>
@@ -90,7 +108,7 @@ export default function BentoAbout() {
             </div>
           </motion.div>
 
-          {/* BOX 3: THE APPROACH (NOW IN BOX 3) */}
+          {/* BOX 3: THE APPROACH (INTACT) */}
           <motion.div 
             whileHover={{ y: -4 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
@@ -122,18 +140,16 @@ export default function BentoAbout() {
               })}
             </div>
 
-            <div className="absolute inset-x-0 bottom-0 h-[90%] bg-gradient-to-t from-black/90 via-black/50 to-transparent z-0 pointer-events-none transition-opacity duration-500" />
+            <div className="absolute inset-x-0 bottom-0 h-[80%] bg-gradient-to-t from-black/90 via-black/50 to-transparent z-0 pointer-events-none transition-opacity duration-500" />
 
             <div className="relative z-10 transition-all duration-500 transform group-hover:-translate-y-1">
               <h3 className="text-sm md:text-2xl font-bold text-white/60 group-hover:text-white tracking-tighter mb-1 md:mb-2 transition-colors duration-500 drop-shadow-md">
                 Meaningful stories <br/>
                 <span className="text-[#E61919]/70 group-hover:text-[#E61919] transition-colors duration-500">that stay with people.</span>
               </h3>
-              
               <p className="block text-white/50 group-hover:text-white/90 text-xs md:text-sm leading-relaxed max-w-[320px] transition-colors duration-500 drop-shadow-md">
                 {siteData.about.description}
               </p>
-
               <div className="mt-4 flex">
                 <Link href="/services/short-form" className="inline-flex items-center gap-2 text-[10px] md:text-xs text-[#E5D3B3] hover:text-white transition-colors font-bold uppercase tracking-widest border-b border-transparent hover:border-white pb-0.5">
                   Explore Short-Form Production

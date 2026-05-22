@@ -19,7 +19,7 @@ export const siteData = {
     philosophy: {
       headingNormal: "Our name is our ",
       headingHighlight: "promise.",
-      paragraph1: "Kahory is built from two words: kahani, the Hindi word for story, and story itself. It is not a coincidence. It is a conviction. We believe every brand holds a story worth telling, and most of them never get told with the weight they deserve.",
+      paragraph1: "Kahory is built from two words: kahani, the Hindi word for story, and story itself. It is not a coincidence. It is conviction. We believe every brand holds a story worth telling, and most of them never get told with the weight they deserve.",
       paragraph2: "We are not a content mill. We are a storytelling studio. We find the meaning inside your brand, shape it into a narrative that earns attention, and engineer it into short-form experiences that convert that attention into trust."
     }
   },
