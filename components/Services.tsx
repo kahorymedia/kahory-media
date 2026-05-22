@@ -3,12 +3,12 @@ import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
 import { MouseEvent } from "react";
 
 const servicesData = [
-  { title: "Short-Form Strategy", description: "Data-driven playbooks for Instagram Reels and YouTube Shorts designed to maximize retention and organic reach." },
-  { title: "Content Ideation", description: "Hook-based storytelling and format development that stops the scroll and builds deep audience connection." },
-  { title: "Video Production", description: "High-end shooting and creative direction. We capture the raw essence of your brand with cinematic precision." },
-  { title: "Post-Production", description: "Dynamic editing workflows, pacing optimization, and color grading that turns raw footage into converting assets." },
-  { title: "Social Management", description: "End-to-end consulting and pipeline management to scale your content output without sacrificing premium quality." },
-  { title: "Brand Consulting", description: "Auditing your current visual identity and content systems to align with high-performing industry standards." }
+  { title: "Short-Form Strategy", description: "Story-led playbooks for Instagram Reels and YouTube Shorts. We map your narrative arc before we map your posting schedule." },
+  { title: "Content Ideation", description: "We excavate the core story your brand has not told yet. Then we build hooks, formats, and scripts around it that feel inevitable." },
+  { title: "Video Production", description: "Cinematic direction rooted in narrative. Every shot earns its place in the story we are building together." },
+  { title: "Post-Production", description: "The edit is where stories are made or lost. We craft pacing, rhythm, and emotion into every cut so the message lands." },
+  { title: "Media Management", description: "Your story does not pause between shoots. We manage your pipeline and presence to keep the narrative consistent at scale." },
+  { title: "Brand Consulting", description: "Before we tell your story, we audit whether your visual identity is ready to carry it. We align both so nothing gets lost in translation." }
 ];
 
 export default function Services() {
@@ -17,11 +17,11 @@ export default function Services() {
       
       <div className="w-full max-w-[1200px] mb-6 md:mb-20 flex flex-col md:flex-row justify-between items-start md:items-end gap-2 md:gap-6 px-6 md:px-0">
         <h2 className="text-[clamp(2.5rem,6vw,4.5rem)] font-bold tracking-tighter text-white uppercase leading-none">
-          Our <br className="hidden md:block" />
-          <span className="text-[#E5D3B3] italic font-serif font-light lowercase">Expertise.</span>
+          Every format. <br className="hidden md:block" />
+          <span className="text-[#E5D3B3] italic font-serif font-light lowercase">One throughline.</span>
         </h2>
         <p className="text-white/40 max-w-sm text-[10px] md:text-sm uppercase tracking-[0.2em] font-bold">
-          High-performing content formats & scalable production systems.
+          Regardless of what we build for you, the story always comes first.
         </p>
       </div>
 

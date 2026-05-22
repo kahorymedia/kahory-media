@@ -40,7 +40,7 @@ export default function BentoAbout() {
 
   const { scrollYProgress } = useScroll({
     target: textRef,
-    offset: ["start 85%", "end 50%"]
+    offset: ["start 85%", "end 60%"]
   });
 
   const WAVE_BARS = 32;

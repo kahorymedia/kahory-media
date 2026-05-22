@@ -63,7 +63,7 @@ export const siteData = {
     ]
   },
   contact: {
-    headline: "Let's build content that actually performs.",
-    subtext: "Ready to accelerate your revenue through digital media?",
+    headline: "Let’s tell your story the right way.",
+    subtext: "Ready to accelerate your journey through digital media?",
   }
 };
