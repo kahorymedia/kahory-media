@@ -103,5 +103,16 @@ export const workData = [
     projectType: "photography",
     gallery: ["/selectedwork/gallery/6.JPG", "/selectedwork/gallery/7.JPG", "/selectedwork/gallery/8.JPG", "/selectedwork/gallery/9.JPG", "/selectedwork/gallery/10.JPG"]
   },
+  {
+    id: "9",
+    slug: "Rootlabs-Dirty-good",
+    title: "Rootlabs- Dirty Good Campaign Shoot",
+    client: "Rootlabs",
+    categories: ["Luxury Goods", "Lifestyle"],
+    coverImage: "/selectedwork/covers/cover18.JPG",
+    metrics: ["Edgy", "Bold"],
+    projectType: "photography",
+    gallery: ["/selectedwork/gallery/11.JPG", "/selectedwork/gallery/12.JPG", "/selectedwork/gallery/13.JPG", "/selectedwork/gallery/14.JPG", "/selectedwork/gallery/15.JPG"]
+  },
   // ... Keep copying and pasting this block to add projects 7 through 18!
 ];

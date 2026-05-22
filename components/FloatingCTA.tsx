@@ -80,7 +80,7 @@ export default function FloatingCTA() {
             <div className="flex items-center gap-4 relative z-20">
               <div className="w-2.5 h-2.5 bg-[#E61919] rounded-full animate-pulse shadow-[0_0_12px_#E61919]" />
               <span className="text-white font-bold tracking-[0.25em] text-[11px] md:text-[13px] uppercase group-hover:text-[#E5D3B3] transition-colors drop-shadow-md">
-                Start a Project
+                Work with us
               </span>
             </div>
           </GlassSurface>
