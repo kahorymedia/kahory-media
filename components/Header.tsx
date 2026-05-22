@@ -2,8 +2,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useSpring, useMotionValue, AnimatePresence } from "framer-motion";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
+// --- Standard Gooey Button Component ---
 function GooeyButton({ text, href, isPage = false, onClick }: { text: string; href: string; isPage?: boolean; onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void; }) {
   const [particles, setParticles] = useState<any[]>([]);
 
@@ -42,6 +43,66 @@ function GooeyButton({ text, href, isPage = false, onClick }: { text: string; hr
   );
 }
 
+// --- DESKTOP DROPDOWN COMPONENT (For the Archive Button) ---
+function ArchiveDropdownButton() {
+  const [isOpen, setIsOpen] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Handle subtle hover delays so the menu doesn't vanish instantly if the mouse slips
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setIsOpen(true);
+  };
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => setIsOpen(false), 200);
+  };
+
+  return (
+    <div 
+      className="relative pointer-events-auto"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      {/* The main visible button */}
+      <button className="relative flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-transparent text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold text-white/60 hover:text-white transition-colors duration-300 z-20 cursor-pointer group">
+        <div className="absolute inset-0 rounded-full border border-[#E61919] opacity-0 group-hover:opacity-100 group-hover:shadow-[0_0_15px_rgba(230,25,25,0.6)] transition-all duration-300" />
+        <span className="relative z-30">Archive</span>
+        <svg className={`relative z-30 w-3 h-3 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+      </button>
+
+      {/* The Dropdown Panel */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="absolute top-[110%] left-1/2 -translate-x-1/2 w-48 bg-[#0a0a0a]/95 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden p-2 flex flex-col gap-1 shadow-2xl z-50"
+          >
+            <Link 
+              href="/work" 
+              className="px-4 py-3 rounded-xl text-left text-xs uppercase tracking-widest font-bold text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+            >
+              Case Studies
+            </Link>
+            <a 
+              href="https://drive.google.com/drive/folders/1kiN3uBkhJswbgq8BlFfSAYQlYfiqWEZb" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center justify-between px-4 py-3 rounded-xl text-left text-xs uppercase tracking-widest font-bold text-[#E61919]/80 hover:text-[#E61919] hover:bg-[#E61919]/10 transition-colors"
+            >
+              Raw Vault
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+            </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// --- MAGNETIC CTA ---
 function MagneticCTAButton({ text, href }: { text: string; href: string; }) {
   const ref = useRef<HTMLDivElement>(null);
   const [particles, setParticles] = useState<any[]>([]);
@@ -84,16 +145,16 @@ function MagneticCTAButton({ text, href }: { text: string; href: string; }) {
   );
 }
 
+// --- MAIN HEADER EXPORT ---
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobileArchiveOpen, setIsMobileArchiveOpen] = useState(false); // Manages mobile dropdown state
 
-  // ✅ UPGRADED: Added Archive with isPage: true
   const navLinks = [
     { name: "About", href: "about", isPage: false },
     { name: "Expertise", href: "results", isPage: false },
     { name: "Watch", href: "work", isPage: false },
-    { name: "Archive", href: "/work", isPage: true } 
-  ];
+  ]; // Note: Archive is removed from here because it's hardcoded as a special component now
 
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
@@ -141,6 +202,10 @@ export default function Header() {
                 onClick={item.isPage ? undefined : (e) => handleScroll(e, item.href)} 
               />
             ))}
+            
+            {/* ✅ THE NEW DESKTOP DROPDOWN COMPONENT */}
+            <ArchiveDropdownButton />
+
           </nav>
 
           <div className="z-[200] flex items-center h-full pointer-events-auto">
@@ -172,27 +237,57 @@ export default function Header() {
               className="absolute top-24 w-[90vw] max-w-[340px] bg-[#0a0a0a]/95 backdrop-blur-3xl border border-white/15 rounded-[2rem] p-6 shadow-2xl flex flex-col items-start"
             >
               <span className="text-[10px] uppercase tracking-[0.3em] text-[#E5D3B3] font-bold mb-6 block opacity-80">Menu</span>
-              <nav className="flex flex-col w-full gap-2">
+              
+              <nav className="flex flex-col w-full gap-2 overflow-y-auto max-h-[60vh]">
+                
+                {/* Standard Links */}
                 {navLinks.map((item, i) => (
                   <motion.div key={item.name} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 + 0.1 }} className="w-full border-b border-white/5">
-                    {item.isPage ? (
-                      <Link href={item.href} onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between group py-3 w-full">
-                        <span className="text-xl font-bold uppercase tracking-widest text-white/80 group-hover:text-white transition-colors">{item.name}</span>
-                        <span className="text-white/20">→</span>
-                      </Link>
-                    ) : (
-                      <a href={`#${item.href}`} onClick={(e) => handleScroll(e, item.href)} className="flex items-center justify-between group py-3 w-full">
-                        <span className="text-xl font-bold uppercase tracking-widest text-white/80 group-hover:text-white transition-colors">{item.name}</span>
-                        <span className="text-white/20">→</span>
-                      </a>
-                    )}
+                    <a href={`#${item.href}`} onClick={(e) => handleScroll(e, item.href)} className="flex items-center justify-between group py-3 w-full">
+                      <span className="text-xl font-bold uppercase tracking-widest text-white/80 group-hover:text-white transition-colors">{item.name}</span>
+                      <span className="text-white/20">→</span>
+                    </a>
                   </motion.div>
                 ))}
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mt-6 w-full">
+
+                {/* ✅ MOBILE ARCHIVE ACCORDION */}
+                <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.25 }} className="w-full border-b border-white/5 flex flex-col">
+                  <button 
+                    onClick={() => setIsMobileArchiveOpen(!isMobileArchiveOpen)} 
+                    className="flex items-center justify-between group py-3 w-full text-left"
+                  >
+                    <span className="text-xl font-bold uppercase tracking-widest text-white/80 group-hover:text-white transition-colors">Archive</span>
+                    <svg className={`w-4 h-4 text-white/20 transition-transform duration-300 ${isMobileArchiveOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                  </button>
+                  
+                  {/* Nested Links */}
+                  <AnimatePresence>
+                    {isMobileArchiveOpen && (
+                      <motion.div 
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="flex flex-col overflow-hidden"
+                      >
+                        <Link href="/work" onClick={() => setIsMenuOpen(false)} className="py-2 pl-4 text-sm font-bold tracking-widest uppercase text-white/60 hover:text-white border-l border-white/10 mb-2 mt-1 transition-colors">
+                          Case Studies
+                        </Link>
+                        <a href="https://drive.google.com/drive/folders/1kiN3uBkhJswbgq8BlFfSAYQlYfiqWEZb" target="_blank" rel="noopener noreferrer" className="py-2 pl-4 text-sm font-bold tracking-widest uppercase text-[#E61919]/80 hover:text-[#E61919] border-l border-[#E61919]/40 mb-3 transition-colors flex items-center justify-between">
+                          Raw Vault
+                          <svg className="w-3 h-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                        </a>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+
+                {/* CTA Button */}
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mt-6 w-full shrink-0">
                   <Link href="/contact" onClick={() => setIsMenuOpen(false)} className="flex w-full items-center justify-center py-4 rounded-2xl border border-[#E61919] text-xs uppercase tracking-[0.2em] font-bold text-white bg-[#E61919]/10 shadow-[0_0_20px_rgba(230,25,25,0.2)] active:scale-95 transition-transform">
                     Start a Project
                   </Link>
                 </motion.div>
+
               </nav>
             </motion.div>
           </div>
