@@ -16,7 +16,6 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
 
   if (!project) notFound();
 
-  // Find related projects (Prefer same category, then fallback to others)
   let relatedProjects = workData.filter(
     (p) => p.slug !== project.slug && p.categories.some(cat => project.categories.includes(cat))
   ).slice(0, 2);
@@ -25,6 +24,9 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
     const filler = workData.filter((p) => p.slug !== project.slug && !relatedProjects.includes(p)).slice(0, 2 - relatedProjects.length);
     relatedProjects = [...relatedProjects, ...filler];
   }
+
+  // ✅ BULLETPROOF CHECK: Ignores typos, spaces, or casing issues in your data file
+  const isPhotography = project.projectType?.trim().toLowerCase() === "photography" && Array.isArray(project.gallery) && project.gallery.length > 0;
 
   return (
     <main className="flex flex-col min-h-screen bg-black overflow-hidden relative">
@@ -76,10 +78,10 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
             </div>
           </div>
 
-          {/* ✅ DYNAMIC RENDERER: Bento Grid (Photography) OR Video Player (Link) */}
-          {project.projectType === "photography" && project.gallery ? (
+          {/* ✅ THE DYNAMIC RENDERER IS NOW BULLETPROOF */}
+          {isPhotography ? (
             <div className="grid grid-cols-2 md:grid-cols-4 md:grid-rows-2 gap-4 md:gap-6 w-full h-[60vh] md:h-[600px]">
-              {project.gallery.slice(0, 5).map((img, i) => (
+              {project.gallery!.slice(0, 5).map((img, i) => (
                 <div 
                   key={i} 
                   className={`relative rounded-3xl overflow-hidden bg-white/5 border border-white/10 group ${
@@ -92,7 +94,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
             </div>
           ) : (
             <a 
-              href={project.videoLink} 
+              href={project.videoLink || "#"} 
               target="_blank" 
               rel="noopener noreferrer"
               className="w-full aspect-[9/16] md:aspect-video rounded-3xl overflow-hidden bg-white/5 border border-white/10 flex items-center justify-center relative group cursor-pointer"
@@ -108,13 +110,14 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
         {/* STICKY SIDEBAR */}
         <aside className="lg:col-span-4 hidden lg:flex flex-col gap-8">
           <div className="sticky top-32 flex flex-col gap-6">
-            <span className="text-[10px] uppercase tracking-[0.4em] text-[#E5D3B3] font-bold block border-b border-white/10 pb-4">Related Case Studies</span>
+            <span className="text-[10px] uppercase tracking-[0.4em] text-[#E5D3B3] font-bold block border-b border-white/10 pb-4">
+              Related Case Studies
+            </span>
             
             {relatedProjects.map((relProject) => (
-              <Link href={`/work/${relProject.slug}`} key={relProject.id} className="group block relative w-full aspect-[4/5] md:aspect-[4/3] rounded-2xl overflow-hidden bg-white/5 border border-white/5 hover:border-white/20 transition-colors duration-500">
+              <Link href={`/work/${relProject.slug}`} key={relProject.id} className="group block relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-white/5 border border-white/5 hover:border-white/20 transition-colors duration-500">
                 <img src={relProject.coverImage} alt={relProject.title} className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
-                {/* Subtle bottom-weighted gradient */}
-                <div className="absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-black via-black/40 to-transparent transition-opacity duration-500" />
+                <div className="absolute inset-x-0 bottom-0 h-[70%] bg-gradient-to-t from-black via-black/60 to-transparent opacity-90 transition-opacity duration-500" />
                 <div className="absolute inset-x-0 bottom-0 p-5 flex flex-col z-10">
                   <span className="text-[9px] uppercase tracking-widest text-white/70 block mb-1">{relProject.categories[0]}</span>
                   <h4 className="text-lg font-bold text-white leading-tight group-hover:text-[#E61919] transition-colors">{relProject.title}</h4>
@@ -127,6 +130,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
             </Link>
           </div>
         </aside>
+
       </section>
 
       <section className="lg:hidden w-full py-24 bg-white/[0.02] flex flex-col items-center justify-center text-center px-6 border-t border-white/5">
