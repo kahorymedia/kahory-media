@@ -64,7 +64,7 @@ export default function BentoAbout() {
             <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-[#E61919] rounded-full blur-[100px] opacity-10 group-hover:opacity-30 transition-opacity duration-700 pointer-events-none will-change-transform transform-gpu" />
 
             <div className="relative z-10 flex flex-col justify-center h-full gap-6">
-              <h3 className="text-xl md:text-2xl font-bold text-white tracking-tighter">
+              <h3 className="text-3xl md:text-5xl font-bold text-white tracking-tighter">
                 {siteData.about.philosophy.headingNormal} 
                 <span className="text-[#E61919]">{siteData.about.philosophy.headingHighlight}</span>
               </h3>
