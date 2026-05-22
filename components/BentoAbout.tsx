@@ -32,14 +32,6 @@ function RollingNumber({ value }: { value: string }) {
 // --- MAIN COMPONENT: BENTO GRID ---
 export default function BentoAbout() {
   const container = useRef(null);
-  const textRef = useRef(null); 
-  const words = siteData.about.description.split(" ");
-
-  const { scrollYProgress } = useScroll({
-    target: textRef,
-    offset: ["start 85%", "end 50%"]
-  });
-
   const WAVE_BARS = 32;
 
   return (
@@ -52,7 +44,7 @@ export default function BentoAbout() {
 
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-6 auto-rows-fr">
           
-          {/* BOX 1: THE STORY */}
+          {/* BOX 1: THE PHILOSOPHY (NOW IN BOX 1) */}
           <motion.div 
             whileHover={{ y: -4 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
@@ -60,21 +52,19 @@ export default function BentoAbout() {
           >
             <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-[#E61919] rounded-full blur-[100px] opacity-10 group-hover:opacity-30 transition-opacity duration-700 pointer-events-none will-change-transform transform-gpu" />
 
-            <div className="relative z-10 flex flex-col justify-center h-full">
-              <p ref={textRef} className="text-2xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-bold tracking-tighter leading-[1.15] flex flex-wrap gap-x-1.5 md:gap-x-3 gap-y-1 md:gap-y-2">
-                {words.map((word, i) => {
-                  const start = i / words.length;
-                  const end = start + (1 / words.length);
-                  const opacity = useTransform(scrollYProgress, [start, end], [0.2, 1]);
-                  const color = useTransform(scrollYProgress, [start, end], ["#555555", "#ffffff"]);
-                  
-                  return (
-                    <motion.span key={i} style={{ opacity, color }} className="text-white drop-shadow-sm">
-                      {word}
-                    </motion.span>
-                  );
-                })}
-              </p>
+            <div className="relative z-10 flex flex-col justify-center h-full gap-6">
+              <h3 className="text-3xl md:text-5xl font-bold tracking-tighter text-white">
+                {siteData.about.philosophy.headingNormal} 
+                <span className="text-[#E61919]">{siteData.about.philosophy.headingHighlight}</span>
+              </h3>
+              <div className="flex flex-col gap-4">
+                <p className="text-white/60 text-lg md:text-xl leading-relaxed max-w-2xl">
+                  {siteData.about.philosophy.paragraph1}
+                </p>
+                <p className="text-white/60 text-lg md:text-xl leading-relaxed max-w-2xl">
+                  {siteData.about.philosophy.paragraph2}
+                </p>
+              </div>
             </div>
           </motion.div>
 
@@ -100,13 +90,12 @@ export default function BentoAbout() {
             </div>
           </motion.div>
 
-          {/* BOX 3: THE PHILOSOPHY */}
+          {/* BOX 3: THE APPROACH (NOW IN BOX 3) */}
           <motion.div 
             whileHover={{ y: -4 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
             className="col-span-1 lg:col-span-2 relative overflow-hidden rounded-[1.5rem] md:rounded-[2rem] bg-white/[0.02] border border-white/5 p-5 md:p-8 group transition-colors duration-500 hover:border-[#E61919]/30 hover:bg-white/[0.04] min-h-[220px] md:min-h-[250px] flex flex-col justify-end"
           >
-            
             <div className="absolute bottom-0 left-0 w-full h-[50%] md:h-[65%] flex items-end justify-between px-4 md:px-6 pb-0 opacity-40 group-hover:opacity-100 transition-opacity duration-700 z-0 pointer-events-none">
               {[...Array(WAVE_BARS)].map((_, i) => {
                 const isCenter = i >= 11 && i <= 20;
@@ -136,27 +125,19 @@ export default function BentoAbout() {
             <div className="absolute inset-x-0 bottom-0 h-[90%] bg-gradient-to-t from-black/90 via-black/50 to-transparent z-0 pointer-events-none transition-opacity duration-500" />
 
             <div className="relative z-10 transition-all duration-500 transform group-hover:-translate-y-1">
-              
-              {/* Heading (Size reduced to match old paragraph size) */}
-              <h3 className="text-xs md:text-sm font-bold text-white/80 group-hover:text-white tracking-wide mb-2 md:mb-3 transition-colors duration-500 drop-shadow-md">
-                {siteData.about.philosophy.headingNormal} 
-                <span className="text-[#E61919]">{siteData.about.philosophy.headingHighlight}</span>
+              <h3 className="text-sm md:text-2xl font-bold text-white/60 group-hover:text-white tracking-tighter mb-1 md:mb-2 transition-colors duration-500 drop-shadow-md">
+                Meaningful stories <br/>
+                <span className="text-[#E61919]/70 group-hover:text-[#E61919] transition-colors duration-500">that stay with people.</span>
               </h3>
               
-              {/* Paragraphs (Size smaller than heading) */}
-              <div className="flex flex-col gap-1.5 md:gap-2">
-                <p className="block text-white/50 group-hover:text-white/90 text-[10px] md:text-[11px] leading-relaxed max-w-[340px] transition-colors duration-500 drop-shadow-md">
-                  {siteData.about.philosophy.paragraph1}
-                </p>
-                <p className="block text-white/50 group-hover:text-white/90 text-[10px] md:text-[11px] leading-relaxed max-w-[340px] transition-colors duration-500 drop-shadow-md">
-                  {siteData.about.philosophy.paragraph2}
-                </p>
-              </div>
+              <p className="block text-white/50 group-hover:text-white/90 text-xs md:text-sm leading-relaxed max-w-[320px] transition-colors duration-500 drop-shadow-md">
+                {siteData.about.description}
+              </p>
 
               <div className="mt-4 flex">
-                <Link href="/services/short-form" className="inline-flex items-center gap-2 text-[9px] md:text-[10px] text-[#E5D3B3] hover:text-white transition-colors font-bold uppercase tracking-widest border-b border-transparent hover:border-white pb-0.5">
+                <Link href="/services/short-form" className="inline-flex items-center gap-2 text-[10px] md:text-xs text-[#E5D3B3] hover:text-white transition-colors font-bold uppercase tracking-widest border-b border-transparent hover:border-white pb-0.5">
                   Explore Short-Form Production
-                  <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
                 </Link>
