@@ -76,27 +76,46 @@ export default function WorkArchivePage() {
 
               {/* Massive Cinematic Category List */}
               <div className="flex flex-col">
-                {categories.map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => {
-                      setActiveFilter(cat);
-                      setIsPaletteOpen(false);
-                    }}
-                    className={`group w-full text-left px-4 py-3 md:py-4 flex items-center justify-between transition-colors duration-300 ${
-                      activeFilter === cat 
-                        ? "text-white" 
-                        : "text-white/30 hover:text-white"
-                    }`}
-                  >
-                    <span className="text-3xl md:text-5xl font-bold tracking-tighter transition-transform duration-500 group-hover:translate-x-4">
-                      {cat}
-                    </span>
-                    {activeFilter === cat && (
-                      <motion.div layoutId="activeDot" className="w-3 h-3 rounded-full bg-[#E61919]" />
-                    )}
-                  </button>
-                ))}
+                {categories.map((cat) => {
+                  // ✅ DYNAMIC CHECK: Does this category have projects?
+                  const hasProjects = cat === "All" || workData.some(item => item.categories.includes(cat));
+
+                  return (
+                    <button
+                      key={cat}
+                      disabled={!hasProjects}
+                      onClick={() => {
+                        if (hasProjects) {
+                          setActiveFilter(cat);
+                          setIsPaletteOpen(false);
+                        }
+                      }}
+                      className={`group w-full text-left px-4 py-3 md:py-4 flex items-center justify-between transition-colors duration-300 ${
+                        !hasProjects 
+                          ? "text-white/10 cursor-not-allowed" // Dimmed and deactivated style
+                          : activeFilter === cat 
+                            ? "text-white" 
+                            : "text-white/30 hover:text-white"
+                      }`}
+                    >
+                      <div className="flex items-center gap-4">
+                        <span className={`text-3xl md:text-5xl font-bold tracking-tighter transition-transform duration-500 ${hasProjects ? "group-hover:translate-x-4" : ""}`}>
+                          {cat}
+                        </span>
+                        {/* Premium 'Coming Soon' Badge for empty categories */}
+                        {!hasProjects && (
+                          <span className="text-[8px] md:text-[10px] uppercase tracking-widest text-white/20 border border-white/10 px-2 py-1 rounded-full hidden sm:block">
+                            Coming Soon
+                          </span>
+                        )}
+                      </div>
+                      
+                      {activeFilter === cat && hasProjects && (
+                        <motion.div layoutId="activeDot" className="w-3 h-3 rounded-full bg-[#E61919]" />
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             </motion.div>
           </motion.div>
@@ -131,7 +150,7 @@ export default function WorkArchivePage() {
           </motion.h1>
         </div>
 
-        {/* ✅ THE COMMAND PALETTE TRIGGER BUTTON */}
+        {/* THE COMMAND PALETTE TRIGGER BUTTON */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
           <button 
             onClick={() => setIsPaletteOpen(true)}
