@@ -225,18 +225,18 @@ export default function Header() {
                   <Image 
                     src="/kahory-full-logo.png" 
                     alt="Kahory Media" 
-                    width={180} 
-                    height={64} 
+                    width={200} 
+                    height={80} 
                     priority 
-                    className="h-[80%] md:h-full w-auto object-contain" 
+                    className="h-[60%] md:h-[70%] w-auto object-contain" 
                   />
                 </motion.div>
               ) : (
-                // Icon (State 2)
+                // Icon (State 2) - Now significantly larger and more prominent
                 <motion.div
                   key="icon-logo"
                   initial={{ opacity: 0, scale: 0.5, x: 20 }}
-                  animate={{ opacity: 1, scale: 1, x: 0 }}
+                  animate={{ opacity: 1, scale: 1.1, x: 0 }} // Added scale 1.1 for presence
                   exit={{ opacity: 0, scale: 0.5 }}
                   transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                   className="absolute left-0 flex items-center h-full origin-left"
@@ -244,7 +244,7 @@ export default function Header() {
                   <img 
                     src="/kahory media icon png 3-d.png" 
                     alt="Kahory Media Icon" 
-                    className="h-[90%] md:h-full w-auto object-contain drop-shadow-[0_0_10px_rgba(230,25,25,0.3)]" 
+                    className="h-[120%] max-h-[60px] w-auto object-contain drop-shadow-[0_0_15px_rgba(230,25,25,0.5)]" 
                   />
                 </motion.div>
               )}
