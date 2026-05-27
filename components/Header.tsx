@@ -209,32 +209,43 @@ export default function Header() {
           className="w-full max-w-[1200px] flex justify-between items-center relative pointer-events-none"
         >
           
-          {/* ✅ THE MORPHING LOGO COMPONENT */}
-          <Link href="/" className="block z-[200] flex items-center h-full pointer-events-auto relative w-[160px] md:w-[200px]">
-            <AnimatePresence mode="popLayout">
+{/* ✅ THE MORPHING LOGO COMPONENT */}
+          <Link href="/" className="block z-[200] flex items-center h-full pointer-events-auto relative w-[200px]">
+            <AnimatePresence mode="wait">
               {!isScrolled ? (
-                // Full text logo (State 1)
+                // Full Logo (State 1)
                 <motion.div
                   key="full-logo"
-                  initial={{ opacity: 0, filter: "blur(4px)" }}
-                  animate={{ opacity: 1, scale: 1, x: 0, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, scale: 0.5, x: -30, filter: "blur(5px)" }}
-                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5, x: -20 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                   className="absolute left-0 flex items-center h-full origin-left"
                 >
-                  <Image src="/kahory-full-logo.png" alt="Kahory Media" width={180} height={64} priority className="h-[80%] md:h-full w-auto object-contain" />
+                  <Image 
+                    src="/kahory-full-logo.png" 
+                    alt="Kahory Media" 
+                    width={180} 
+                    height={64} 
+                    priority 
+                    className="h-[80%] md:h-full w-auto object-contain" 
+                  />
                 </motion.div>
               ) : (
-                // 3D Icon (State 2) - Scaling up from the left gives the illusion the text collapsed into it
+                // Icon (State 2)
                 <motion.div
                   key="icon-logo"
-                  initial={{ opacity: 0, scale: 0.5, x: -30, filter: "blur(5px)" }}
-                  animate={{ opacity: 1, scale: 1, x: 0, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, scale: 0.5, x: -30, filter: "blur(4px)" }}
-                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                  initial={{ opacity: 0, scale: 0.5, x: 20 }}
+                  animate={{ opacity: 1, scale: 1, x: 0 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                   className="absolute left-0 flex items-center h-full origin-left"
                 >
-                  <img src="/kahory media icon png 3-d.png" alt="Kahory Media Icon" className="h-[90%] md:h-full w-auto object-contain drop-shadow-[0_0_15px_rgba(230,25,25,0.4)]" />
+                  <img 
+                    src="/kahory media icon png 3-d.png" 
+                    alt="Kahory Media Icon" 
+                    className="h-[90%] md:h-full w-auto object-contain drop-shadow-[0_0_10px_rgba(230,25,25,0.3)]" 
+                  />
                 </motion.div>
               )}
             </AnimatePresence>
