@@ -122,13 +122,13 @@ export default function WorkArchivePage() {
         )}
       </AnimatePresence>
 
-      {/* TOP NAVIGATION: UPDATED TO ONLY SHOW THE 3D ICON CENTERED */}
-      <header className="absolute top-0 left-0 w-full p-6 md:px-12 md:py-8 z-40 flex items-center justify-center pointer-events-auto">
-        <Link href="/" className="group transition-transform duration-300 hover:scale-110 flex items-center justify-center">
+      {/* TOP NAVIGATION: 3D ICON ON THE LEFT AND LARGER */}
+      <header className="absolute top-0 left-0 w-full p-6 md:px-12 md:py-8 z-40 flex items-center justify-start pointer-events-auto">
+        <Link href="/" className="group transition-transform duration-300 hover:scale-110 flex items-center">
           <img 
             src="/kahory media icon png 3-d.png" 
             alt="Back to Home" 
-            className="w-12 h-12 md:w-16 md:h-16 object-contain drop-shadow-[0_0_20px_rgba(230,25,25,0.2)]" 
+            className="w-16 h-16 md:w-24 md:h-24 object-contain drop-shadow-[0_0_20px_rgba(230,25,25,0.2)]" 
             draggable="false"
           />
         </Link>
