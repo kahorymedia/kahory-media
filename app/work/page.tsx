@@ -122,17 +122,16 @@ export default function WorkArchivePage() {
         )}
       </AnimatePresence>
 
-      {/* TOP NAVIGATION */}
-      <header className="absolute top-0 left-0 w-full p-6 md:px-12 md:py-8 z-40 flex items-center justify-between pointer-events-auto">
-        <Link href="/" className="group flex items-center gap-3 text-white/50 hover:text-white transition-colors duration-300">
-          <svg className="w-5 h-5 transform transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest mt-0.5">Back to Home</span>
+      {/* TOP NAVIGATION: UPDATED TO ONLY SHOW THE 3D ICON CENTERED */}
+      <header className="absolute top-0 left-0 w-full p-6 md:px-12 md:py-8 z-40 flex items-center justify-center pointer-events-auto">
+        <Link href="/" className="group transition-transform duration-300 hover:scale-110 flex items-center justify-center">
+          <img 
+            src="/kahory media icon png 3-d.png" 
+            alt="Back to Home" 
+            className="w-12 h-12 md:w-16 md:h-16 object-contain drop-shadow-[0_0_20px_rgba(230,25,25,0.2)]" 
+            draggable="false"
+          />
         </Link>
-        <div className="text-[#E5D3B3] font-bold tracking-[0.3em] uppercase text-[10px]">
-          Kahory Media
-        </div>
       </header>
       
       {/* HEADER & TRIGGER BUTTON */}
