@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, useSpring, useMotionValue, AnimatePresence } from "framer-motion";
+import { motion, useSpring, useMotionValue, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 
 // --- Standard Gooey Button Component ---
@@ -48,7 +48,6 @@ function ArchiveDropdownButton() {
   const [isOpen, setIsOpen] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Handle subtle hover delays so the menu doesn't vanish instantly if the mouse slips
   const handleMouseEnter = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setIsOpen(true);
@@ -63,14 +62,12 @@ function ArchiveDropdownButton() {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* The main visible button */}
       <button className="relative flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-transparent text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold text-white/60 hover:text-white transition-colors duration-300 z-20 cursor-pointer group">
         <div className="absolute inset-0 rounded-full border border-[#E61919] opacity-0 group-hover:opacity-100 group-hover:shadow-[0_0_15px_rgba(230,25,25,0.6)] transition-all duration-300" />
         <span className="relative z-30">Archive</span>
         <svg className={`relative z-30 w-3 h-3 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
       </button>
 
-      {/* The Dropdown Panel */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -148,13 +145,20 @@ function MagneticCTAButton({ text, href }: { text: string; href: string; }) {
 // --- MAIN HEADER EXPORT ---
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMobileArchiveOpen, setIsMobileArchiveOpen] = useState(false); // Manages mobile dropdown state
+  const [isMobileArchiveOpen, setIsMobileArchiveOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  
+  // ✅ Scroll Detection Logic
+  const { scrollY } = useScroll();
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    setIsScrolled(latest > 60); // Trigger morph after 60px of scroll
+  });
 
   const navLinks = [
     { name: "About", href: "about", isPage: false },
     { name: "Expertise", href: "results", isPage: false },
     { name: "Watch", href: "work", isPage: false },
-  ]; // Note: Archive is removed from here because it's hardcoded as a special component now
+  ];
 
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
@@ -180,16 +184,60 @@ export default function Header() {
         </defs>
       </svg>
 
+      {/* ✅ Dynamic Header wrapper that shrinks on scroll */}
       <motion.header
         initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        className="fixed top-0 left-0 w-full z-[100] px-6 py-6 md:py-8 lg:py-12 flex justify-center pointer-events-none"
+        animate={{ 
+          y: 0,
+          paddingTop: isScrolled ? "0.75rem" : "2rem",
+          paddingBottom: isScrolled ? "0.75rem" : "2rem",
+        }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+        className="fixed top-0 left-0 w-full z-[100] px-6 md:px-12 flex justify-center pointer-events-none"
       >
-        <div className="absolute top-0 left-0 w-full h-32 md:h-48 lg:h-64 bg-black/80 md:bg-black/70 backdrop-blur-md [mask-image:linear-gradient(to_bottom,black_60%,transparent_100%)] -z-10 pointer-events-none" />
+        {/* Dynamic Background Gradient */}
+        <motion.div 
+          animate={{ height: isScrolled ? "100px" : "220px" }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+          className="absolute top-0 left-0 w-full bg-black/80 md:bg-black/70 backdrop-blur-md [mask-image:linear-gradient(to_bottom,black_60%,transparent_100%)] -z-10 pointer-events-none" 
+        />
 
-        <div className="w-full max-w-[1200px] flex justify-between items-center relative pointer-events-none h-16 md:h-20 lg:h-24">
-          <Link href="/" className="block z-[200] flex items-center h-full pointer-events-auto">
-            <Image src="/kahory-full-logo.png" alt="Kahory Media" width={160} height={64} priority className="h-full w-auto object-contain" />
+        {/* Dynamic Container Height */}
+        <motion.div 
+          animate={{ height: isScrolled ? "48px" : "80px" }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+          className="w-full max-w-[1200px] flex justify-between items-center relative pointer-events-none"
+        >
+          
+          {/* ✅ THE MORPHING LOGO COMPONENT */}
+          <Link href="/" className="block z-[200] flex items-center h-full pointer-events-auto relative w-[160px] md:w-[200px]">
+            <AnimatePresence mode="popLayout">
+              {!isScrolled ? (
+                // Full text logo (State 1)
+                <motion.div
+                  key="full-logo"
+                  initial={{ opacity: 0, filter: "blur(4px)" }}
+                  animate={{ opacity: 1, scale: 1, x: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, scale: 0.5, x: -30, filter: "blur(5px)" }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                  className="absolute left-0 flex items-center h-full origin-left"
+                >
+                  <Image src="/kahory-full-logo.png" alt="Kahory Media" width={180} height={64} priority className="h-[80%] md:h-full w-auto object-contain" />
+                </motion.div>
+              ) : (
+                // 3D Icon (State 2) - Scaling up from the left gives the illusion the text collapsed into it
+                <motion.div
+                  key="icon-logo"
+                  initial={{ opacity: 0, scale: 0.5, x: -30, filter: "blur(5px)" }}
+                  animate={{ opacity: 1, scale: 1, x: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, scale: 0.5, x: -30, filter: "blur(4px)" }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                  className="absolute left-0 flex items-center h-full origin-left"
+                >
+                  <img src="/kahory media icon png 3-d.png" alt="Kahory Media Icon" className="h-[90%] md:h-full w-auto object-contain drop-shadow-[0_0_15px_rgba(230,25,25,0.4)]" />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </Link>
 
           <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-2 lg:gap-4 z-[150] pointer-events-none">
@@ -203,7 +251,6 @@ export default function Header() {
               />
             ))}
             
-            {/* ✅ THE NEW DESKTOP DROPDOWN COMPONENT */}
             <ArchiveDropdownButton />
 
           </nav>
@@ -221,7 +268,7 @@ export default function Header() {
               <motion.span animate={isMenuOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }} className="w-6 h-[2px] bg-white block transition-all" />
             </button>
           </div>
-        </div>
+        </motion.div>
       </motion.header>
 
       {/* Mobile Menu Overlay */}
@@ -250,7 +297,7 @@ export default function Header() {
                   </motion.div>
                 ))}
 
-                {/* ✅ MOBILE ARCHIVE ACCORDION */}
+                {/* MOBILE ARCHIVE ACCORDION */}
                 <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.25 }} className="w-full border-b border-white/5 flex flex-col">
                   <button 
                     onClick={() => setIsMobileArchiveOpen(!isMobileArchiveOpen)} 
